@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# Path to your minishell executable
+MINISHELL="./minishell"
+
+# List of commands to test
+commands=(
+    "echo Hello, World!"
+    "pwd"
+    "ls -la"
+    "whoami"
+    "date"
+    "uname -a"
+    "cat /etc/os-release"
+    "echo \$HOME"
+    "env"
+    "echo \$?"
+    "exit 0"
+)
+
+# Temporary files to store outputs
+bash_output="bash_output.txt"
+minishell_output="minishell_output.txt"
+diff_output="diff_output.txt"
+
+# Clear diff output file
+> $diff_output
+
+# Function to run a command in Bash and minishell and compare the outputs
+run_test() {
+    local cmd="$1"
+    echo "Testing command: $cmd"
+
+    # Run the command in Bash
+    bash -c "$cmd" > $bash_output 2>&1
+    # Run the command in minishell
+    $MINISHELL "$cmd" > $minishell_output 2>&1
+
+    # Compare the outputs
+    if diff -u $bash_output $minishell_output > /dev/null; then
+        echo "Test passed!"
+    else
+        echo "Test failed!"
+        echo "Command: $cmd" >> $diff_output
+        diff -u $bash_output $minishell_output >> $diff_output
+        echo "" >> $diff_output
+    fi
+}
+
+# Loop over all the commands and run the tests
+for cmd in "${commands[@]}"; do
+    run_test "$cmd"
+done
+
+# Check if there were any differences
+if [ -s $diff_output ]; then
+    echo "Some tests failed. See $diff_output for details."
+else
+    echo "All tests passed!"
+fi
+
+# Clean up temporary files
+rm $bash_output $minishell_output
