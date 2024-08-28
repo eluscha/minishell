@@ -1,2 +1,2 @@
 # microshell
-simplified minishell with a tester
+simplified minishell with a tester in bash
