@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/27 16:16:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/08/27 16:20:56 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:20:58 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,5 @@ int	ft_strcmp(char *str1, char *str2)
 		str1++;
 		str2++;
 	}
-	return (str1 - str2);
+	return (*str1 - *str2);
 }

@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 11:03:11 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:09:40 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <dirent.h>
 
 typedef enum lex_state
 {
@@ -51,10 +52,10 @@ typedef enum e_toktype
 
 typedef struct s_tok
 {
-	char *word;
-	int idx;
-	struct s_tok *next;
-	t_toktype type;
+	char			*word;
+	int				idx;
+	struct s_tok	*next;
+	t_toktype		type;
 }	t_tok;
 
 typedef struct cmd
@@ -96,20 +97,20 @@ int		clean_exit(char *msg, int r_value, t_data *data);
 t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
-int		get_path(t_cmd *cmd, t_data *data);
+int		check_command(t_cmd *cmd, t_data *data);
 int		check_builtin(t_cmd *cmd);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);
 t_cmd	*parser(char *input, char **envp);
-t_tok *lexer(char *input, lex_state state, t_tok *tail, char **envp);
-t_tok *gen_token(t_toktype type, int len);
-char    *expand(char *start, int *lenvar, char **envp);
-void    change_word(t_tok *token, char *var, int len);
-int process_tokens(t_tok *head);
-int    io_type(t_tok *token, t_toktype type);
-void insert_token(t_tok *token);
-int check_syntax(t_tok *head);
-t_cmd *generate_structs(t_tok *head, int numargs);
+t_tok	*lexer(char *input, lex_state state, t_tok *tail, char **envp);
+t_tok	*gen_token(t_toktype type, int len);
+char	*expand(char *start, int *lenvar, char **envp);
+void	change_word(t_tok *token, char *var, int len);
+int		process_tokens(t_tok *head);
+int		io_type(t_tok *token, t_toktype type);
+void	insert_token(t_tok *token);
+int		check_syntax(t_tok *head);
+t_cmd	*generate_structs(t_tok *head, int numargs);
 
 #endif

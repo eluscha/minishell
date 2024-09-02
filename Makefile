@@ -6,7 +6,7 @@ SRC = execution.c \
 		parser.c \
 		utils.c \
 		builtins.c \
-		check_path.c \
+		check_command.c \
 		main.c \
 		redirect.c \
 		inits.c \
