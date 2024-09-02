@@ -9,7 +9,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/minishell",
-			"args": ["echo 2"],
+			"args": ["cd libft"],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
 			"environment": [],

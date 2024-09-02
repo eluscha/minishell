@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 15:12:20 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:54:33 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,7 @@ int	find_binary(t_data *data, t_cmd *cmd)
 		{
 			cmd->args[0] = strdup(cmd->cmd);
 			free(cmd->cmd);
-			cmd->cmd = strdup(path);
-			free(path);
+			cmd->cmd = path;
 			return (0);
 		}
 		free(path);
@@ -67,7 +66,7 @@ int	find_binary(t_data *data, t_cmd *cmd)
 
 int	check_command(t_cmd *cmd, t_data *data)
 {
-	if (check_builtin(cmd))
+	if (check_builtin(cmd, data))
 		return (4);
 	if (ft_strchr(cmd->cmd, '/'))
 		return (check_path(cmd));
