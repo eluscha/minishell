@@ -1,0 +1,180 @@
+Command: echo Hello, World!
+--- normalized_bash_output.txt	2024-09-02 12:44:57.296851752 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.296851752 +0200
+@@ -1 +1 @@
+-Hello, World!
++./tester: line 48: ./minishell: No such file or directory
+
+Command: pwd
+--- normalized_bash_output.txt	2024-09-02 12:44:57.300851751 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.300851751 +0200
+@@ -1 +1 @@
+-/home/eusatiko/Desktop/microshell
++./tester: line 48: ./minishell: No such file or directory
+
+Command: ls -la
+--- normalized_bash_output.txt	2024-09-02 12:44:57.304851749 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.304851749 +0200
+@@ -1,24 +1 @@
+-total 88
+-drwxr-xr-x  4 eusatiko 2022_berlin 4096 Sep  2 12:44 .
+-drwxr-xr-x 14 eusatiko 2022_berlin  227 Aug 28 09:44 ..
+--rw-r--r--  1 eusatiko 2022_berlin    0 Sep  2 12:44 bash_output.txt
+--rw-r--r--  1 eusatiko 2022_berlin 1340 Sep  2 12:37 builtins.c
+--rw-r--r--  1 eusatiko 2022_berlin 1835 Sep  2 12:37 check_path.c
+--rw-r--r--  1 eusatiko 2022_berlin  491 Sep  2 12:44 diff_output.txt
+--rw-r--r--  1 eusatiko 2022_berlin 2793 Sep  2 12:37 execution.c
+-drwxr-xr-x  8 eusatiko 2022_berlin 4096 Sep  2 12:38 .git
+--rw-r--r--  1 eusatiko 2022_berlin  430 Sep  2 12:37 .gitignore
+--rw-r--r--  1 eusatiko 2022_berlin 1162 Sep  2 12:37 inits.c
+-drwxr-xr-x  2 eusatiko 2022_berlin 4096 Sep  2 12:37 libft
+--rw-r--r--  1 eusatiko 2022_berlin 1313 Sep  2 12:37 main.c
+--rw-r--r--  1 eusatiko 2022_berlin  668 Sep  2 12:37 Makefile
+--rw-r--r--  1 eusatiko 2022_berlin 2747 Sep  2 12:37 minishell.h
+--rw-r--r--  1 eusatiko 2022_berlin   58 Sep  2 12:44 minishell_output.txt
+--rw-r--r--  1 eusatiko 2022_berlin   34 Sep  2 12:44 normalized_bash_output.txt
+--rw-r--r--  1 eusatiko 2022_berlin  460 Sep  2 12:37 outfile
+--rw-r--r--  1 eusatiko 2022_berlin 2361 Sep  2 12:37 parcing.c
+--rw-r--r--  1 eusatiko 2022_berlin 8037 Sep  2 12:37 parser.c
+--rw-r--r--  1 eusatiko 2022_berlin   56 Sep  2 12:37 README.md
+--rw-r--r--  1 eusatiko 2022_berlin 2053 Sep  2 12:37 redirect.c
+--rwxrwxrwx  1 eusatiko 2022_berlin 1927 Sep  2 12:44 tester
+--rw-r--r--  1 eusatiko 2022_berlin 2190 Sep  2 12:37 utils.c
++./tester: line 48: ./minishell: No such file or directory
+
+Command: whoami
+--- normalized_bash_output.txt	2024-09-02 12:44:57.308851748 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.304851749 +0200
+@@ -1 +1 @@
+-eusatiko
++./tester: line 48: ./minishell: No such file or directory
+
+Command: date
+--- normalized_bash_output.txt	2024-09-02 12:44:57.308851748 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.308851748 +0200
+@@ -1 +1 @@
+-Mon Sep  2 12:44:57 PM CEST 2024
++./tester: line 48: ./minishell: No such file or directory
+
+Command: uname -a
+--- normalized_bash_output.txt	2024-09-02 12:44:57.312851746 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.312851746 +0200
+@@ -1 +1 @@
+-Linux c3a3c10.42berlin.de 6.5.0-1027-oem #28-Ubuntu SMP PREEMPT_DYNAMIC Thu Jul 25 13:32:46 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
++./tester: line 48: ./minishell: No such file or directory
+
+Command: cat /etc/os-release
+--- normalized_bash_output.txt	2024-09-02 12:44:57.316851745 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.312851746 +0200
+@@ -1,12 +1 @@
+-PRETTY_NAME="Ubuntu 22.04.4 LTS"
+-NAME="Ubuntu"
+-VERSION_ID="22.04"
+-VERSION="22.04.4 LTS (Jammy Jellyfish)"
+-VERSION_CODENAME=jammy
+-ID=ubuntu
+-ID_LIKE=debian
+-HOME_URL="https://www.ubuntu.com/"
+-SUPPORT_URL="https://help.ubuntu.com/"
+-BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+-PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+-UBUNTU_CODENAME=jammy
++./tester: line 48: ./minishell: No such file or directory
+
+Command: echo $HOME
+--- normalized_bash_output.txt	2024-09-02 12:44:57.316851745 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.316851745 +0200
+@@ -1 +1 @@
+-/home/eusatiko
++./tester: line 48: ./minishell: No such file or directory
+
+Command: env
+--- normalized_bash_output.txt	2024-09-02 12:44:57.320851743 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.320851743 +0200
+@@ -1,64 +1 @@
+-SHELL=/bin/zsh
+-SESSION_MANAGER=local/c3a3c10.42berlin.de:@/tmp/.ICE-unix/3848,unix/c3a3c10.42berlin.de:/tmp/.ICE-unix/3848
+-USER_ZDOTDIR=/home/eusatiko
+-QT_ACCESSIBILITY=1
+-COLORTERM=truecolor
+-XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+-SSH_AGENT_LAUNCHER=gnome-keyring
+-XDG_SESSION_PATH=/org/freedesktop/DisplayManager/Session0
+-XDG_MENU_PREFIX=gnome-
+-TERM_PROGRAM_VERSION=1.92.1
+-GNOME_DESKTOP_SESSION_ID=this-is-deprecated
+-GTK_IM_MODULE=ibus
+-LANGUAGE=en
+-SSH_AUTH_SOCK=/run/user/101176/keyring/ssh
+-XMODIFIERS=@im=ibus
+-DESKTOP_SESSION=ubuntu
+-GTK_MODULES=gail:atk-bridge
+-KRB5CCNAME=FILE:/tmp/krb5cc_101176_9qHF0X
+-PWD=/home/eusatiko/Desktop/microshell
+-LOGNAME=eusatiko
+-XDG_SESSION_DESKTOP=ubuntu
+-XDG_SESSION_TYPE=x11
+-GPG_AGENT_INFO=/run/user/101176/gnupg/S.gpg-agent:0:1
+-SYSTEMD_EXEC_PID=3868
+-_=/usr/bin/env
+-XAUTHORITY=/home/eusatiko/.Xauthority
+-VSCODE_GIT_ASKPASS_NODE=/usr/share/code/code
+-XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/eusatiko
+-GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+-VSCODE_INJECTION=1
+-GDM_LANG=en
+-HOME=/home/eusatiko
+-LANG=en_US.UTF-8
+-XDG_CURRENT_DESKTOP=Unity
+-GIT_ASKPASS=/usr/share/code/resources/app/extensions/git/dist/askpass.sh
+-XDG_SEAT_PATH=/org/freedesktop/DisplayManager/Seat0
+-INVOCATION_ID=9b8513b848494471bd6b9adc974b203c
+-MANAGERPID=3191
+-CHROME_DESKTOP=code-url-handler.desktop
+-GJS_DEBUG_OUTPUT=stderr
+-VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+-XDG_SESSION_CLASS=user
+-TERM=xterm-256color
+-ZDOTDIR=/home/eusatiko
+-USER=eusatiko
+-VSCODE_GIT_IPC_HANDLE=/run/user/101176/vscode-git-8bd7efd28e.sock
+-DISPLAY=:0
+-SHLVL=2
+-QT_IM_MODULE=ibus
+-XDG_RUNTIME_DIR=/run/user/101176
+-DOCKER_HOST=unix:///run/user/101176/docker.sock
+-VSCODE_GIT_ASKPASS_MAIN=/usr/share/code/resources/app/extensions/git/dist/askpass-main.js
+-JOURNAL_STREAM=8:63569
+-XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/eusatiko/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share:/usr/share:/var/lib/snapd/desktop
+-GDK_BACKEND=x11
+-PATH=/home/eusatiko/bin:/home/eusatiko/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+-GDMSESSION=ubuntu
+-ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/101176/bus
+-MAIL=eusatiko@student.42berlin.de
+-GIO_LAUNCHED_DESKTOP_FILE_PID=4606
+-GIO_LAUNCHED_DESKTOP_FILE=/usr/share/applications/code.desktop
+-OLDPWD=/home/eusatiko/Desktop/microshell
+-TERM_PROGRAM=vscode
++./tester: line 48: ./minishell: No such file or directory
+
+Command: echo $?
+--- normalized_bash_output.txt	2024-09-02 12:44:57.320851743 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.320851743 +0200
+@@ -1 +1 @@
+-0
++./tester: line 48: ./minishell: No such file or directory
+
+Command: exit 0
+--- normalized_bash_output.txt	2024-09-02 12:44:57.324851742 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.324851742 +0200
+@@ -0,0 +1 @@
++./tester: line 48: ./minishell: No such file or directory
+
+Command: cat <infile >infile
+--- normalized_bash_output.txt	2024-09-02 12:44:57.328851740 +0200
++++ minishell_output.txt	2024-09-02 12:44:57.324851742 +0200
+@@ -1 +1 @@
+-line 1: infile: No such file or directory
++./tester: line 48: ./minishell: No such file or directory
+

@@ -3,6 +3,12 @@
 # Path to your minishell executable
 MINISHELL="./minishell"
 
+# Check if minishell executable exists and is executable
+if [ ! -x "$MINISHELL" ]; then
+    echo "Error: minishell executable not found or not executable at $MINISHELL"
+    exit 1
+fi
+
 # List of commands to test
 commands=(
     "echo Hello, World!"
@@ -21,11 +27,21 @@ commands=(
 
 # Temporary files to store outputs
 bash_output="bash_output.txt"
+normalized_bash_output="normalized_bash_output.txt"
 minishell_output="minishell_output.txt"
 diff_output="diff_output.txt"
 
 # Clear diff output file
 > $diff_output
+
+# Function to normalize the output to allow for minor differences
+normalize_output() {
+    local input_file="$1"
+    local output_file="$2"
+    
+    # Remove 'bash: ' prefix from error messages and normalize other patterns as needed
+    sed -E 's/^bash: //g; s/some_other_pattern/replacement/g' "$input_file" > "$output_file"
+}
 
 # Function to run a command in Bash and minishell and compare the outputs
 run_test() {
@@ -37,13 +53,16 @@ run_test() {
     # Run the command in minishell
     $MINISHELL "$cmd" > $minishell_output 2>&1
 
+    # Normalize both outputs
+    normalize_output $bash_output $normalized_bash_output
+
     # Compare the outputs
-    if diff -u $bash_output $minishell_output > /dev/null; then
+    if diff -u $normalized_bash_output $minishell_output > /dev/null; then
         echo "Test passed!"
     else
         echo "Test failed!"
         echo "Command: $cmd" >> $diff_output
-        diff -u $bash_output $minishell_output >> $diff_output
+        diff -u $normalized_bash_output $minishell_output >> $diff_output
         echo "" >> $diff_output
     fi
 }
@@ -61,4 +80,4 @@ else
 fi
 
 # Clean up temporary files
-rm $bash_output $minishell_output
+rm $bash_output $normalized_bash_output $minishell_output
