@@ -16,6 +16,7 @@ commands=(
     "env"
     "echo \$?"
     "exit 0"
+	"cat <infile >infile"
 )
 
 # Temporary files to store outputs
