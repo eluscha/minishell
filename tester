@@ -40,7 +40,7 @@ diff_output="diff_output.txt"
 normalize_output() {
     local input_file="$1"
     local output_file="$2"
-    
+
     # Remove 'bash: ' prefix from error messages and normalize other patterns as needed
     sed -E 's/^bash: //g; s/some_other_pattern/replacement/g' "$input_file" > "$output_file"
 }
@@ -82,4 +82,4 @@ else
 fi
 
 # Clean up temporary files
-rm $bash_output $normalized_bash_output $minishell_output
+#rm $bash_output $normalized_bash_output $minishell_output

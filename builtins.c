@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/08/28 11:00:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:24:49 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ int	ft_pwd(void)
 {
 	char	*dir;
 
-	printf("pwd\n");
 	fflush(stdout);
 	dir = getcwd(NULL, 0);
 	write(1, dir, strlen(dir));
+	write(1, "\n", 1);
 	free(dir);
 	return (1);
 }

@@ -66,7 +66,6 @@ t_cmd	*parser(char *input, char **envp)
 	}
 	free(head->word);
 	free(head);
-
 	return (cmds);
 }
 
@@ -327,7 +326,7 @@ t_cmd *generate_structs(t_tok *head, int numargs)
 		else if (head->type == CMD)
 			cmd->cmd = ft_strdup(head->word); // need to protect
 		else if (head->type == ARGS)
-			cmd->args[idx++] = head->word;
+			cmd->args[idx++] = ft_strdup(head->word);
 		else if (head->type >= HEREDOC)
 		{
 			if (head->type >= OUTPUT)
