@@ -2,7 +2,7 @@
 #include "minishell.h"
 
 //void print_struct(t_cmd *cmd);
-//void print_toktype(t_tok *token)
+void print_toktype(t_tok *token);
 
 
 
@@ -58,6 +58,9 @@ t_cmd	*parser(char *input, char **envp)
 
 	while (head->type != END)
 	{
+
+        print_toktype(head);
+        printf("%s\n", head->word);
 		if (head->word)
 			free(head->word);
 		ptr = head->next;
@@ -148,6 +151,7 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, char **envp)
 	}
 	while(input[++i])
 	{
+        printf("i is %d\n", i);
 		c = input[i];
 		if (state == DELIM)
 		{
@@ -179,6 +183,12 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, char **envp)
 			tail->next = gen_token(UNDETERM, len);
 			tail = tail->next;
 		}
+        else if (state == WORD && (c == '|' || c == '>' || c == '<') && tail->word[0])
+        {
+            tail->next = gen_token(UNDETERM, len);
+			tail = tail->next;
+            tail->word[tail->idx++] = c;
+        }
 		else if (c == '$' && (state == WORD || state == INDQTS))
 		{
 			varvalue = expand(input + i + 1, &lenvar, envp);
@@ -327,7 +337,7 @@ t_cmd *generate_structs(t_tok *head, int numargs)
 		else if (head->type == CMD)
 			cmd->cmd = ft_strdup(head->word); // need to protect
 		else if (head->type == ARGS)
-			cmd->args[idx++] = head->word;
+			cmd->args[idx++] = ft_strdup(head->word);
 		else if (head->type >= HEREDOC)
 		{
 			if (head->type >= OUTPUT)
@@ -377,7 +387,7 @@ void print_struct(t_cmd *cmd)
 		printf("out_redirect type is %d value is %s\n", ptr->type, ptr->value);
 		ptr = ptr->next;
 	}
-}
+}*/
 
 void print_toktype(t_tok *token)
 {
@@ -408,4 +418,4 @@ void print_toktype(t_tok *token)
 	else if (token->type == DISCARD)
 		printf("DISCARD ");
 }
-*/
+

@@ -23,6 +23,7 @@ commands=(
     "echo \$?"
     "exit 0"
 	"cat <infile >infile"
+    "ls|wc|>>inf"
 )
 
 # Temporary files to store outputs
