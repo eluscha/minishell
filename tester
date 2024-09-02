@@ -23,6 +23,8 @@ commands=(
     "echo \$?"
     "exit 0"
 	"cat <infile >infile"
+	"\$HOME"
+	"gfjf\$HOME"
 )
 
 # Temporary files to store outputs
