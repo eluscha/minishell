@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 12:33:17 by auspensk          #+#    #+#             */
-/*   Updated: 2024/08/28 17:02:31 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 12:12:24 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ int	out_redirect(t_cmd *cmd)
 		redirect = cmd->out_redirect;
 		while (redirect)
 		{
-			if (redirect->type == 1)
-				fd = open(redirect->value, O_RDWR | O_CREAT, 0644);
-			else
+			if (redirect->type == OUTPUT)
+				fd = open(redirect->value, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			else if (redirect->type == APPEND)
 				fd = open(redirect->value, O_CREAT | O_APPEND | O_RDWR, 0644);
 			if (fd < 0)
 				return (redirect_error(redirect->value));

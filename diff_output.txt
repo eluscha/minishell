@@ -1,0 +1,139 @@
+Command: echo Hello, World!
+--- bash_output.txt	2024-09-02 12:20:51.435356364 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.439356263 +0200
+@@ -1 +1 @@
+-Hello, World!
++/usr/local/bin /usr/local/sbin
+
+Command: ls -la
+--- bash_output.txt	2024-09-02 12:20:51.451355962 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.451355962 +0200
+@@ -1,34 +1 @@
+-total 212
+-drwxr-xr-x 5 auspensk 2024_berlin  4096 Sep  2 12:20 .
+-drwxr-xr-x 6 auspensk 2024_berlin  4096 Sep  2 10:51 ..
+--rw-r--r-- 1 auspensk 2024_berlin     0 Sep  2 12:20 bash_output.txt
+--rw-r--r-- 1 auspensk 2024_berlin  1340 Aug 28 11:00 builtins.c
+--rw-r--r-- 1 auspensk 2024_berlin  4512 Sep  2 11:04 builtins.o
+--rw-r--r-- 1 auspensk 2024_berlin  1835 Sep  2 10:18 check_path.c
+--rw-r--r-- 1 auspensk 2024_berlin  6872 Sep  2 11:04 check_path.o
+--rw-r--r-- 1 auspensk 2024_berlin   205 Sep  2 12:20 diff_output.txt
+--rw-r--r-- 1 auspensk 2024_berlin  2793 Aug 28 17:54 execution.c
+--rw-r--r-- 1 auspensk 2024_berlin  8568 Sep  2 11:03 execution.o
+-drwxr-xr-x 8 auspensk 2024_berlin   185 Sep  2 11:13 .git
+--rw-r--r-- 1 auspensk 2024_berlin   430 Sep  2 10:44 .gitignore
+--rw-r--r-- 1 auspensk 2024_berlin  1162 Aug 28 16:47 inits.c
+--rw-r--r-- 1 auspensk 2024_berlin  4368 Sep  2 11:05 inits.o
+-drwxr-xr-x 2 auspensk 2024_berlin  4096 Sep  2 11:03 libft
+--rw-r--r-- 1 auspensk 2024_berlin  1313 Sep  2 11:12 main.c
+--rw-r--r-- 1 auspensk 2024_berlin  4952 Sep  2 11:12 main.o
+--rw-r--r-- 1 auspensk 2024_berlin   668 Sep  2 11:03 Makefile
+--rwxr-xr-x 1 auspensk 2024_berlin 47112 Sep  2 12:13 minishell
+--rw-r--r-- 1 auspensk 2024_berlin  2747 Sep  2 11:03 minishell.h
+--rw-r--r-- 1 auspensk 2024_berlin    37 Sep  2 12:20 minishell_output.txt
+--rw-r--r-- 1 auspensk 2024_berlin   239 Sep  2 12:13 outfile
+--rw-r--r-- 1 auspensk 2024_berlin     0 Sep  2 12:04 outfile2
+--rw-r--r-- 1 auspensk 2024_berlin  2361 Sep  2 09:50 parcing.c
+--rw-r--r-- 1 auspensk 2024_berlin  8037 Sep  2 11:04 parser.c
+--rw-r--r-- 1 auspensk 2024_berlin 14928 Sep  2 11:04 parser.o
+--rw-r--r-- 1 auspensk 2024_berlin    56 Sep  2 10:44 README.md
+--rw-r--r-- 1 auspensk 2024_berlin  2100 Sep  2 12:12 redirect.c
+--rw-r--r-- 1 auspensk 2024_berlin  5680 Sep  2 12:13 redirect.o
+--rwxrwxrwx 1 auspensk 2024_berlin  1436 Sep  2 12:18 tester
+--rw-r--r-- 1 auspensk 2024_berlin  2190 Sep  2 10:26 utils.c
+--rw-r--r-- 1 auspensk 2024_berlin  6360 Sep  2 11:04 utils.o
+-drwxr-xr-x 2 auspensk 2024_berlin    43 Sep  2 11:53 .vscode
++unminimize
+
+Command: uname -a
+--- bash_output.txt	2024-09-02 12:20:51.459355761 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.459355761 +0200
+@@ -1 +1,2 @@
+-Linux c3a2c9.42berlin.de 6.5.0-1027-oem #28-Ubuntu SMP PREEMPT_DYNAMIC Thu Jul 25 13:32:46 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux
++/usr/bin/uname: extra operand â€˜/usr/local/sbinâ€™
++Try '/usr/bin/uname --help' for more information.
+
+Command: cat /etc/os-release
+--- bash_output.txt	2024-09-02 12:20:51.463355660 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.463355660 +0200
+@@ -1,12 +1 @@
+-PRETTY_NAME="Ubuntu 22.04.4 LTS"
+-NAME="Ubuntu"
+-VERSION_ID="22.04"
+-VERSION="22.04.4 LTS (Jammy Jellyfish)"
+-VERSION_CODENAME=jammy
+-ID=ubuntu
+-ID_LIKE=debian
+-HOME_URL="https://www.ubuntu.com/"
+-SUPPORT_URL="https://help.ubuntu.com/"
+-BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+-PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+-UBUNTU_CODENAME=jammy
++/usr/bin/cat: /usr/local/sbin: Is a directory
+
+Command: echo $HOME
+--- bash_output.txt	2024-09-02 12:20:51.463355660 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.463355660 +0200
+@@ -1 +1 @@
+-/home/auspensk
++»®À
+
+Command: env
+--- bash_output.txt	2024-09-02 12:20:51.467355560 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.467355560 +0200
+@@ -14,14 +14,13 @@
+ DESKTOP_SESSION=ubuntu
+ GTK_MODULES=gail:atk-bridge
+ DBUS_STARTER_BUS_TYPE=session
+-KRB5CCNAME=FILE:/tmp/krb5cc_102331_0leUDj
+ PWD=/home/auspensk/Minishell/common_repo
+-LOGNAME=auspensk
++KRB5CCNAME=FILE:/tmp/krb5cc_102331_0leUDj
+ XDG_SESSION_DESKTOP=ubuntu
++LOGNAME=auspensk
+ XDG_SESSION_TYPE=x11
+ GPG_AGENT_INFO=/run/user/102331/gnupg/S.gpg-agent:0:1
+ SYSTEMD_EXEC_PID=3937
+-_=/usr/bin/env
+ XAUTHORITY=/home/auspensk/.Xauthority
+ XDG_GREETER_DATA_DIR=/var/lib/lightdm-data/auspensk
+ GDM_LANG=en
+@@ -47,3 +46,4 @@
+ DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/102331/bus,guid=6ddb1e41fb992df7991ac7fb66d56cc6
+ MAIL=auspensk@student.42berlin.de
+ OLDPWD=/home/auspensk/Minishell
++_=./minishell
+
+Command: echo $?
+--- bash_output.txt	2024-09-02 12:20:51.467355560 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.471355460 +0200
+@@ -1 +1 @@
+-0
++/usr/local/sbin
+
+Command: exit 0
+--- bash_output.txt	2024-09-02 12:20:51.471355460 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.471355460 +0200
+@@ -0,0 +1 @@
++Command 'exit' not found
+
+Command: cat <infile >infile
+--- bash_output.txt	2024-09-02 12:20:51.475355359 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.475355359 +0200
+@@ -1 +1 @@
+-bash: line 1: infile: No such file or directory
++infile: No such file or directory
+
+Command: $HOME
+--- bash_output.txt	2024-09-02 12:20:51.475355359 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.475355359 +0200
+@@ -1 +0,0 @@
+-bash: line 1: /home/auspensk: Is a directory
+
+Command: gfjf$HOME
+--- bash_output.txt	2024-09-02 12:20:51.479355259 +0200
++++ minishell_output.txt	2024-09-02 12:20:51.479355259 +0200
+@@ -1 +1 @@
+-bash: line 1: gfjf/home/auspensk: No such file or directory
++Command 'gfjf/home/auspensk' not found
+
