@@ -25,6 +25,9 @@ commands=(
 	"cat <infile >infile"
 	"\$HOME"
 	"gfjf\$HOME"
+	"cd libft"
+	"cd libft | ls"
+	"ls | cd libft"
 )
 
 # Temporary files to store outputs

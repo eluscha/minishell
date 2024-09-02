@@ -4,7 +4,7 @@ CC = cc
 
 SRC = execution.c \
 		parser.c \
-		utils.c \
+		cleaning.c \
 		builtins.c \
 		check_command.c \
 		main.c \

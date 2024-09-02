@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 14:51:15 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:09:14 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,13 @@ int	fork_function(t_cmd *cmd, t_data *data)
 void	wait_loop(t_data *data)
 {
 	int		wstatus;
+	t_pids	*cur_pid;
 
-	while (data->pids)
+	cur_pid = data->pids;
+	while (cur_pid)
 	{
-		waitpid(data->pids->pid, &wstatus, 0);
-		data->pids = data->pids->next;
+		waitpid(cur_pid->pid, &wstatus, 0);
+		cur_pid = cur_pid->next;
 	}
 	if (WIFEXITED(wstatus))
 	{
@@ -115,6 +117,8 @@ int	execute_loop(t_data *data)
 			if (pipe(data->fd) < 0)
 				return (clean_exit("failed to create pipe\n", 1, data));
 		}
+		else if (check_builtin(cmd, data))
+			return (clean_exit(NULL, 0, data));
 		if (fork_function(cmd, data))
 			return (1);
 		cmd = cmd->next;
