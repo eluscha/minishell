@@ -4,6 +4,8 @@ CC = cc
 
 SRC = execution.c \
 		parser.c \
+		lexer_fts.c \
+		token_fts.c \
 		utils.c \
 		builtins.c \
 		check_path.c \

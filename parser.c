@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
+/*   Updated: 2024/09/03 14:18:30 by eusatiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "minishell.h"
 
@@ -6,7 +18,7 @@ void print_toktype(t_tok *token);
 
 
 
-t_cmd	*parser(char *input, char **envp)
+t_cmd	*parser(char *input, t_data *data)
 {
 	int numargs;
 	t_tok *tail;
@@ -23,25 +35,25 @@ t_cmd	*parser(char *input, char **envp)
 			break;
 		if (*input)
 			add_history(input);
-		tail = lexer(input, DELIM, NULL, envp);
+		tail = lexer(input, DELIM, NULL, data);
 		while (tail->type == SQERR)
 		{
 			input = readline("> ");
 			if (input == NULL) //will happen with ctrl+D
 				break;
-			tail = lexer(input, INSQTS, NULL, envp);
+			tail = lexer(input, INSQTS, NULL, data);
 		}
 		while (tail->type == DQERR)
 		{
 			input = readline("> ");
 			if (input == NULL) //will happen with ctrl+D
 				break;
-			tail = lexer(input, INDQTS, tail, envp);
+			tail = lexer(input, INDQTS, tail, data);
 		}
 		head = tail->next;
 		*/
 
-	tail = lexer(input, DELIM, NULL, envp);
+	tail = lexer(input, DELIM, NULL, data);
 	head = tail->next;
 	numargs = process_tokens(head);
 	if (check_syntax(head) == 0)
@@ -73,23 +85,8 @@ t_cmd	*parser(char *input, char **envp)
 	return (cmds);
 }
 
-t_tok *gen_token(t_toktype type, int len)
-{
-	t_tok *token = malloc(sizeof(t_tok));
-	token->next = NULL;
-	token->type = type;
-	token->word = ft_calloc(len + 1, sizeof(char));
-	token->idx = 0;
-	if (!token->word)
-	{
-		free(token);
-		return (NULL);
-	}
-	if (type == END)
-		ft_strlcpy(token->word, "newline", 8);
-	return token; //need to handle if it is NULL
-}
 
+/*
 char    *expand(char *start, int *lenvar, char **envp)
 {
 	int i = 0;
@@ -110,95 +107,63 @@ char    *expand(char *start, int *lenvar, char **envp)
 		return (ft_strdup(""));
 	return (ft_strdup(*envp + len + 1)); //need to free though later
 }
+*/
 
-void    change_word(t_tok *token, char *var, int len)
-{
-	int lenvar = ft_strlen(var);
-	int lenword = ft_strlen(token->word);
-	char *newword = ft_calloc(lenvar + len + 1, sizeof(char));
-	ft_strlcpy(newword, token->word, lenword + 1);
-	ft_strlcat(newword, var, lenvar + len + 1);
-	free(token->word);
-	free(var);
-	token->word = newword;
-	token->idx += lenvar;
-	//printf("idx is %d\n", token->idx);
-}
-
-t_tok *lexer(char *input, lex_state state, t_tok *tail, char **envp)
+t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 {
 	char c;
 	t_tok *head;
 	int len = ft_strlen(input);
 	int i = -1;
-
-	int lenvar;
-	char *varvalue;
+	int err = 0;
 
 	if (!tail)
 	{
-		tail = gen_token(UNDETERM, len); // need to protect malloc
+		tail = gen_token(UNDETERM, len, &err); // need to protect malloc
 		head = tail;
 	}
 	else
 	{
 		head = tail->next;
-		tail->next = gen_token(NWLINE, 1);
-		tail = tail->next;
-		tail->word[tail->idx++] = '\n';
-		tail->next = gen_token(UNDETERM, len);
-		tail = tail->next;
+		tail->next = gen_token(NWLINE, 1, &err);
+		if (!err)
+		{
+			tail = tail->next;
+			tail->next = gen_token(UNDETERM, len, &err);
+			if (!err)
+				tail = tail->next;
+		}
 	}
-	while(input[++i])
+	while (input[++i] && !err)
 	{
-        printf("i is %d\n", i);
 		c = input[i];
-		if (state == DELIM)
-		{
-			if (c == ' ' || c == '\t')
-				continue;
-			state = WORD;
-		}
-		if (c == '\'')
-		{
-			if (state == INSQTS)
-				state = WORD;
-			else if (state == WORD)
-				state = INSQTS;
-			else
-				tail->word[tail->idx++] = c;
-		}
-		else if (c == '\"')
-		{
-			if (state == INDQTS)
-				state = WORD;
-			else if (state == WORD)
-				state = INDQTS;
-			else
-				tail->word[tail->idx++] = c;
-		}
-		else if (state == WORD && (c == ' ' || c == '\t'))
-		{
-			state = DELIM;
-			tail->next = gen_token(UNDETERM, len);
-			tail = tail->next;
-		}
-        else if (state == WORD && (c == '|' || c == '>' || c == '<') && tail->word[0])
+		if ((state == WORD || state == DELIM) && (c == ' ' || c == '\t'))
+			tail = handle_spaces(&state, tail, len, &err);
+		else if (c == '\'' || c == '\"')
+			handle_quotes(&state, tail, c);
+        else if (c == '|' || c == '>' || c == '<') //handle special chars
         {
-            tail->next = gen_token(UNDETERM, len);
-			tail = tail->next;
+			if (state == DELIM)
+				state = WORD;
+			else if (state == WORD && tail->word[0] && tail->word[0] != c)
+            {
+				tail->next = gen_token(UNDETERM, len, &err);
+				tail = tail->next;
+			}
             tail->word[tail->idx++] = c;
         }
 		else if (c == '$' && (state == WORD || state == INDQTS))
-		{
-			varvalue = expand(input + i + 1, &lenvar, envp);
-			change_word(tail, varvalue, len);
-			i += lenvar;
-		}
+			i += handle_expand(input + i + 1, tail, data, &err);
 		else
+		{
+			if (state == DELIM)
+				state = WORD;
 			tail->word[tail->idx++] = c;
+			//printf("word is %s\n", tail->word);
+		}
+		//printf("char is '%c' and state is %i\n", c, state);
 	}
-	if (state == INSQTS)
+	if (state == INSQTS)    //need to add analogous pipe error, seems like
 		tail->type = SQERR;
 	else if (state == INDQTS)
 		tail->type = DQERR;
@@ -206,10 +171,16 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, char **envp)
 		tail->type = END;
 	else
 	{
-		tail->next = gen_token(END, 7);
-		tail = tail->next;
+		tail->next = gen_token(END, 7, &err);
+		if (!err)
+			tail = tail->next;
 	}
 	tail->next = head;
+	if (err)
+	{
+		//free_tokens
+		return (NULL);
+	}
 	return (tail);
 }
 
@@ -241,15 +212,6 @@ int    io_type(t_tok *token, t_toktype type)
 	return (0);
 }
 
-void insert_token(t_tok *token)
-{
-	char *word = ft_strdup(token->word + 1);
-	t_tok *next = token->next;
-	token->next = gen_token(UNDETERM, ft_strlen(word));
-	token->next->word = word;
-	token->next->next = next;
-	token->word[1] = '\0';
-}
 
 int process_tokens(t_tok *token) //maybe return -1 always on malloc err ?
 {
@@ -388,34 +350,3 @@ void print_struct(t_cmd *cmd)
 		ptr = ptr->next;
 	}
 }*/
-
-void print_toktype(t_tok *token)
-{
-	if (token->type == UNDETERM)
-		printf("UNDETERM ");
-	else if (token->type == END)
-		printf("END\n");
-	else if (token->type == SQERR)
-		printf("SQERR ");
-	else if (token->type == DQERR)
-		printf("DQERR ");
-	else if (token->type == NWLINE)
-		printf("NWLINE ");
-	else if (token->type == PIPE)
-		printf("PIPE ");
-	else if (token->type == CMD)
-		printf("CMD ");
-	else if (token->type == ARGS)
-		printf("ARGS ");
-	else if (token->type == HEREDOC)
-		printf("HEREDOC ");
-	else if (token->type == INPUT)
-		printf("INPUT ");
-	else if (token->type == OUTPUT)
-		printf("OUTPUT ");
-	else if (token->type == APPEND)
-		printf("APPEND ");
-	else if (token->type == DISCARD)
-		printf("DISCARD ");
-}
-
