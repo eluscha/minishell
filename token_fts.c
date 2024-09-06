@@ -3,24 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   token_fts.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:50:20 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/03 12:49:39 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/06 10:51:17 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
 t_tok	*gen_token(t_toktype type, int len, int *err)
 {
-	t_tok	*token;
+	t_tok		*token;
+	static int	input_len;
 
+	if (!len)
+		len = input_len;
+	else
+		input_len = len;
 	token = malloc(sizeof(t_tok));
 	if (!token)
 	{
-		*err = 1;
+		*err = -1;
 		return (NULL);
 	}
 	token->next = NULL;
@@ -30,13 +34,9 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	if (!token->word)
 	{
 		free(token);
-		*err = 0;
+		*err = -1;
 		return (NULL);
 	}
-	if (type == END)
-		ft_strlcpy(token->word, "newline", 8);
-	else if (type == NWLINE)
-		ft_strlcpy(token->word, "\n", 2);
 	return (token);
 }
 
@@ -65,26 +65,25 @@ int	change_word(t_tok *token, char *var, char *start)
 	token->word = newword;
 	token->idx += lenvar;
 	return (0);
-	//printf("idx is %d\n", token->idx);
 }
 
-int insert_token(t_tok *token)
+t_tok	*free_tokens(t_tok *head)
 {
-	char	*word = ft_strdup(token->word + 1);
-	int		err = 0;
-	t_tok *next = token->next;
-	token->next = gen_token(UNDETERM, ft_strlen(word), &err);
-	if (err)
-		return (1);
-	token->next->word = word;
-	token->next->next = next;
-	token->word[1] = '\0';
-	return (0);
+	t_tok	*ptr;
+
+	while (head != NULL)
+	{
+		if (head->word)
+			free(head->word);
+		ptr = head->next;
+		free(head);
+		head = ptr;
+	}
+	return (NULL);
 }
 
-//free_tokens function goes here
-
-void print_toktype(t_tok *token)
+/*won't need this function in a final version*/
+void	print_toktype(t_tok *token) 
 {
 	if (token->type == UNDETERM)
 		printf("UNDETERM ");
@@ -94,6 +93,8 @@ void print_toktype(t_tok *token)
 		printf("SQERR ");
 	else if (token->type == DQERR)
 		printf("DQERR ");
+	else if (token->type == PIPERR)
+		printf("PIPERR ");
 	else if (token->type == NWLINE)
 		printf("NWLINE ");
 	else if (token->type == PIPE)

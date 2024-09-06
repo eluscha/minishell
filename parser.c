@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/03 14:18:30 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/06 14:38:43 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 #include "minishell.h"
 
 //void print_struct(t_cmd *cmd);
-void print_toktype(t_tok *token);
-
-
 
 t_cmd	*parser(char *input, t_data *data)
 {
@@ -54,10 +51,19 @@ t_cmd	*parser(char *input, t_data *data)
 		*/
 
 	tail = lexer(input, DELIM, NULL, data);
+	if (!tail)
+		return (NULL);
 	head = tail->next;
+	tail->next = NULL;
 	numargs = process_tokens(head);
+	if (numargs == -1)
+	{
+		free_tokens(head);
+		return (NULL);
+	}
 	if (check_syntax(head) == 0)
 		cmds = generate_structs(head, numargs);
+	
 
 		/* THIS IS for printing structs
 		t_cmd *ptrs = cmds;
@@ -67,23 +73,16 @@ t_cmd	*parser(char *input, t_data *data)
 			ptrs = ptrs->next;
 		}
 		*/
-
-	while (head->type != END)
+	ptr = head;
+	while (ptr->type != END)
 	{
-
-        print_toktype(head);
-        printf("%s\n", head->word);
-		if (head->word)
-			free(head->word);
-		ptr = head->next;
-		free(head);
-		head = ptr;
+        print_toktype(ptr);
+        printf("%s\n", ptr->word);
+		ptr = ptr->next;
 	}
-	free(head->word);
-	free(head);
-
+	free_tokens(head);
 	return (cmds);
-}
+	}
 
 
 /*
@@ -111,153 +110,53 @@ char    *expand(char *start, int *lenvar, char **envp)
 
 t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 {
-	char c;
-	t_tok *head;
-	int len = ft_strlen(input);
-	int i = -1;
-	int err = 0;
+	char	c;
+	t_tok	*head;
+	int		i;
+	int		err;
 
+	err = 0;
+	tail = set_start(tail, &head, ft_strlen(input), &err);
+	i = -1;
+	while (input[++i] && !err)
+	{
+		c = input[i];
+		if (state == DELIM || state == WORD)
+			tail = check_word_border(&state, tail, c, &err);
+		if (c == '\'' || c == '\"')
+			handle_quotes(&state, tail, c);
+		else if (c == '|' || c == '>' || c == '<')
+			tail = handle_special(&state, tail, c, &err);
+		else if (c == '$' && (state == WORD || state == INDQTS))
+			i += handle_expand(input + i + 1, tail, data, &err);
+		else if (state != DELIM)
+			tail->word[tail->idx++] = c;
+	}
+	tail = set_end(&state, tail, head, &err);
+	return (tail);
+}
+
+t_tok *set_start(t_tok *tail, t_tok **head, int len, int *err)
+{
 	if (!tail)
 	{
-		tail = gen_token(UNDETERM, len, &err); // need to protect malloc
-		head = tail;
+		tail = gen_token(UNDETERM, len, err);
+		*head = tail;
 	}
 	else
 	{
-		head = tail->next;
-		tail->next = gen_token(NWLINE, 1, &err);
+		*head = tail->next;
+		tail->next = gen_token(NWLINE, 1, err);
 		if (!err)
 		{
 			tail = tail->next;
-			tail->next = gen_token(UNDETERM, len, &err);
+			ft_strlcpy(tail->word, "\n", 2);
+			tail->next = gen_token(UNDETERM, len, err);
 			if (!err)
 				tail = tail->next;
 		}
 	}
-	while (input[++i] && !err)
-	{
-		c = input[i];
-		if ((state == WORD || state == DELIM) && (c == ' ' || c == '\t'))
-			tail = handle_spaces(&state, tail, len, &err);
-		else if (c == '\'' || c == '\"')
-			handle_quotes(&state, tail, c);
-        else if (c == '|' || c == '>' || c == '<') //handle special chars
-        {
-			if (state == DELIM)
-				state = WORD;
-			else if (state == WORD && tail->word[0] && tail->word[0] != c)
-            {
-				tail->next = gen_token(UNDETERM, len, &err);
-				tail = tail->next;
-			}
-            tail->word[tail->idx++] = c;
-        }
-		else if (c == '$' && (state == WORD || state == INDQTS))
-			i += handle_expand(input + i + 1, tail, data, &err);
-		else
-		{
-			if (state == DELIM)
-				state = WORD;
-			tail->word[tail->idx++] = c;
-			//printf("word is %s\n", tail->word);
-		}
-		//printf("char is '%c' and state is %i\n", c, state);
-	}
-	if (state == INSQTS)    //need to add analogous pipe error, seems like
-		tail->type = SQERR;
-	else if (state == INDQTS)
-		tail->type = DQERR;
-	else if (state == DELIM)
-		tail->type = END;
-	else
-	{
-		tail->next = gen_token(END, 7, &err);
-		if (!err)
-			tail = tail->next;
-	}
-	tail->next = head;
-	if (err)
-	{
-		//free_tokens
-		return (NULL);
-	}
 	return (tail);
-}
-
-
-int    io_type(t_tok *token, t_toktype type)
-{
-	token->type = type;
-	char *io_arg;
-	int idx;
-	if (type == HEREDOC || type == APPEND)
-		idx = 2;
-	else
-		idx = 1;
-	if (!token->word[idx])
-	{
-		token->type = DISCARD;
-		if (token->next->type != END)
-			token->next->type = type;
-	}
-	else
-	{
-		token->type = type;
-		io_arg = ft_strdup(token->word + idx);
-		if (!io_arg)
-			return (1);
-		free(token->word);
-		token->word = io_arg;
-	}
-	return (0);
-}
-
-
-int process_tokens(t_tok *token) //maybe return -1 always on malloc err ?
-{
-	int cmd = 0;
-	int args = 0;
-	while (token->type != END)
-	{
-		if (token->word[0] == '|')
-		{
-			token->type = PIPE;
-			cmd = 0;
-			if (token->word[1])
-				insert_token(token);
-		}
-		else if (token->type >= HEREDOC)
-		{
-			token = token->next;
-			continue ;
-		}
-		else if (token->word[0] == '<')
-		{
-			if (token->word[1] == '<')
-				io_type(token, HEREDOC);
-			else
-				io_type(token, INPUT);
-		}
-		else if (token->word[0] == '>')
-		{
-			if (token->word[1] == '>')
-				io_type(token, APPEND);
-			else
-				io_type(token, OUTPUT);
-		}
-		else if (!cmd)
-		{
-			token->type = CMD;
-			cmd = 1;
-		}
-		else
-		{
-			token->type = ARGS;
-			args++;
-		}
-		token = token->next;
-	}
-	return args;
 }
 
 int check_syntax(t_tok *head)
@@ -284,16 +183,28 @@ int check_syntax(t_tok *head)
 
 t_cmd *generate_structs(t_tok *head, int numargs)
 {
-	t_cmd *cmd = ft_calloc(1, sizeof(t_cmd));
-	cmd->args = ft_calloc(numargs + 2, sizeof(char *));
+	t_cmd *cmd;
 	t_redirect *ptr;
 	t_redirect **ptradr;
-	int idx = 1;
+	int idx;
+
+	cmd = ft_calloc(1, sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->args = ft_calloc(numargs + 2, sizeof(char *));
+	if (!cmd->args)
+	{
+		free(cmd);
+		return(NULL);
+	}
+	idx = 1;
 	while (head->type != END)
 	{
 		if (head->type == PIPE)
 		{
 			cmd->next = generate_structs(head->next, numargs);
+			if (!cmd->next)
+				cmd = free_cmd(cmd);
 			break ;
 		}
 		else if (head->type == CMD)
@@ -325,6 +236,38 @@ t_cmd *generate_structs(t_tok *head, int numargs)
 		head = head->next;
 	}
 	return (cmd);
+}
+
+t_cmd	*free_cmd(t_cmd *cmd)
+{
+	t_redirect	*ptr;
+	t_redirect	*tofree;
+	int			i;
+	
+	ptr = cmd->in_redirect;
+	while (ptr)
+	{
+		if (ptr->value)
+			free(ptr->value);
+		tofree = ptr;
+		ptr = ptr->next;
+		free(tofree);
+	}
+	ptr = cmd->out_redirect;
+	while (ptr)
+	{
+		if (ptr->value)
+			free(ptr->value);
+		tofree = ptr;
+		ptr = ptr->next;
+		free(tofree);
+	}
+	i = 0;
+	while(cmd->args[++i])
+		free(cmd->args[i]);
+	free(cmd->args);
+	free(cmd);
+	return (NULL);
 }
 
 /*
