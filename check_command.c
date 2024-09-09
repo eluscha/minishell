@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_path.c                                       :+:      :+:    :+:   */
+/*   check_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 10:18:57 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:54:33 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,29 @@ void	parce_paths(t_data *data)
 	data->paths = ft_split(data->envp[i] + 5, ':');
 }
 
-int	get_first_arg(t_cmd *cmd)
+int	check_path(t_cmd *cmd)
 {
-	if (*(cmd->cmd) == '/')
-		cmd->args[0] = ft_strdup(ft_strrchr(cmd->cmd, '/') + 1);
-	else
-		cmd->args[0] = ft_strdup(cmd->cmd);
+	DIR	*dir;
+
+	if (access(cmd->cmd, F_OK))
+		return (3);
+	dir = opendir(cmd->cmd);
+	if (dir)
+	{
+		closedir(dir);
+		return (2);
+	}
+	cmd->args[0] = ft_strdup(ft_strrchr(cmd->cmd, '/') + 1);
 	return (0);
 }
 
-int	concatenate_path(t_data *data, t_cmd *cmd)
+int	find_binary(t_data *data, t_cmd *cmd)
 {
 	char	*path;
 	char	*buf;
 	int		i;
 
+	parce_paths(data);
 	i = 0;
 	while (data->paths[i])
 	{
@@ -45,9 +53,9 @@ int	concatenate_path(t_data *data, t_cmd *cmd)
 		free(buf);
 		if (access(path, F_OK) == 0)
 		{
-			cmd->args[0] = cmd->cmd;
+			cmd->args[0] = strdup(cmd->cmd);
 			free(cmd->cmd);
-			cmd->cmd = strdup(path);
+			cmd->cmd = path;
 			return (0);
 		}
 		free(path);
@@ -56,12 +64,11 @@ int	concatenate_path(t_data *data, t_cmd *cmd)
 	return (1);
 }
 
-int	get_path(t_cmd *cmd, t_data *data)
+int	check_command(t_cmd *cmd, t_data *data)
 {
-	parce_paths(data);
-	if (!check_builtin(cmd) && access(cmd->cmd, F_OK))
-	{
-		return (concatenate_path(data, cmd));
-	}
-	return (get_first_arg(cmd));
+	if (check_builtin(cmd, data))
+		return (4);
+	if (ft_strchr(cmd->cmd, '/'))
+		return (check_path(cmd));
+	return (find_binary(data, cmd));
 }

@@ -24,6 +24,11 @@ commands=(
     "exit 0"
 	"cat <infile >infile"
     "ls|wc|>>inf"
+	"\$HOME"
+	"gfjf\$HOME"
+	"cd libft"
+	"cd libft | ls"
+	"ls | cd libft"
 )
 
 # Temporary files to store outputs
@@ -39,7 +44,7 @@ diff_output="diff_output.txt"
 normalize_output() {
     local input_file="$1"
     local output_file="$2"
-    
+
     # Remove 'bash: ' prefix from error messages and normalize other patterns as needed
     sed -E 's/^bash: //g; s/some_other_pattern/replacement/g' "$input_file" > "$output_file"
 }
@@ -81,4 +86,4 @@ else
 fi
 
 # Clean up temporary files
-rm $bash_output $normalized_bash_output $minishell_output
+#rm $bash_output $normalized_bash_output $minishell_output

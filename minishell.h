@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/09 10:45:14 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/09 11:04:25 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include "libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <dirent.h>
 
 typedef enum e_lex_state
 {
@@ -52,10 +53,10 @@ typedef enum e_toktype
 
 typedef struct s_tok
 {
-	char *word;
-	int idx;
-	struct s_tok *next;
-	t_toktype type;
+	char			*word;
+	int				idx;
+	struct s_tok	*next;
+	t_toktype		type;
 }	t_tok;
 
 typedef struct cmd
@@ -97,8 +98,8 @@ int		clean_exit(char *msg, int r_value, t_data *data);
 t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
-int		get_path(t_cmd *cmd, t_data *data);
-int		check_builtin(t_cmd *cmd);
+int		check_command(t_cmd *cmd, t_data *data);
+int		check_builtin(t_cmd *cmd, t_data *data);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);

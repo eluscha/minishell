@@ -6,25 +6,43 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/08/28 17:54:57 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:09:14 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	path_not_found(t_cmd *cmd, t_data *data)
+int	path_not_found(t_cmd *cmd, t_data *data, int code)
 {
-	write(2, "Command \'", ft_strlen("Command \'"));
-	write(2, cmd->cmd, ft_strlen(cmd->cmd));
-	write(2, "\' not found\n", strlen("\' not found\n"));
-	data->st_code = 127;
+	if (code == 1)
+	{
+		write(2, "Command \'", ft_strlen("Command \'"));
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, "\' not found\n", strlen("\' not found\n"));
+		data->st_code = 127;
+	}
+	if (code == 2)
+	{
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
+		data->st_code = 126;
+	}
+	if (code == 3)
+	{
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, ": No such file or directory\n",
+			ft_strlen(": No such file or directory\n"));
+		data->st_code = 127;
+	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	return (clean_exit(NULL, 1, data));
+	return (clean_exit(NULL, 0, data));
 }
 
 int	child_process(t_cmd *cmd, t_data *data)
 {
+	int	exit_code;
+
 	if (cmd->next)
 	{
 		close ((data->fd)[0]);
@@ -33,8 +51,9 @@ int	child_process(t_cmd *cmd, t_data *data)
 	}
 	if (redirect(cmd))
 		return (clean_exit(NULL, 1, data));
-	if (get_path(cmd, data))
-		return (path_not_found(cmd, data));
+	exit_code = check_command(cmd, data);
+	if (exit_code)
+		return (path_not_found(cmd, data, exit_code));
 	execve(cmd->cmd, cmd->args, data->envp);
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
@@ -71,11 +90,13 @@ int	fork_function(t_cmd *cmd, t_data *data)
 void	wait_loop(t_data *data)
 {
 	int		wstatus;
+	t_pids	*cur_pid;
 
-	while (data->pids)
+	cur_pid = data->pids;
+	while (cur_pid)
 	{
-		waitpid(data->pids->pid, &wstatus, 0);
-		data->pids = data->pids->next;
+		waitpid(cur_pid->pid, &wstatus, 0);
+		cur_pid = cur_pid->next;
 	}
 	if (WIFEXITED(wstatus))
 	{
@@ -96,6 +117,8 @@ int	execute_loop(t_data *data)
 			if (pipe(data->fd) < 0)
 				return (clean_exit("failed to create pipe\n", 1, data));
 		}
+		else if (check_builtin(cmd, data))
+			return (clean_exit(NULL, 0, data));
 		if (fork_function(cmd, data))
 			return (1);
 		cmd = cmd->next;
