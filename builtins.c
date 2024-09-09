@@ -51,8 +51,8 @@ int	check_builtin(t_cmd *cmd, t_data *data)
 		return (ft_echo(cmd, data));
 	if (!ft_strcmp(cmd->cmd, "export"))
 		return (ft_export(cmd, data));
-	// if (!ft_strcmp(cmd->cmd, "unset"))
-	// 	return (ft_cd(cmd, data));
+	if (!ft_strcmp(cmd->cmd, "unset"))
+		return (ft_unset(cmd, data));
 	// if (!ft_strcmp(cmd->cmd, "env"))
 	// 	return (ft_cd(cmd, data));
 	if (!ft_strcmp(cmd->cmd, "exit"))
