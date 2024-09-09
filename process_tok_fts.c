@@ -1,42 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   process_tokens.c                                   :+:      :+:    :+:   */
+/*   process_tok_fts.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eleonora          #+#    #+#             */
-/*   Updated: 2024/09/06 10:52:53 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/09/09 10:42:12 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	process_tokens(t_tok *token)
-{
-	int	cmd;
-	int	args;
-	int	err;
-
-	cmd = 0;
-	args = 0;
-	err = 0;
-	while (token->type != END)
-	{
-		if (token->word[0] == '|')
-			err = handle_pipe(token, &cmd);
-		else
-			err = handle_notpipe(token, cmd);
-		if (token->type == CMD)
-			cmd = 1;
-		else if (token->type == ARGS)
-			args++;
-		token = token->next;
-	}
-	if (err)
-		return (err);
-	return (args);
-}
 
 int	handle_pipe(t_tok *token, int *cmd)
 {

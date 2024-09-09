@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/06 14:38:43 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/09/09 10:45:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,27 +136,30 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 	return (tail);
 }
 
-t_tok *set_start(t_tok *tail, t_tok **head, int len, int *err)
+int	process_tokens(t_tok *token)
 {
-	if (!tail)
+	int	cmd;
+	int	args;
+	int	err;
+
+	cmd = 0;
+	args = 0;
+	err = 0;
+	while (token->type != END)
 	{
-		tail = gen_token(UNDETERM, len, err);
-		*head = tail;
+		if (token->word[0] == '|')
+			err = handle_pipe(token, &cmd);
+		else
+			err = handle_notpipe(token, cmd);
+		if (token->type == CMD)
+			cmd = 1;
+		else if (token->type == ARGS)
+			args++;
+		token = token->next;
 	}
-	else
-	{
-		*head = tail->next;
-		tail->next = gen_token(NWLINE, 1, err);
-		if (!err)
-		{
-			tail = tail->next;
-			ft_strlcpy(tail->word, "\n", 2);
-			tail->next = gen_token(UNDETERM, len, err);
-			if (!err)
-				tail = tail->next;
-		}
-	}
-	return (tail);
+	if (err)
+		return (err);
+	return (args);
 }
 
 int check_syntax(t_tok *head)
@@ -184,21 +187,13 @@ int check_syntax(t_tok *head)
 t_cmd *generate_structs(t_tok *head, int numargs)
 {
 	t_cmd *cmd;
-	t_redirect *ptr;
-	t_redirect **ptradr;
 	int idx;
+	int	err;
 
-	cmd = ft_calloc(1, sizeof(t_cmd));
-	if (!cmd)
-		return (NULL);
-	cmd->args = ft_calloc(numargs + 2, sizeof(char *));
-	if (!cmd->args)
-	{
-		free(cmd);
-		return(NULL);
-	}
+	err = 0;
+	cmd = init_struct(numargs, &err);
 	idx = 1;
-	while (head->type != END)
+	while (head->type != END && !err)
 	{
 		if (head->type == PIPE)
 		{
@@ -207,67 +202,10 @@ t_cmd *generate_structs(t_tok *head, int numargs)
 				cmd = free_cmd(cmd);
 			break ;
 		}
-		else if (head->type == CMD)
-			cmd->cmd = ft_strdup(head->word); // need to protect
-		else if (head->type == ARGS)
-			cmd->args[idx++] = ft_strdup(head->word);
-		else if (head->type >= HEREDOC)
-		{
-			if (head->type >= OUTPUT)
-			{
-				ptr = cmd->out_redirect;
-				ptradr = &cmd->out_redirect;
-			}
-			else
-			{
-				ptr = cmd->in_redirect;
-				ptradr = &cmd->in_redirect;
-			}
-			while (ptr)
-			{
-				ptr = ptr->next;
-				ptradr = &ptr->next;
-			}
-			ptr = ft_calloc(1, sizeof(t_redirect));
-			ptr->value = ft_strdup(head->word); //need to protect
-			ptr->type = head->type;
-			*ptradr = ptr;
-		}
+		err = fill_struct(head, cmd, &idx);
 		head = head->next;
 	}
 	return (cmd);
-}
-
-t_cmd	*free_cmd(t_cmd *cmd)
-{
-	t_redirect	*ptr;
-	t_redirect	*tofree;
-	int			i;
-	
-	ptr = cmd->in_redirect;
-	while (ptr)
-	{
-		if (ptr->value)
-			free(ptr->value);
-		tofree = ptr;
-		ptr = ptr->next;
-		free(tofree);
-	}
-	ptr = cmd->out_redirect;
-	while (ptr)
-	{
-		if (ptr->value)
-			free(ptr->value);
-		tofree = ptr;
-		ptr = ptr->next;
-		free(tofree);
-	}
-	i = 0;
-	while(cmd->args[++i])
-		free(cmd->args[i]);
-	free(cmd->args);
-	free(cmd);
-	return (NULL);
 }
 
 /*

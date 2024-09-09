@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_fts.c                                        :+:      :+:    :+:   */
+/*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/06 14:36:10 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/09/09 10:40:22 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,28 +91,30 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 	return (i);
 }
 
-t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err)
+
+int	change_word(t_tok *token, char *var, char *start)
 {
-	if (*state == INSQTS)
-		tail->type = SQERR;
-	else if (*state == INDQTS)
-		tail->type = DQERR;
-	else if (tail->word[tail->idx - 1] == '|')
-		tail->type = PIPERR;
-	else if (*state == DELIM)
+	int		lenword;
+	int		lenvar;
+	int		sum;
+	char	*newword;
+
+	if (!var)
+		return (1);
+	lenword = ft_strlen(token->word);
+	lenvar = ft_strlen(var);
+	sum = lenword + lenvar + ft_strlen(start);
+	newword = ft_calloc(sum + 1, sizeof(char));
+	if (!newword)
 	{
-		tail->type = END;
-		ft_strlcpy(tail->word, "newline", 8);
+		free(var);
+		return (1);
 	}
-	else
-	{
-		tail->next = gen_token(END, 7, err);
-		if (!*err)
-			tail = tail->next;
-	}
-	if (*err)
-		tail = free_tokens(head);
-	else
-		tail->next = head;
-	return (tail);
+	ft_strlcpy(newword, token->word, lenword + 1);
+	ft_strlcat(newword, var, sum + 1);
+	free(token->word);
+	free(var);
+	token->word = newword;
+	token->idx += lenvar;
+	return (0);
 }

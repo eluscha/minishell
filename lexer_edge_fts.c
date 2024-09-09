@@ -1,16 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_fts.c                                        :+:      :+:    :+:   */
+/*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 10:50:20 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/06 10:51:17 by eleonora         ###   ########.fr       */
+/*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
+/*   Updated: 2024/09/09 10:40:08 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_tok *set_start(t_tok *tail, t_tok **head, int len, int *err)
+{
+	if (!tail)
+	{
+		tail = gen_token(UNDETERM, len, err);
+		*head = tail;
+	}
+	else
+	{
+		*head = tail->next;
+		tail->next = gen_token(NWLINE, 1, err);
+		if (!err)
+		{
+			tail = tail->next;
+			ft_strlcpy(tail->word, "\n", 2);
+			tail->next = gen_token(UNDETERM, len, err);
+			if (!err)
+				tail = tail->next;
+		}
+	}
+	return (tail);
+}
 
 t_tok	*gen_token(t_toktype type, int len, int *err)
 {
@@ -40,32 +63,32 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	return (token);
 }
 
-int	change_word(t_tok *token, char *var, char *start)
+t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err)
 {
-	int		lenword;
-	int		lenvar;
-	int		sum;
-	char	*newword;
-
-	if (!var)
-		return (1);
-	lenword = ft_strlen(token->word);
-	lenvar = ft_strlen(var);
-	sum = lenword + lenvar + ft_strlen(start);
-	newword = ft_calloc(sum + 1, sizeof(char));
-	if (!newword)
+	if (*state == INSQTS)
+		tail->type = SQERR;
+	else if (*state == INDQTS)
+		tail->type = DQERR;
+	else if (tail->word[tail->idx - 1] == '|')
+		tail->type = PIPERR;
+	else if (*state == DELIM)
 	{
-		free(var);
-		return (1);
+		tail->type = END;
+		ft_strlcpy(tail->word, "newline", 8);
 	}
-	ft_strlcpy(newword, token->word, lenword + 1);
-	ft_strlcat(newword, var, sum + 1);
-	free(token->word);
-	free(var);
-	token->word = newword;
-	token->idx += lenvar;
-	return (0);
+	else
+	{
+		tail->next = gen_token(END, 7, err);
+		if (!*err)
+			tail = tail->next;
+	}
+	if (*err)
+		tail = free_tokens(head);
+	else
+		tail->next = head;
+	return (tail);
 }
+
 
 t_tok	*free_tokens(t_tok *head)
 {
