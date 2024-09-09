@@ -8,7 +8,6 @@ SRC = execution.c \
 		lexer_edge_fts.c \
 		process_tok_fts.c \
 		gen_struct_fts.c \
-		utils.c \
 		cleaning.c \
 		builtins.c \
 		check_command.c \
