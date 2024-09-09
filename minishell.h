@@ -93,6 +93,19 @@ typedef struct data
 	char	*tty_out;
 }	t_data;
 
+typedef struct export
+{
+	char			*arg;
+	char			*key;
+	t_cmd_type		type;
+}	t_export;
+
+typedef enum cmd_type
+{
+	UNSET,
+	EXPORT
+} t_cmd_type;
+
 int		clean_exit(char *msg, int r_value, t_data *data);
 t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
@@ -114,5 +127,6 @@ void	insert_token(t_tok *token);
 int		check_syntax(t_tok *head);
 t_cmd	*generate_structs(t_tok *head, int numargs);
 int		ft_export(t_cmd *cmd, t_data *data);
+int		print_array(char **array);
 
 #endif

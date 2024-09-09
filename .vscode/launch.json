@@ -8,7 +8,7 @@
 			"name": "(lldb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "enter program name, for example ${workspaceFolder}/minishell",
+			"program": "${workspaceFolder}/minishell",
 			"args": ["export path=path"],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
