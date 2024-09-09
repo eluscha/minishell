@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/09 11:11:25 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/09 11:15:30 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ t_cmd	*parser(char *input, t_data *data)
 	int numargs;
 	t_tok *tail;
 	t_tok *head;
-	t_tok *ptr;
 	t_cmd *cmds = NULL;
 	/*  THIS is preliminary readline for multiple line input..
 	while (1)
@@ -72,7 +71,7 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	*/
 	/* THIS IS for printing tokens
-	ptr = head;
+	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
         print_toktype(ptr);
