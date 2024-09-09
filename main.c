@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 11:12:04 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:29:48 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	init_data(&data, envp);
 	// read_input(&data);
-	data.cmd = parser(argv[1], envp);
+	data.cmd = parser(argv[1], &data);
 	return_value = execute_loop(&data);
 	if (data.cmd)
 		clean_exit(NULL, return_value, &data);
