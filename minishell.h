@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 13:58:24 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:21:12 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct cmd
 {
 	char			*cmd;
 	char			**args;
-	struct redirect	*redirect[100];
+	struct redirect	*redirect;
 	struct cmd		*next;
 	int				builtin;
 }	t_cmd;
