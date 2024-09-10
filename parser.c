@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/09 11:15:30 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:10:06 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 t_cmd	*parser(char *input, t_data *data)
 {
 	int numargs;
+	int numredir;
 	t_tok *tail;
 	t_tok *head;
 	t_cmd *cmds = NULL;
@@ -54,14 +55,16 @@ t_cmd	*parser(char *input, t_data *data)
 		return (NULL);
 	head = tail->next;
 	tail->next = NULL;
-	numargs = process_tokens(head);
-	if (numargs == -1)
+	if (process_tokens(head, &numargs, &numredir) == -1)
 	{
 		free_tokens(head);
 		return (NULL);
 	}
-	if (check_syntax(head) == 0)
-		cmds = generate_structs(head, numargs);
+	tail = check_syntax(head);
+	if (tail->type != END || get_heredoc(head, tail) == -1)
+		cmds = NULL;
+	else
+		cmds = generate_structs(head, numargs, numredir);
 	/* THIS IS for printing structs
 	t_cmd *ptrs = cmds;
 	while (ptrs)
@@ -70,7 +73,8 @@ t_cmd	*parser(char *input, t_data *data)
 		ptrs = ptrs->next;
 	}
 	*/
-	/* THIS IS for printing tokens
+	//THIS IS for printing tokens
+	/*
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -124,8 +128,8 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 			tail = check_word_border(&state, tail, c, &err);
 		if (c == '\'' || c == '\"')
 			handle_quotes(&state, tail, c);
-		else if (c == '|' || c == '>' || c == '<')
-			tail = handle_special(&state, tail, c, &err);
+		else if (state == WORD && (c == '|' || c == '>' || c == '<'))
+			tail = handle_special(tail, c, &err);
 		else if (c == '$' && (state == WORD || state == INDQTS))
 			i += handle_expand(input + i + 1, tail, data, &err);
 		else if (state != DELIM)
@@ -135,75 +139,82 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 	return (tail);
 }
 
-int	process_tokens(t_tok *token)
+int	process_tokens(t_tok *token, int *numargs, int *numredir)
 {
 	int	cmd;
-	int	args;
 	int	err;
 
 	cmd = 0;
-	args = 0;
+	*numargs = 0;
 	err = 0;
 	while (token->type != END)
 	{
 		if (token->word[0] == '|')
-			err = handle_pipe(token, &cmd);
+		{
+			token->type = PIPE;
+			cmd = 0;
+		}
 		else
-			err = handle_notpipe(token, cmd);
+			err = handle_notpipe(token, cmd, numredir);
 		if (token->type == CMD)
 			cmd = 1;
 		else if (token->type == ARGS)
-			args++;
+			*numargs = *numargs + 1;
 		token = token->next;
 	}
-	if (err)
-		return (err);
-	return (args);
+	return (err);
 }
 
-int check_syntax(t_tok *head)
+t_tok	*check_syntax(t_tok *head)
 {
-	t_toktype ntype;
-	int err = 0;
-	while(head->type != END)
+	t_toktype	ntype;
+	int			err;
+
+	err = 0;
+	while (head->type != END)
 	{
 		ntype = head->next->type;
 		if (head->type == PIPE && ntype != CMD && ntype < DISCARD)
 			err = 1;
 		else if (head->type == DISCARD && ntype < HEREDOC)
 			err = 1;
+		head = head->next;
 		if (err)
 		{
 			printf("syntax error near unexpected token `");
-			printf("%s\'\n", head->next->word);
-			return (1);
+			printf("%s\'\n", head->word);
+			break ;
 		}
-		head = head->next;
 	}
-	return (0);
+	return (head);
 }
 
-t_cmd *generate_structs(t_tok *head, int numargs)
+
+t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
 {
 	t_cmd *cmd;
-	int idx;
+	int idx_a;
+	int idx_r;
 	int	err;
 
 	err = 0;
-	cmd = init_struct(numargs, &err);
-	idx = 1;
+	cmd = init_struct(numargs, numredir, &err);
+	idx_a = 1;
+	idx_r = 0;
 	while (head->type != END && !err)
 	{
 		if (head->type == PIPE)
 		{
-			cmd->next = generate_structs(head->next, numargs);
+			cmd->next = generate_structs(head->next, numargs, numredir);
 			if (!cmd->next)
 				cmd = free_cmd(cmd);
 			break ;
 		}
-		err = fill_struct(head, cmd, &idx);
+		err = fill_struct(head, cmd, &idx_a, &idx_r);
 		head = head->next;
 	}
+	if (err)
+		cmd = free_cmd(cmd);
 	return (cmd);
 }
 

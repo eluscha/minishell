@@ -5,25 +5,27 @@ MINISHELL="./minishell"
 
 # Check if minishell executable exists and is executable
 if [ ! -x "$MINISHELL" ]; then
-    echo "Error: minishell executable not found or not executable at $MINISHELL"
-    exit 1
+	echo "Error: minishell executable not found or not executable at $MINISHELL"
+	exit 1
 fi
+
+#echo "Using minishell at: $(realpath "$MINISHELL")"
 
 # List of commands to test
 commands=(
-    "echo Hello, World!"
-    "pwd"
-    "ls -la"
-    "whoami"
-    "date"
-    "uname -a"
-    "cat /etc/os-release"
-    "echo \$HOME"
-    "env"
-    "echo \$?"
-    "exit 0"
+	"echo Hello, World!"
+	"pwd"
+	"ls -la" #gets messed up by temp files i think
+	"whoami"
+	"date"
+	"uname -a"
+	"cat /etc/os-release"
+	"echo \$HOME"
+	"env"
+	"echo \$?"
+	"exit 0" #have to test manually
 	"cat <infile >infile"
-    "ls|wc|>>inf"
+	"ls|wc|>>inf" 
 	"\$HOME"
 	"gfjf\$HOME"
 	"cd libft"
@@ -42,48 +44,48 @@ diff_output="diff_output.txt"
 
 # Function to normalize the output to allow for minor differences
 normalize_output() {
-    local input_file="$1"
-    local output_file="$2"
+	local input_file="$1"
+	local output_file="$2"
 
-    # Remove 'bash: ' prefix from error messages and normalize other patterns as needed
-    sed -E 's/^bash: //g; s/some_other_pattern/replacement/g' "$input_file" > "$output_file"
+	# Remove 'bash: ' prefix from error messages and normalize other patterns as needed
+	sed -E 's/^bash: //g; s/^line [0-9]+: //g' "$input_file" > "$output_file"
 }
 
 # Function to run a command in Bash and minishell and compare the outputs
 run_test() {
-    local cmd="$1"
-    echo "Testing command: $cmd"
+	local cmd="$1"
+	echo "Testing command: $cmd"
 
-    # Run the command in Bash
-    bash -c "$cmd" > $bash_output 2>&1
-    # Run the command in minishell
-    $MINISHELL "$cmd" > $minishell_output 2>&1
+	# Run the command in Bash
+	bash -c "$cmd" > $bash_output 2>&1
+	# Run the command in minishell
+	bash -c "$MINISHELL \"$cmd\"" > $minishell_output 2>&1
 
-    # Normalize both outputs
-    normalize_output $bash_output $normalized_bash_output
+	# Normalize bash output
+	normalize_output $bash_output $normalized_bash_output
 
-    # Compare the outputs
-    if diff -u $normalized_bash_output $minishell_output > /dev/null; then
-        echo "Test passed!"
-    else
-        echo "Test failed!"
-        echo "Command: $cmd" >> $diff_output
-        diff -u $normalized_bash_output $minishell_output >> $diff_output
-        echo "" >> $diff_output
-    fi
+	# Compare the outputs
+	if diff -u $normalized_bash_output $minishell_output > /dev/null; then
+		echo "Test passed!"
+	else
+		echo "Test failed!"
+		echo "Command: $cmd" >> $diff_output
+		diff -u $normalized_bash_output $minishell_output >> $diff_output
+		echo "" >> $diff_output
+	fi
 }
 
 # Loop over all the commands and run the tests
 for cmd in "${commands[@]}"; do
-    run_test "$cmd"
+	run_test "$cmd"
 done
 
 # Check if there were any differences
 if [ -s $diff_output ]; then
-    echo "Some tests failed. See $diff_output for details."
+	echo "Some tests failed. See $diff_output for details."
 else
-    echo "All tests passed!"
+	echo "All tests passed!"
 fi
 
 # Clean up temporary files
-#rm $bash_output $normalized_bash_output $minishell_output
+rm $bash_output $normalized_bash_output $minishell_output

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/09 10:40:22 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:00:04 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,30 @@ void	handle_quotes(lex_state *state, t_tok *tail, char c)
 	}
 }
 
-t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err)
+t_tok	*handle_special(t_tok *tail, char c, int *err)
 {
-	if (*state == WORD && tail->word[0] && tail->word[0] != c)
+	if (c == '|')
+	{
+		if (!tail->idx)
+		{
+			tail->word[tail->idx++] = c;
+			tail->next = gen_token(UNDETERM, 0, err);
+			if (!*err)
+				tail = tail->next;
+		}
+		else
+		{
+			tail->next = gen_token(UNDETERM, 0, err);
+			if (!*err)
+				tail = tail->next;
+			tail->word[tail->idx++] = c;
+			tail->next = gen_token(UNDETERM, 0, err);
+			if (!*err)
+				tail = tail->next;
+		}
+		return (tail);
+	}
+	else if (tail->idx && tail->word[tail->idx - 1] != c)
 	{
 		tail->next = gen_token(UNDETERM, 0, err);
 		if (!*err)

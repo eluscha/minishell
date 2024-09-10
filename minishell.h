@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/09 11:04:25 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:17:07 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ typedef struct cmd
 {
 	char			*cmd;
 	char			**args;
-	struct redirect	*redirect[100];
+	struct redirect	*redirect;
 	struct cmd		*next;
 	int				builtin;
 }	t_cmd;
@@ -114,7 +114,6 @@ int		ft_echo(t_cmd *cmd, t_data *data);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);
-t_cmd	*generate_structs(t_tok *head, int numargs);
 int		ft_export(t_cmd *cmd, t_data *data);
 int		print_array(char **array);
 int		ft_unset(t_cmd *cmd, t_data *data);
@@ -126,14 +125,14 @@ int		unset_variable(int i, char **envp);
 /* parser.c */
 t_cmd	*parser(char *input, t_data *data);
 t_tok	*lexer(char *input, lex_state state, t_tok *tail, t_data *data);
-int		process_tokens(t_tok *token);
-int		check_syntax(t_tok *head);
-t_cmd 	*generate_structs(t_tok *head, int numargs);
+int		process_tokens(t_tok *token, int *numargs, int *numredir);
+t_tok	*check_syntax(t_tok *head);
+t_cmd 	*generate_structs(t_tok *head, int numargs, int numredir);
 
 /* lexer_mid_fts.c */
 t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
 void	handle_quotes(lex_state *state, t_tok *tail, char c);
-t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err);
+t_tok	*handle_special(t_tok *tail, char c, int *err);
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
 int		change_word(t_tok *token, char *var, char *start);
 
@@ -145,15 +144,15 @@ t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
 /* process_tok_fts.c */
-int		handle_pipe(t_tok *token, int *cmd);
-int		handle_notpipe(t_tok *token, int cmd);
-int		io_type(t_tok *token, t_toktype type);
+int		handle_notpipe(t_tok *token, int cmd, int *numredir);
+int		io_type(t_tok *token, t_toktype type, int *numredir);
+int		get_heredoc(t_tok *head, t_tok *tail);
+int		open_tmp_file(char **name);
+void	get_input(int fd, char *limiter, size_t len);
 
 /* gen_struct_fts.c */
-t_cmd	*init_struct(int numargs, int *err);
-int		fill_struct(t_tok *head, t_cmd *cmd, int *idx);
-int		fill_redirect(t_tok *head, t_cmd *cmd);
+t_cmd	*init_struct(int numargs, int numredir, int *err);
+int		fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r);
 t_cmd	*free_cmd(t_cmd *cmd);
-void	free_redirect(t_redirect *ptr);
 
 #endif
