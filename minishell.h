@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 14:08:31 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:17:07 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,35 @@ typedef struct data
 	char	*tty_out;
 }	t_data;
 
+typedef enum cmd_type
+{
+	UNSET,
+	EXPORT
+}	t_cmd_type;
+
+typedef struct export
+{
+	char			*arg;
+	char			*key;
+	t_cmd_type		type;
+}	t_export;
+
 int		clean_exit(char *msg, int r_value, t_data *data);
-t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
 int		check_builtin(t_cmd *cmd, t_data *data);
+int		ft_echo(t_cmd *cmd, t_data *data);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);
+int		ft_export(t_cmd *cmd, t_data *data);
+int		print_array(char **array);
+int		ft_unset(t_cmd *cmd, t_data *data);
+int		find_key(t_export *export, char **envp);
+void	add_entry(char *entry, char **envp);
+int		print_array(char **array);
+int		unset_variable(int i, char **envp);
 
 /* parser.c */
 t_cmd	*parser(char *input, t_data *data);
