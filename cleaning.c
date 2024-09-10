@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 13:56:16 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:19:25 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	free_redirects(t_cmd *cmd)
 	int	i;
 
 	i = 0;
-	while (cmd->redirect[i])
+	while (cmd->redirect[i]. value)
 	{
-		if (cmd->redirect[i]->value)
-			free(cmd->redirect[i]->value);
+		if (cmd->redirect[i].value)
+			free(cmd->redirect[i].value);
 		i++;
 	}
 	free(cmd->redirect);
