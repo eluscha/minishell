@@ -63,8 +63,7 @@ typedef struct cmd
 {
 	char			*cmd;
 	char			**args;
-	struct redirect	*in_redirect;
-	struct redirect	*out_redirect;
+	struct redirect	*redirect[100];
 	struct cmd		*next;
 	int				builtin;
 }	t_cmd;
@@ -73,7 +72,6 @@ typedef struct redirect
 {
 	t_toktype		type;
 	char			*value;
-	struct redirect	*next;
 }	t_redirect;
 
 typedef struct pids
@@ -94,15 +92,36 @@ typedef struct data
 	char	*tty_out;
 }	t_data;
 
+typedef enum cmd_type
+{
+	UNSET,
+	EXPORT
+}	t_cmd_type;
+
+typedef struct export
+{
+	char			*arg;
+	char			*key;
+	t_cmd_type		type;
+}	t_export;
+
 int		clean_exit(char *msg, int r_value, t_data *data);
-t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
 int		check_builtin(t_cmd *cmd, t_data *data);
+int		ft_echo(t_cmd *cmd, t_data *data);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);
+t_cmd	*generate_structs(t_tok *head, int numargs);
+int		ft_export(t_cmd *cmd, t_data *data);
+int		print_array(char **array);
+int		ft_unset(t_cmd *cmd, t_data *data);
+int		find_key(t_export *export, char **envp);
+void	add_entry(char *entry, char **envp);
+int		print_array(char **array);
+int		unset_variable(int i, char **envp);
 
 /* parser.c */
 t_cmd	*parser(char *input, t_data *data);

@@ -6,22 +6,44 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 16:41:48 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:35:04 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	dup_envp(char **envp, t_data *data)
+{
+	int		i;
+
+	i = 0;
+	data->envp = malloc(sizeof(char **) * 100);
+	if (!data->envp)
+		return ;
+	while (envp[i])
+	{
+		data->envp[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	data->envp[i] = NULL;
+	return ;
+}
 
 void	init_data(t_data *data, char **envp)
 {
 	data->pids = NULL;
 	data->cmd = NULL;
 	data->pids = NULL;
-	data->envp = envp;
+	dup_envp(envp, data);
 	data->paths = NULL;
 	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
+	if (!data->envp || !data->tty_in || !data->tty_out)
+	{
+		clean_exit("failed to init data\n", 1, data);
+		exit (1);
+	}
 }
 
 int	new_pid(int pid, t_data *data)
