@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 13:58:24 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/09 11:04:25 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <fcntl.h>
 # include <dirent.h>
 
-typedef enum lex_state
+typedef enum e_lex_state
 {
 	WORD,
 	DELIM,
@@ -39,6 +39,7 @@ typedef enum e_toktype
 	END,
 	SQERR,
 	DQERR,
+	PIPERR,
 	NWLINE,
 	PIPE,
 	CMD,
@@ -113,15 +114,6 @@ int		ft_echo(t_cmd *cmd, t_data *data);
 // void	read_input(t_data *data);
 int		execute_loop(t_data *data);
 void	init_data(t_data *data, char **envp);
-t_cmd	*parser(char *input, char **envp);
-t_tok	*lexer(char *input, lex_state state, t_tok *tail, char **envp);
-t_tok	*gen_token(t_toktype type, int len);
-char	*expand(char *start, int *lenvar, char **envp);
-void	change_word(t_tok *token, char *var, int len);
-int		process_tokens(t_tok *head);
-int		io_type(t_tok *token, t_toktype type);
-void	insert_token(t_tok *token);
-int		check_syntax(t_tok *head);
 t_cmd	*generate_structs(t_tok *head, int numargs);
 int		ft_export(t_cmd *cmd, t_data *data);
 int		print_array(char **array);
@@ -130,5 +122,38 @@ int		find_key(t_export *export, char **envp);
 void	add_entry(char *entry, char **envp);
 int		print_array(char **array);
 int		unset_variable(int i, char **envp);
+
+/* parser.c */
+t_cmd	*parser(char *input, t_data *data);
+t_tok	*lexer(char *input, lex_state state, t_tok *tail, t_data *data);
+int		process_tokens(t_tok *token);
+int		check_syntax(t_tok *head);
+t_cmd 	*generate_structs(t_tok *head, int numargs);
+
+/* lexer_mid_fts.c */
+t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
+void	handle_quotes(lex_state *state, t_tok *tail, char c);
+t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err);
+int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
+int		change_word(t_tok *token, char *var, char *start);
+
+/* lexer_edge_fts.c */
+t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
+t_tok	*gen_token(t_toktype type, int len, int *err);
+t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err);
+t_tok	*free_tokens(t_tok *head);
+void	print_toktype(t_tok *token);
+
+/* process_tok_fts.c */
+int		handle_pipe(t_tok *token, int *cmd);
+int		handle_notpipe(t_tok *token, int cmd);
+int		io_type(t_tok *token, t_toktype type);
+
+/* gen_struct_fts.c */
+t_cmd	*init_struct(int numargs, int *err);
+int		fill_struct(t_tok *head, t_cmd *cmd, int *idx);
+int		fill_redirect(t_tok *head, t_cmd *cmd);
+t_cmd	*free_cmd(t_cmd *cmd);
+void	free_redirect(t_redirect *ptr);
 
 #endif

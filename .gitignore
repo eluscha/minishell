@@ -1,6 +1,9 @@
 # Executable
 minishell
 
+# Tester files
+diff_output.txt
+
 # Prerequisites
 *.d
 
