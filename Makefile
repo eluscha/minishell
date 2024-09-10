@@ -4,6 +4,10 @@ CC = cc
 
 SRC = execution.c \
 		parser.c \
+		lexer_mid_fts.c \
+		lexer_edge_fts.c \
+		process_tok_fts.c \
+		gen_struct_fts.c \
 		cleaning.c \
 		builtins.c \
 		check_command.c \
