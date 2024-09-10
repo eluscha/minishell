@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/09 12:11:22 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 11:43:38 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	*/
 	//THIS IS for printing tokens
+	/*
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -78,7 +79,7 @@ t_cmd	*parser(char *input, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-
+	*/
 	free_tokens(head);
 	return (cmds);
 	}
@@ -124,13 +125,13 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 			tail = check_word_border(&state, tail, c, &err);
 		if (c == '\'' || c == '\"')
 			handle_quotes(&state, tail, c);
-		else if (c == '|' || c == '>' || c == '<')
-			tail = handle_special(&state, tail, c, &err);
+		else if (state == WORD && (c == '|' || c == '>' || c == '<'))
+			tail = handle_special(tail, c, &err);
 		else if (c == '$' && (state == WORD || state == INDQTS))
 			i += handle_expand(input + i + 1, tail, data, &err);
 		else if (state != DELIM)
 			tail->word[tail->idx++] = c;
-		printf("i is %i, state is %i, word is %s\n", i, state, tail->word);
+		//printf("i is %i, state is %i, word is %s\n", i, state, tail->word);
 	}
 	tail = set_end(&state, tail, head, &err);
 	return (tail);
@@ -148,7 +149,10 @@ int	process_tokens(t_tok *token)
 	while (token->type != END)
 	{
 		if (token->word[0] == '|')
-			err = handle_pipe(token, &cmd);
+		{
+			token->type = PIPE;
+			cmd = 0;
+		}
 		else
 			err = handle_notpipe(token, cmd);
 		if (token->type == CMD)

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/09 11:04:25 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:38:46 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ t_cmd 	*generate_structs(t_tok *head, int numargs);
 /* lexer_mid_fts.c */
 t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
 void	handle_quotes(lex_state *state, t_tok *tail, char c);
-t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err);
+t_tok	*handle_special(t_tok *tail, char c, int *err);
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
 int		change_word(t_tok *token, char *var, char *start);
 
@@ -126,9 +126,11 @@ t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
 /* process_tok_fts.c */
-int		handle_pipe(t_tok *token, int *cmd);
 int		handle_notpipe(t_tok *token, int cmd);
 int		io_type(t_tok *token, t_toktype type);
+int		heredoc(t_tok *token);
+int		open_tmp_file(char **name);
+void	get_input(int fd, char *limiter, size_t len);
 
 /* gen_struct_fts.c */
 t_cmd	*init_struct(int numargs, int *err);
