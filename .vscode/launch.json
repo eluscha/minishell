@@ -9,7 +9,7 @@
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/minishell",
-			"args": ["export path=path"],
+			"args": ["unset SHLVL"],
 			"stopAtEntry": false,
 			"cwd": "${fileDirname}",
 			"environment": [],

@@ -6,25 +6,25 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/03 16:17:52 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:56:16 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	free_redirects(t_redirect *list)
+void	free_redirects(t_cmd *cmd)
 {
-	t_redirect	*next_node;
+	int	i;
 
-	while (list)
+	i = 0;
+	while (cmd->redirect[i])
 	{
-		// if (list->value)
-		// 	free(list->value);
-		next_node = list->next;
-		free(list);
-		list = next_node;
+		if (cmd->redirect[i]->value)
+			free(cmd->redirect[i]->value);
+		i++;
 	}
+	free(cmd->redirect);
 }
 
 void	free_envp(char **envp)
@@ -51,10 +51,7 @@ void	free_cmds(t_cmd	*cmd_list)
 			free(cmd_list->cmd);
 		if (cmd_list->args)
 			free(cmd_list->args);
-		if (cmd_list->in_redirect)
-			free_redirects(cmd_list->in_redirect);
-		if (cmd_list->out_redirect)
-			free_redirects(cmd_list->out_redirect);
+		free_redirects(cmd_list);
 		next_node = cmd_list->next;
 		free(cmd_list);
 		cmd_list = next_node;

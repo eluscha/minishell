@@ -10,8 +10,8 @@ SRC = execution.c \
 		main.c \
 		redirect.c \
 		inits.c \
-		ft_echo.c \
-		ft_export.c
+		ft_export.c \
+		ft_export_utils.c
 
 OBJS = $(SRC:.c=.o)
 

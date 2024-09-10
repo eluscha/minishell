@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/03 15:05:51 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:58:24 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ typedef struct cmd
 {
 	char			*cmd;
 	char			**args;
-	struct redirect	*in_redirect;
-	struct redirect	*out_redirect;
+	struct redirect	*redirect[100];
 	struct cmd		*next;
 	int				builtin;
 }	t_cmd;
@@ -72,7 +71,6 @@ typedef struct redirect
 {
 	t_toktype		type;
 	char			*value;
-	struct redirect	*next;
 }	t_redirect;
 
 typedef struct pids
@@ -93,6 +91,12 @@ typedef struct data
 	char	*tty_out;
 }	t_data;
 
+typedef enum cmd_type
+{
+	UNSET,
+	EXPORT
+}	t_cmd_type;
+
 typedef struct export
 {
 	char			*arg;
@@ -100,14 +104,7 @@ typedef struct export
 	t_cmd_type		type;
 }	t_export;
 
-typedef enum cmd_type
-{
-	UNSET,
-	EXPORT
-} t_cmd_type;
-
 int		clean_exit(char *msg, int r_value, t_data *data);
-t_cmd	*parce(void);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
@@ -128,5 +125,10 @@ int		check_syntax(t_tok *head);
 t_cmd	*generate_structs(t_tok *head, int numargs);
 int		ft_export(t_cmd *cmd, t_data *data);
 int		print_array(char **array);
+int		ft_unset(t_cmd *cmd, t_data *data);
+int		find_key(t_export *export, char **envp);
+void	add_entry(char *entry, char **envp);
+int		print_array(char **array);
+int		unset_variable(int i, char **envp);
 
 #endif
