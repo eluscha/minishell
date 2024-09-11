@@ -15,7 +15,9 @@ SRC = execution.c \
 		redirect.c \
 		inits.c \
 		builtins/ft_export.c \
-		builtins/ft_export_utils.c
+		builtins/ft_export_utils.c \
+		builtins/ft_exit.c \
+		builtins/ft_cd.c \
 
 OBJS = $(SRC:.c=.o)
 
