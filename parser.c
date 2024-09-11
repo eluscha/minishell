@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/11 10:52:07 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:37:16 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ t_cmd	*parser(char *input, t_data *data)
 	tail->next = NULL;
 	if (process_tokens(head, &numargs, &numredir) == -1)
 	{
-		printf("process tokens returned -1\n");
+		//printf("process tokens returned -1\n");
 		free_tokens(head);
 		return (NULL);
 	}
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail) == -1)
 	{
-		printf("check syntax returned early or heredoc has error\n");
+		//printf("check syntax returned early or heredoc has error\n");
 		cmds = NULL;
 	}
 	else
