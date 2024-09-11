@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 12:33:17 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 13:57:05 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:26:55 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,18 +75,16 @@ int	redirect(t_cmd *cmd)
 	i = 0;
 	fd_in = 0;
 	fd_out = 0;
-	while (cmd->redirect[i])
+	while (cmd->redirect[i].value)
 	{
-		if (cmd->redirect[i]->type == INPUT
-			|| cmd->redirect[i]->type == HEREDOC)
+		if (cmd->redirect[i].type == INPUT || cmd->redirect[i].type == HEREDOC)
 		{
-			if (in_redirect(cmd->redirect[i], &fd_in, &fd_out) == 1)
+			if (in_redirect(&(cmd->redirect[i]), &fd_in, &fd_out) == 1)
 				return (1);
 		}
-		if (cmd->redirect[i]->type == OUTPUT
-			|| cmd->redirect[i]->type == APPEND)
+		if (cmd->redirect[i].type == OUTPUT || cmd->redirect[i].type == APPEND)
 		{
-			if (out_redirect(cmd->redirect[i], &fd_out, &fd_in) == 1)
+			if (out_redirect(&(cmd->redirect[i]), &fd_out, &fd_in) == 1)
 				return (1);
 		}
 		i++;
