@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/03 16:35:04 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:33:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,11 @@ void	init_data(t_data *data, char **envp)
 	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
-	if (!data->envp || !data->tty_in || !data->tty_out)
-	{
-		clean_exit("failed to init data\n", 1, data);
-		exit (1);
-	}
+	// if (!data->envp || !data->tty_in || !data->tty_out)
+	// {
+	// 	clean_exit("failed to init data\n", 1, data);
+	// 	exit (1);
+	// }
 }
 
 int	new_pid(int pid, t_data *data)
