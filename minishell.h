@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 17:17:02 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:26:26 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,11 +128,12 @@ t_tok	*lexer(char *input, lex_state state, t_tok *tail, t_data *data);
 int		process_tokens(t_tok *token, int *numargs, int *numredir);
 t_tok	*check_syntax(t_tok *head);
 t_cmd 	*generate_structs(t_tok *head, int numargs, int numredir);
+void print_struct(t_cmd *cmd);
 
 /* lexer_mid_fts.c */
 t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
 void	handle_quotes(lex_state *state, t_tok *tail, char c);
-t_tok	*handle_special(t_tok *tail, char c, int *err);
+t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err);
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
 int		change_word(t_tok *token, char *var, char *start);
 
