@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/03 12:29:48 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:01:25 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char *argv[], char *envp[])
 		printf ("no arguments required, only program name: %s\n", argv[0]);
 		return (1);
 	}
-
 	init_data(&data, envp);
 	// read_input(&data);
 	data.cmd = parser(argv[1], &data);

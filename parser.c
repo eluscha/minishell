@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/11 10:45:23 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:52:07 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 t_cmd	*parser(char *input, t_data *data)
 {
-	int numargs = 0;
-	int numredir = 0;
+	int numargs;
+	int numredir;
 	t_tok *tail;
 	t_tok *head;
 	t_cmd *cmds = NULL;
@@ -151,6 +151,7 @@ int	process_tokens(t_tok *token, int *numargs, int *numredir)
 
 	cmd = 0;
 	*numargs = 0;
+	*numredir = 0;
 	err = 0;
 	while (token->type != END)
 	{

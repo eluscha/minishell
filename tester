@@ -21,6 +21,7 @@ commands=(
 	"uname -a"
 	"cat /etc/os-release"
 	"echo \$HOME"
+	"echo -n \$HOME| grep \"/\" | wc -c"
 	"env"
 	"echo \$?"
 	"exit 0" #have to test manually
@@ -59,7 +60,7 @@ run_test() {
 	# Run the command in Bash
 	bash -c "$cmd" > $bash_output 2>&1
 	# Run the command in minishell
-	bash -c "$MINISHELL \"$cmd\"" > $minishell_output 2>&1
+	$MINISHELL "$cmd" > $minishell_output 2>&1
 
 	# Normalize bash output
 	normalize_output $bash_output $normalized_bash_output

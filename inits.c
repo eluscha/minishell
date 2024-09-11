@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/03 16:35:04 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 11:14:45 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ void	init_data(t_data *data, char **envp)
 	data->st_code = 0;
 	if (!data->envp || !data->tty_in || !data->tty_out)
 	{
+		write(1, "test\n", 5);
+		printf("data->envp is %p, data->tty_in is %p, data->tty_out is %p\n", data->envp, data->tty_in, data->tty_out);
 		clean_exit("failed to init data\n", 1, data);
 		exit (1);
 	}
