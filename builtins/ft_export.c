@@ -6,11 +6,11 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 11:48:04 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:09:33 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*check_argument(t_export *export)
 {
@@ -54,25 +54,25 @@ int	unset_variable(int i, char **envp)
 }
 
 
-int	ft_export(t_cmd *cmd, t_data *data)
+int	ft_export(char *arg, t_cmd *cmd, t_data *data)
 {
 	t_export	export;
 
-	if (redirect(cmd))
-		return (clean_exit(NULL, 1, data));
-	if (!cmd->args[1])
-		return (print_array(data->envp));
-	else
+	if (cmd)
 	{
-		export.arg = cmd->args[1];
-		export.type = EXPORT;
-		export.key = check_argument(&export);
-		if (!export.key)
-			return (1);
-		if (!find_key(&export, data->envp))
-			add_entry(export.arg, data->envp);
-		free(export.key);
+		if (redirect(cmd))
+			return (clean_exit(NULL, 1, data));
+		if (!cmd->args[1])
+			return (print_array(data->envp));
 	}
+	export.arg = arg;
+	export.type = EXPORT;
+	export.key = check_argument(&export);
+	if (!export.key)
+		return (1);
+	if (!find_key(&export, data->envp))
+		add_entry(export.arg, data->envp);
+	free(export.key);
 	return (1);
 }
 
