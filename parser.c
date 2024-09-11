@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/10 14:10:06 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:45:23 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 t_cmd	*parser(char *input, t_data *data)
 {
-	int numargs;
-	int numredir;
+	int numargs = 0;
+	int numredir = 0;
 	t_tok *tail;
 	t_tok *head;
 	t_cmd *cmds = NULL;
@@ -57,16 +57,20 @@ t_cmd	*parser(char *input, t_data *data)
 	tail->next = NULL;
 	if (process_tokens(head, &numargs, &numredir) == -1)
 	{
+		printf("process tokens returned -1\n");
 		free_tokens(head);
 		return (NULL);
 	}
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail) == -1)
+	{
+		printf("check syntax returned early or heredoc has error\n");
 		cmds = NULL;
+	}
 	else
 		cmds = generate_structs(head, numargs, numredir);
-	/* THIS IS for printing structs
-	t_cmd *ptrs = cmds;
+	//THIS IS for printing structs
+	/*t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
@@ -129,11 +133,12 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 		if (c == '\'' || c == '\"')
 			handle_quotes(&state, tail, c);
 		else if (state == WORD && (c == '|' || c == '>' || c == '<'))
-			tail = handle_special(tail, c, &err);
+			tail = handle_special(&state, tail, c, &err);
 		else if (c == '$' && (state == WORD || state == INDQTS))
 			i += handle_expand(input + i + 1, tail, data, &err);
 		else if (state != DELIM)
 			tail->word[tail->idx++] = c;
+		//printf("state is %d c is %c word is %s\n", state, c, tail->word);
 	}
 	tail = set_end(&state, tail, head, &err);
 	return (tail);
@@ -197,8 +202,10 @@ t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
 	int idx_r;
 	int	err;
 
+	//printf("in gen struct, head is %s, numargs is %i, numredir is %i\n", head->word, numargs, numredir);
 	err = 0;
 	cmd = init_struct(numargs, numredir, &err);
+	//print_struct(cmd);
 	idx_a = 1;
 	idx_r = 0;
 	while (head->type != END && !err)
@@ -218,26 +225,19 @@ t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
 	return (cmd);
 }
 
-/*
+
 void print_struct(t_cmd *cmd)
 {
 	if (!cmd)
 		return ;
 	printf("CMD: %s ARGS: ", cmd->cmd);
-	int i = -1;
+	int i = 0;
 	while (cmd->args[++i])
 		printf("%s ", cmd->args[i]);
 	printf("%s\n", cmd->args[i]);
-	t_redirect *ptr = cmd->in_redirect;
-	while (ptr)
+	i = -1;
+	while (cmd->redirect[++i].value)
 	{
-		printf("in_redirect type is %d value is %s\n", ptr->type, ptr->value);
-		ptr = ptr->next;
+		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
 	}
-	ptr = cmd->out_redirect;
-	while (ptr)
-	{
-		printf("out_redirect type is %d value is %s\n", ptr->type, ptr->value);
-		ptr = ptr->next;
-	}
-}*/
+}
