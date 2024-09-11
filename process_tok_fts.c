@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eleonora          #+#    #+#             */
-/*   Updated: 2024/09/10 14:10:34 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:36:27 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ int	io_type(t_tok *token, t_toktype type, int *numredir)
 	return (0);
 }
 
-int	get_heredoc(t_tok *head, t_tok *tail)
+int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 {
 	char	*name;
 	int		fd;
+	int err = 0;
 
 	while (head != tail)
 	{
@@ -89,13 +90,12 @@ int	get_heredoc(t_tok *head, t_tok *tail)
 				free(name);
 			return (-1);
 		}
-		get_input(fd, head->word, ft_strlen(head->word));
-		close(fd);
+		err = get_input(fd, head, data);
 		free(head->word);
 		head->word = name;
 		head = head->next;
 	}
-	return (0);
+	return (err);
 }
 
 
@@ -127,18 +127,43 @@ int	open_tmp_file(char **name)
 	return (fd);
 }
 
-void	get_input(int fd, char *limiter, size_t len)
+int	get_input(int fd, t_tok *token, t_data *data)
 {
 	char	*line;
+	int		linelen;
+	int len = ft_strlen(token->word);
+	int	idx;
+	int err = 0;
+	lex_state state = WORD;
+	t_tok *temp = NULL;
 
 	ft_putstr_fd("> ", 0);
 	line = get_next_line(0);
 	while (line)
 	{
-		if (ft_strlen(line) == len + 1)
+		linelen = ft_strlen(line);
+		if (linelen == len + 1)
 		{
-			if (ft_strncmp(line, limiter, len) == 0)
+			if (ft_strncmp(line, token->word, len) == 0)
 				break ;
+		}
+		idx = -1;
+		while(line[++idx])
+		{
+			if (line[idx] == '\'')
+			{
+				if (state == INSQTS )
+					state = WORD;
+				else if (state == WORD)
+					state = INSQTS;
+			}
+			else if (state == WORD && line[idx] == '$')
+			{
+				temp = gen_token(0, linelen, &err);
+				handle_expand(&line[idx], temp, data, &err);
+				free(line);
+				line = temp->word;
+			}
 		}
 		write(fd, line, ft_strlen(line));
 		free(line);
@@ -147,5 +172,8 @@ void	get_input(int fd, char *limiter, size_t len)
 	}
 	if (line)
 		free(line);
-	return ;
+	if (temp)
+		free(temp);
+	close(fd);
+	return (err);
 }

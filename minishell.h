@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 13:35:00 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:09:16 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,9 +148,9 @@ void	print_toktype(t_tok *token);
 /* process_tok_fts.c */
 int		handle_notpipe(t_tok *token, int cmd, int *numredir);
 int		io_type(t_tok *token, t_toktype type, int *numredir);
-int		get_heredoc(t_tok *head, t_tok *tail);
+int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
 int		open_tmp_file(char **name);
-void	get_input(int fd, char *limiter, size_t len);
+int		get_input(int fd, t_tok *token, t_data *data);
 
 /* gen_struct_fts.c */
 t_cmd	*init_struct(int numargs, int numredir, int *err);
