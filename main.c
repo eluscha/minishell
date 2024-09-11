@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 17:53:37 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:47:33 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	main(int argc, char *argv[], char *envp[])
 		printf ("no arguments required, only program name: %s\n", argv[0]);
 		return (1);
 	}
-
 	init_data(&data, envp);
 	// read_input(&data);
 	data.cmd = parser(argv[1], &data);
