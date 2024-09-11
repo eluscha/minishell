@@ -9,13 +9,13 @@ SRC = execution.c \
 		process_tok_fts.c \
 		gen_struct_fts.c \
 		cleaning.c \
-		builtins.c \
+		builtins/builtins.c \
 		check_command.c \
 		main.c \
 		redirect.c \
 		inits.c \
-		ft_export.c \
-		ft_export_utils.c
+		builtins/ft_export.c \
+		builtins/ft_export_utils.c
 
 OBJS = $(SRC:.c=.o)
 

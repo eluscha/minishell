@@ -6,11 +6,11 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 11:56:43 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:41:22 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	ft_pwd(t_cmd *cmd, t_data *data)
 {
@@ -28,10 +28,20 @@ int	ft_pwd(t_cmd *cmd, t_data *data)
 int	ft_cd(t_cmd *cmd, t_data *data)
 {
 	int	result;
+	int	i;
 
+	i = 0;
 	if (redirect(cmd))
 		return (clean_exit(NULL, 1, data));
+	if (!cmd->args[1])
+	{
+		while (data->envp[i] && ft_strncmp(data->envp[i], "HOM=", 5))
+			i++;
+		if (data->envp[i])
+			cmd->args[1] = ft_strdup(data->envp[i] + 5);
+	}
 	result = chdir(cmd->args[1]);
+	ft_pwd(cmd, data);
 	if (result)
 	{
 		write(2, "cd: ", 4);

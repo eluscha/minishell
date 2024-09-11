@@ -6,11 +6,11 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 11:48:04 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/11 10:41:45 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 char	*check_argument(t_export *export)
 {
