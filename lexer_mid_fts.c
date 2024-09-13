@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/11 10:42:26 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:33:50 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 			i++;
 		while (*envp)
 		{
-			if (ft_strncmp(*envp, start, i) == 0 && *envp[i] == '=')
+			if (ft_strncmp(*envp, start, i) == 0 && (*envp)[i] == '=')
 				break ;
 			envp++;
 		}
