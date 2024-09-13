@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 09:58:00 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:30:05 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	*/
 	//THIS IS for printing tokens
-	
+	/*
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -86,7 +86,7 @@ t_cmd	*parser(char *input, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	
+	*/
 	free_tokens(head);
 	return (cmds);
 	}
@@ -144,33 +144,6 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 	return (tail);
 }
 
-int	process_tokens(t_tok *token, int *numargs, int *numredir)
-{
-	int	cmd;
-	int	err;
-
-	cmd = 0;
-	*numargs = 0;
-	*numredir = 0;
-	err = 0;
-	while (token->type != END)
-	{
-		if (token->word[0] == '|')
-		{
-			token->type = PIPE;
-			cmd = 0;
-		}
-		else
-			err = handle_notpipe(token, cmd, numredir);
-		if (token->type == CMD)
-			cmd = 1;
-		else if (token->type == ARGS)
-			*numargs = *numargs + 1;
-		token = token->next;
-	}
-	return (err);
-}
-
 t_tok	*check_syntax(t_tok *head)
 {
 	t_toktype	ntype;
@@ -193,52 +166,4 @@ t_tok	*check_syntax(t_tok *head)
 		}
 	}
 	return (head);
-}
-
-
-t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
-{
-	t_cmd *cmd;
-	int idx_a;
-	int idx_r;
-	int	err;
-
-	//printf("in gen struct, head is %s, numargs is %i, numredir is %i\n", head->word, numargs, numredir);
-	err = 0;
-	cmd = init_struct(numargs, numredir, &err);
-	//print_struct(cmd);
-	idx_a = 1;
-	idx_r = 0;
-	while (head->type != END && !err)
-	{
-		if (head->type == PIPE)
-		{
-			cmd->next = generate_structs(head->next, numargs, numredir);
-			if (!cmd->next)
-				cmd = free_cmd(cmd);
-			break ;
-		}
-		err = fill_struct(head, cmd, &idx_a, &idx_r);
-		head = head->next;
-	}
-	if (err)
-		cmd = free_cmd(cmd);
-	return (cmd);
-}
-
-
-void print_struct(t_cmd *cmd)
-{
-	if (!cmd)
-		return ;
-	printf("CMD: %s ARGS: ", cmd->cmd);
-	int i = 0;
-	while (cmd->args[++i])
-		printf("%s ", cmd->args[i]);
-	printf("%s\n", cmd->args[i]);
-	i = -1;
-	while (cmd->redirect[++i].value)
-	{
-		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
-	}
 }

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 14:09:16 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:30:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,14 @@ typedef struct export
 	t_cmd_type		type;
 }	t_export;
 
+
+
 int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
 int		execute_loop(t_data *data);
+char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 
 /*builtins*/
@@ -126,10 +129,7 @@ int		print_array(char **array);
 /* parser.c */
 t_cmd	*parser(char *input, t_data *data);
 t_tok	*lexer(char *input, lex_state state, t_tok *tail, t_data *data);
-int		process_tokens(t_tok *token, int *numargs, int *numredir);
 t_tok	*check_syntax(t_tok *head);
-t_cmd	*generate_structs(t_tok *head, int numargs, int numredir);
-void	print_struct(t_cmd *cmd);
 
 /* lexer_mid_fts.c */
 t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
@@ -145,16 +145,22 @@ t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err);
 t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
-/* process_tok_fts.c */
+/* process_tokens.c */
+int		process_tokens(t_tok *token, int *numargs, int *numredir);
 int		handle_notpipe(t_tok *token, int cmd, int *numredir);
 int		io_type(t_tok *token, t_toktype type, int *numredir);
+
+/* get_heredoc.c */
 int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
 int		open_tmp_file(char **name);
 int		get_input(int fd, t_tok *token, t_data *data);
+int		expand_and_write(int fd, char *line, t_data *data);
 
-/* gen_struct_fts.c */
+/* generate_structs.c */
+t_cmd	*generate_structs(t_tok *head, int numargs, int numredir);
 t_cmd	*init_struct(int numargs, int numredir, int *err);
 int		fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r);
-t_cmd	*free_cmd(t_cmd *cmd);
+t_cmd	*free_cmd(t_cmd *cmd, int i);
+void	print_struct(t_cmd *cmd);
 
 #endif

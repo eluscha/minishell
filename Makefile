@@ -6,8 +6,9 @@ SRC = execution.c \
 		parser.c \
 		lexer_mid_fts.c \
 		lexer_edge_fts.c \
-		process_tok_fts.c \
-		gen_struct_fts.c \
+		process_tokens.c \
+		generate_structs.c \
+		get_heredoc.c \
 		cleaning.c \
 		builtins/builtins.c \
 		check_command.c \

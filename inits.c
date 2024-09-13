@@ -6,27 +6,34 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 13:46:45 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 11:29:11 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	dup_envp(char **envp, t_data *data)
+char **dup_envp(char **envp)
 {
 	int		i;
+	char	**dup_envp;
 
 	i = 0;
-	data->envp = malloc(sizeof(char **) * 100);
-	if (!data->envp)
-		return ;
+	dup_envp = ft_calloc(100, sizeof(char *));
+	if (!dup_envp)
+		return (NULL);
 	while (envp[i])
 	{
-		data->envp[i] = ft_strdup(envp[i]);
+		dup_envp[i] = ft_strdup(envp[i]);
+		if (!dup_envp[i])
+		{
+			while (--i >= 0)
+				free(dup_envp[i]);
+			free(dup_envp);
+			return (NULL);
+		}
 		i++;
 	}
-	data->envp[i] = NULL;
-	return ;
+	return (dup_envp);
 }
 
 void	init_data(t_data *data, char **envp)
@@ -34,7 +41,7 @@ void	init_data(t_data *data, char **envp)
 	data->pids = NULL;
 	data->cmd = NULL;
 	data->pids = NULL;
-	dup_envp(envp, data);
+	data->envp = dup_envp(envp);
 	data->paths = NULL;
 	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);

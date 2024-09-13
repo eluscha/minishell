@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 17:19:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:23:13 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
+/*
 void	free_redirects(t_cmd *cmd)
 {
 	int	i;
@@ -26,6 +26,7 @@ void	free_redirects(t_cmd *cmd)
 	}
 	free(cmd->redirect);
 }
+*/
 
 void	free_envp(char **envp)
 {
@@ -39,6 +40,7 @@ void	free_envp(char **envp)
 		free(envp[i]);
 		i++;
 	}
+	free(envp); //added this line
 }
 
 void	free_cmds(t_cmd	*cmd_list)
@@ -47,13 +49,8 @@ void	free_cmds(t_cmd	*cmd_list)
 
 	while (cmd_list)
 	{
-		if (cmd_list->cmd)
-			free(cmd_list->cmd);
-		if (cmd_list->args)
-			free(cmd_list->args);
-		free_redirects(cmd_list);
 		next_node = cmd_list->next;
-		free(cmd_list);
+		free_cmd(cmd_list, 0); //changed to my function, now this is so short can be maybe unuted with clean_exit
 		cmd_list = next_node;
 	}
 }
@@ -71,7 +68,7 @@ int	clean_exit(char *msg, int r_value, t_data *data)
 		while (data->pids)
 		{
 			next_pid = data->pids->next;
-			free (data->pids);
+			free(data->pids);
 			data->pids = next_pid;
 		}
 	}

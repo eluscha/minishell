@@ -1,16 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gen_struct_fts.c                                   :+:      :+:    :+:   */
+/*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/10 14:11:18 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:30:10 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
+{
+	t_cmd *cmd;
+	int idx_a;
+	int idx_r;
+	int	err;
+
+	err = 0;
+	cmd = init_struct(numargs, numredir, &err);
+	idx_a = 1;
+	idx_r = 0;
+	while (head->type != END && !err)
+	{
+		if (head->type == PIPE)
+		{
+			cmd->next = generate_structs(head->next, numargs, numredir);
+			if (!cmd->next)
+				cmd = free_cmd(cmd, 0);
+			break ;
+		}
+		err = fill_struct(head, cmd, &idx_a, &idx_r);
+		head = head->next;
+	}
+	if (err)
+		cmd = free_cmd(cmd, 0);
+	return (cmd);
+}
 
 t_cmd	*init_struct(int numargs, int numredir, int *err)
 {
@@ -27,7 +55,7 @@ t_cmd	*init_struct(int numargs, int numredir, int *err)
 				return (cmd);
 		}
 	}
-	free_cmd(cmd);
+	free_cmd(cmd, 0);
 	*err = -1;
 	return (NULL);
 }
@@ -58,10 +86,8 @@ int	fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r)
 	return (0);
 }
 
-t_cmd	*free_cmd(t_cmd *cmd)
+t_cmd	*free_cmd(t_cmd *cmd, int i)
 {
-	int			i;
-
 	if (!cmd)
 		return (NULL);
 	if (cmd->args)
@@ -77,9 +103,29 @@ t_cmd	*free_cmd(t_cmd *cmd)
 	{
 		i = -1;
 		while (cmd->redirect[++i].value)
+		{
+			if (cmd->redirect[i].type == HEREDOC)
+				unlink(cmd->redirect[i].value);
 			free(cmd->redirect[i].value);
+		}
 		free(cmd->redirect);
 	}
 	free(cmd);
 	return (NULL);
+}
+
+void print_struct(t_cmd *cmd)
+{
+	if (!cmd)
+		return ;
+	printf("CMD: %s ARGS: ", cmd->cmd);
+	int i = 0;
+	while (cmd->args[++i])
+		printf("%s ", cmd->args[i]);
+	printf("%s\n", cmd->args[i]);
+	i = -1;
+	while (cmd->redirect[++i].value)
+	{
+		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
+	}
 }
