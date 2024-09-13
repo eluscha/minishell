@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/13 12:30:43 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 12:35:20 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,8 @@ int		print_array(char **array);
 int		unset_variable(int i, char **envp);
 int		ft_export(char *arg, t_cmd *cmd, t_data *data);
 int		print_array(char **array);
+int		ft_cd(t_cmd *cmd, t_data *data);
+int		ft_exit(t_cmd *cmd, t_data *data);
 
 /* parser.c */
 t_cmd	*parser(char *input, t_data *data);
