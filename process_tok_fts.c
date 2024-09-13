@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_tok_fts.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eleonora          #+#    #+#             */
-/*   Updated: 2024/09/11 14:36:27 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:30:55 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ int	get_input(int fd, t_tok *token, t_data *data)
 			if (ft_strncmp(line, token->word, len) == 0)
 				break ;
 		}
+		temp = gen_token(0, linelen, &err);
 		idx = -1;
 		while(line[++idx])
 		{
@@ -158,22 +159,20 @@ int	get_input(int fd, t_tok *token, t_data *data)
 					state = INSQTS;
 			}
 			else if (state == WORD && line[idx] == '$')
-			{
-				temp = gen_token(0, linelen, &err);
-				handle_expand(&line[idx], temp, data, &err);
-				free(line);
-				line = temp->word;
-			}
+				idx += handle_expand(&line[idx + 1], temp, data, &err);
+			else 
+				temp->word[temp->idx++] = line[idx];
+			//printf("idx is %d and word is %s\n", idx, temp->word);
 		}
-		write(fd, line, ft_strlen(line));
+		write(fd, temp->word, temp->idx);
 		free(line);
+		free(temp->word);
+		free(temp);
 		ft_putstr_fd("> ", 0);
 		line = get_next_line(0);
 	}
 	if (line)
 		free(line);
-	if (temp)
-		free(temp);
 	close(fd);
 	return (err);
 }

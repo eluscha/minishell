@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/11 10:42:26 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:53:45 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 	char	**envp;
 	int		i;
 
+	printf("we are in handle expand ");
+	fflush(NULL);
 	envp = data->envp;
 	i = 0;
 	if (start[i] == '?')
@@ -101,6 +103,10 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 			i++;
 		while (*envp)
 		{
+			printf("*envp is %s\n", *envp);
+			printf("start is %s\n", start);
+			printf("i is %i\n", i);
+			printf("*envp[i] == %c\n", **envp + i);
 			if (ft_strncmp(*envp, start, i) == 0 && *envp[i] == '=')
 				break ;
 			envp++;
@@ -122,6 +128,7 @@ int	change_word(t_tok *token, char *var, char *start)
 	int		sum;
 	char	*newword;
 
+	printf("variable value is %s\n", var);
 	if (!var)
 		return (1);
 	lenword = ft_strlen(token->word);

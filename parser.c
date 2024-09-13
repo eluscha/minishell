@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/11 11:37:16 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/13 09:58:00 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ t_cmd	*parser(char *input, t_data *data)
 		return (NULL);
 	}
 	tail = check_syntax(head);
-	if (tail->type != END || get_heredoc(head, tail) == -1)
+	if (tail->type != END || get_heredoc(head, tail, data) == -1)
 	{
 		//printf("check syntax returned early or heredoc has error\n");
 		cmds = NULL;
@@ -78,7 +78,7 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	*/
 	//THIS IS for printing tokens
-	/*
+	
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -86,7 +86,7 @@ t_cmd	*parser(char *input, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	*/
+	
 	free_tokens(head);
 	return (cmds);
 	}
