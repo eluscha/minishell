@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 15:58:13 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:20:27 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 
 typedef enum e_lex_state
 {
-	WORD,
 	DELIM,
+	WORD,
 	INSQTS,
 	INDQTS
 }	lex_state;
@@ -117,6 +117,7 @@ typedef struct export
 }	t_export;
 
 
+void	free_cmds(t_cmd	*cmd_list);
 
 int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
@@ -139,9 +140,11 @@ int		print_array(char **array);
 int		ft_cd(t_cmd *cmd, t_data *data);
 int		ft_exit(t_cmd *cmd, t_data *data);
 
+t_tok	*read_input(t_data *data);
+
 /* parser.c */
-t_cmd	*parser(char *input, t_data *data);
-t_tok	*lexer(char *input, lex_state state, t_tok *tail, t_data *data);
+t_cmd   *parser(t_tok *head, t_data *data);
+t_tok	*lexer(char *input, t_tok *tail, t_data *data);
 t_tok	*check_syntax(t_tok *head);
 
 /* lexer_mid_fts.c */
@@ -154,7 +157,8 @@ int		change_word(t_tok *token, char *var, char *start);
 /* lexer_edge_fts.c */
 t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
 t_tok	*gen_token(t_toktype type, int len, int *err);
-t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err);
+void extend_word(t_tok *tail, int len, int *err);
+t_tok	*set_end(lex_state *state, t_tok *tail, char c, int *err);
 t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/09 10:40:08 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 11:42:54 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,14 @@ t_tok *set_start(t_tok *tail, t_tok **head, int len, int *err)
 	else
 	{
 		*head = tail->next;
-		tail->next = gen_token(NWLINE, 1, err);
-		if (!err)
+		if (tail->type == PIPERR)
 		{
-			tail = tail->next;
-			ft_strlcpy(tail->word, "\n", 2);
-			tail->next = gen_token(UNDETERM, len, err);
+			tail->next = gen_token(NWLINE, 1, err);
 			if (!err)
 				tail = tail->next;
 		}
+		else
+			extend_word(tail, len, err);
 	}
 	return (tail);
 }
@@ -63,13 +62,31 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	return (token);
 }
 
-t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err)
+void extend_word(t_tok *tail, int len, int *err)
+{
+	int oldlen;
+	char *newword;
+
+	oldlen = ft_strlen(tail->word);
+	newword = ft_calloc(oldlen + len + 2, sizeof(char));
+	if (!newword)
+	{
+		*err = -1;
+		return ;
+	}
+	ft_strlcpy(newword, tail->word, oldlen + 1);
+	free(tail->word);
+	tail->word = newword;
+	tail->word[tail->idx++] = '\n';
+}
+
+t_tok	*set_end(lex_state *state, t_tok *tail, char c, int *err)
 {
 	if (*state == INSQTS)
 		tail->type = SQERR;
 	else if (*state == INDQTS)
 		tail->type = DQERR;
-	else if (tail->word[tail->idx - 1] == '|')
+	else if (c == '|')
 		tail->type = PIPERR;
 	else if (*state == DELIM)
 	{
@@ -82,10 +99,6 @@ t_tok	*set_end(lex_state *state, t_tok *tail, t_tok *head, int *err)
 		if (!*err)
 			tail = tail->next;
 	}
-	if (*err)
-		tail = free_tokens(head);
-	else
-		tail->next = head;
 	return (tail);
 }
 
