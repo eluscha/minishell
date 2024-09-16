@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 12:30:05 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:45:49 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,15 @@
 
 //void print_struct(t_cmd *cmd);
 
-t_cmd	*parser(char *input, t_data *data)
+t_cmd	*parser(t_tok *head, t_data *data)
 {
 	int numargs;
 	int numredir;
 	t_tok *tail;
-	t_tok *head;
 	t_cmd *cmds = NULL;
-	/*  THIS is preliminary readline for multiple line input..
-	while (1)
-	{
-		if (input)
-			free(input);
-		input = readline("prompt> ");
-		if (input == NULL) //will happen with ctrl+D
-			break;
-		if (*input)
-			add_history(input);
-		tail = lexer(input, DELIM, NULL, data);
-		while (tail->type == SQERR)
-		{
-			input = readline("> ");
-			if (input == NULL) //will happen with ctrl+D
-				break;
-			tail = lexer(input, INSQTS, NULL, data);
-		}
-		while (tail->type == DQERR)
-		{
-			input = readline("> ");
-			if (input == NULL) //will happen with ctrl+D
-				break;
-			tail = lexer(input, INDQTS, tail, data);
-		}
-		head = tail->next;
-		*/
-
-	tail = lexer(input, DELIM, NULL, data);
-	if (!tail)
+	
+	if (!head)
 		return (NULL);
-	head = tail->next;
-	tail->next = NULL;
 	if (process_tokens(head, &numargs, &numredir) == -1)
 	{
 		//printf("process tokens returned -1\n");
@@ -63,14 +32,12 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) == -1)
-	{
-		//printf("check syntax returned early or heredoc has error\n");
 		cmds = NULL;
-	}
 	else
 		cmds = generate_structs(head, numargs, numredir);
 	//THIS IS for printing structs
-	/*t_cmd *ptrs = cmds;
+	/*
+	t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
@@ -78,7 +45,7 @@ t_cmd	*parser(char *input, t_data *data)
 	}
 	*/
 	//THIS IS for printing tokens
-	/*
+	
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -86,41 +53,18 @@ t_cmd	*parser(char *input, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	*/
+	
 	free_tokens(head);
 	return (cmds);
 	}
 
-
-/*
-char    *expand(char *start, int *lenvar, char **envp)
-{
-	int i = 0;
-	while(start[i] && ft_isalnum(start[i]))
-		i++;
-	*lenvar = i;
-	char *var = ft_strdup(start);
-	var[i] = '\0';
-	int len = ft_strlen(var);
-	while (*envp)
-	{
-		if (ft_strncmp((const char *) *envp, var, len) == 0 || *envp[len] == '=')
-			break ;
-		envp++;
-	}
-	free(var);
-	if (!*envp)
-		return (ft_strdup(""));
-	return (ft_strdup(*envp + len + 1)); //need to free though later
-}
-*/
-
-t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
+t_tok *lexer(char *input, t_tok *tail, t_data *data)
 {
 	char	c;
 	t_tok	*head;
 	int		i;
 	int		err;
+	static lex_state state;
 
 	err = 0;
 	tail = set_start(tail, &head, ft_strlen(input), &err);
@@ -138,9 +82,12 @@ t_tok *lexer(char *input, lex_state state, t_tok *tail, t_data *data)
 			i += handle_expand(input + i + 1, tail, data, &err);
 		else if (state != DELIM)
 			tail->word[tail->idx++] = c;
-		//printf("state is %d c is %c word is %s\n", state, c, tail->word);
 	}
-	tail = set_end(&state, tail, head, &err);
+	tail = set_end(&state, tail, c, &err);
+	if (err)
+		tail = free_tokens(head);
+	else
+		tail->next = head;
 	return (tail);
 }
 
