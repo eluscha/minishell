@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/16 11:23:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:45:49 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,9 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	int numredir;
 	t_tok *tail;
 	t_cmd *cmds = NULL;
-		
+	
+	if (!head)
+		return (NULL);
 	if (process_tokens(head, &numargs, &numredir) == -1)
 	{
 		//printf("process tokens returned -1\n");

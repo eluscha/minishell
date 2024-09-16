@@ -6,11 +6,38 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 11:49:00 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 12:47:11 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+NON-INTERACTIVE MAIN
+
+int	main(int argc, char *argv[], char *envp[])
+{
+	t_data	data;
+	int		return_value;
+	t_tok *head;
+	t_tok *tail;
+
+	if (argc > 2)
+	{
+		printf ("no arguments required, only program name: %s\n", argv[0]);
+		return (1);
+	}
+	init_data(&data, envp);
+	tail = lexer(input, NULL, data);
+	head = tail->next;
+	tail->next = NULL;
+	data.cmd = parser(head, &data);
+	return_value = execute_loop(&data);
+	if (data.cmd)
+		clean_exit(NULL, return_value, &data); //
+	clean_exit(NULL, 0, &data);
+}
+*/
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -28,12 +55,14 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		head = read_input(&data);
 		data.cmd = parser(head, &data);
+		if (!data.cmd)
+			break ;
 		return_value = execute_loop(&data);
 		free_cmds(data.cmd);
 	}
 	if (data.cmd)
-			clean_exit(NULL, return_value, &data);
-		clean_exit(NULL, 0, &data);
+		clean_exit(NULL, return_value, &data);
+	clean_exit(NULL, 0, &data);
 	exit(EXIT_SUCCESS);
 }
 
