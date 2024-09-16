@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/13 12:35:20 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:58:13 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,15 @@ typedef struct s_tok
 	t_toktype		type;
 }	t_tok;
 
+typedef enum cmd_check
+{
+	BLTN,
+	NSCHFL,
+	CMDNF,
+	ISDIR,
+	BIN
+}	t_cmd_check;
+
 typedef struct cmd
 {
 	char			*cmd;
@@ -66,6 +75,7 @@ typedef struct cmd
 	struct redirect	*redirect;
 	struct cmd		*next;
 	int				builtin;
+	t_cmd_check		cmd_check;
 }	t_cmd;
 
 typedef struct redirect
@@ -92,23 +102,24 @@ typedef struct data
 	char	*tty_out;
 }	t_data;
 
-typedef enum cmd_type
+typedef enum exp_type
 {
 	UNSET,
 	EXPORT
-}	t_cmd_type;
+}	t_exp_unset;
+
 
 typedef struct export
 {
 	char			*arg;
 	char			*key;
-	t_cmd_type		type;
+	t_exp_unset		type;
 }	t_export;
 
 
 
 int		clean_exit(char *msg, int r_value, t_data *data);
-int		redirect(t_cmd *cmd);
+int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
 int		execute_loop(t_data *data);
@@ -119,10 +130,10 @@ void	init_data(t_data *data, char **envp);
 int		check_builtin(t_cmd *cmd, t_data *data);
 int		ft_echo(t_cmd *cmd, t_data *data);
 int		ft_unset(t_cmd *cmd, t_data *data);
-int		find_key(t_export *export, char **envp);
-void	add_entry(char *entry, char **envp);
+int		find_key(t_export *export, char **envp, t_data *data);
+int		add_entry(char *entry, char **envp, t_data *data);
 int		print_array(char **array);
-int		unset_variable(int i, char **envp);
+int		unset_variable(int i, char **envp, t_data *data);
 int		ft_export(char *arg, t_cmd *cmd, t_data *data);
 int		print_array(char **array);
 int		ft_cd(t_cmd *cmd, t_data *data);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/13 11:50:25 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:50:54 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, envp);
 	// read_input(&data);
 	data.cmd = parser(argv[1], &data);
+	data.cmd->cmd_check = BIN;
 	return_value = execute_loop(&data);
 	if (data.cmd)
 		clean_exit(NULL, return_value, &data); //

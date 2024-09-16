@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 15:27:53 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:13:23 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,30 @@ int	ft_pwd(t_cmd *cmd, t_data *data)
 {
 	char	*dir;
 
+	cmd->cmd_check = BLTN;
 	data->st_code = 0;
-	if (redirect(cmd))
-		return (clean_exit(NULL, 1, data));
+	if (redirect(cmd, data))
+		return (1);
 	dir = getcwd(NULL, 0);
+	if (!dir)
+	{
+		data->st_code = 1;
+		return (1);
+	}
 	write(1, dir, strlen(dir));
 	write(1, "\n", 1);
 	free(dir);
-	return (1);
+	return (0);
 }
 
 int	ft_echo(t_cmd *cmd, t_data *data)
 {
 	int		i;
 
+	cmd->cmd_check = BLTN;
 	data->st_code = 0;
-	if (redirect(cmd))
-		return (clean_exit(NULL, 1, data));
+	if (redirect(cmd, data))
+		return (1);
 	i = 1;
 	if (!cmd->args[1])
 		write(1, "\n", 1);
@@ -50,7 +57,7 @@ int	ft_echo(t_cmd *cmd, t_data *data)
 		if (strcmp(cmd->args[1], "-n"))
 			write(1, "\n", 1);
 	}
-	return (1);
+	return (0);
 }
 
 
@@ -58,18 +65,21 @@ int	ft_echo(t_cmd *cmd, t_data *data)
 int	check_builtin(t_cmd *cmd, t_data *data)
 {
 	if (!ft_strcmp(cmd->cmd, "pwd"))
-		return (ft_pwd(cmd, data));
-	if (!ft_strcmp(cmd->cmd, "cd"))
-		return (ft_cd(cmd, data));
-	if (!ft_strcmp(cmd->cmd, "echo"))
-		return (ft_echo(cmd, data));
-	if (!ft_strcmp(cmd->cmd, "export"))
-		return (ft_export(cmd->args[1], cmd, data));
-	if (!ft_strcmp(cmd->cmd, "unset"))
-		return (ft_unset(cmd, data));
-	if (!ft_strcmp(cmd->cmd, "env"))
-		return (print_array(data->envp));
-	if (!ft_strcmp(cmd->cmd, "exit"))
+		ft_pwd(cmd, data);
+	else if (!ft_strcmp(cmd->cmd, "cd"))
+		ft_cd(cmd, data);
+	else if (!ft_strcmp(cmd->cmd, "echo"))
+		ft_echo(cmd, data);
+	else if (!ft_strcmp(cmd->cmd, "export"))
+		ft_export(cmd->args[1], cmd, data);
+	else if (!ft_strcmp(cmd->cmd, "unset"))
+		ft_unset(cmd, data);
+	else if (!ft_strcmp(cmd->cmd, "env"))
+		print_array(data->envp);
+	else if (!ft_strcmp(cmd->cmd, "exit"))
 		ft_exit(cmd, data);
-	return (0);
+	if (cmd->cmd_check == BLTN)
+		return (1);
+	else
+		return (0);
 }

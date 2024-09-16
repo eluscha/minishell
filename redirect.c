@@ -6,17 +6,18 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 12:33:17 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/10 14:26:55 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 10:35:01 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	redirect_error(char *value)
+int	redirect_error(char *value, t_data *data)
 {
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	perror (value);
+	data->st_code = 1;
 	return (1);
 }
 
@@ -35,7 +36,7 @@ int	duplicate_fds(int *fd_in, int *fd_out)
 	return (0);
 }
 
-int	out_redirect(t_redirect *redirect, int *fd_out, int *fd_in)
+int	out_redirect(t_redirect *redirect, int *fd_out, int *fd_in, t_data *data)
 {
 	if (*fd_out)
 		close(*fd_out);
@@ -47,12 +48,12 @@ int	out_redirect(t_redirect *redirect, int *fd_out, int *fd_in)
 	{
 		if (*fd_in)
 			close (*fd_in);
-		return (redirect_error(redirect->value));
+		return (redirect_error(redirect->value, data));
 	}
 	return (0);
 }
 
-int	in_redirect(t_redirect *redirect, int *fd_in, int *fd_out)
+int	in_redirect(t_redirect *redirect, int *fd_in, int *fd_out, t_data *data)
 {
 	if (*fd_in)
 		close(*fd_in);
@@ -61,12 +62,12 @@ int	in_redirect(t_redirect *redirect, int *fd_in, int *fd_out)
 	{
 		if (*fd_out)
 			close(*fd_out);
-		return (redirect_error(redirect->value));
+		return (redirect_error(redirect->value, data));
 	}
 	return (0);
 }
 
-int	redirect(t_cmd *cmd)
+int	redirect(t_cmd *cmd, t_data *data)
 {
 	int	i;
 	int	fd_in;
@@ -79,12 +80,12 @@ int	redirect(t_cmd *cmd)
 	{
 		if (cmd->redirect[i].type == INPUT || cmd->redirect[i].type == HEREDOC)
 		{
-			if (in_redirect(&(cmd->redirect[i]), &fd_in, &fd_out) == 1)
+			if (in_redirect(&(cmd->redirect[i]), &fd_in, &fd_out, data) == 1)
 				return (1);
 		}
 		if (cmd->redirect[i].type == OUTPUT || cmd->redirect[i].type == APPEND)
 		{
-			if (out_redirect(&(cmd->redirect[i]), &fd_out, &fd_in) == 1)
+			if (out_redirect(&(cmd->redirect[i]), &fd_out, &fd_in, data) == 1)
 				return (1);
 		}
 		i++;

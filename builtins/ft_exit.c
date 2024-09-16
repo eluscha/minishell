@@ -6,23 +6,23 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 16:36:55 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 16:03:14 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	err_exit(char *str, t_data *data)
+int	err_exit(char *str, t_data *data)
 {
 	write(1, "exit: ", ft_strlen("exit: "));
 	write(1, str, ft_strlen(str));
 	write(1, ": numeric argument required\n",
 		ft_strlen(": numeric argument required\n"));
-	clean_exit(NULL, 0, data);
-	exit (0);
+	data->st_code = 2;
+	return (0);
 }
 
-void	parse_ex_status(char *str, t_data *data)
+int	parse_ex_status(char *str, t_data *data)
 {
 	int	status;
 	int	sign;
@@ -49,14 +49,11 @@ void	parse_ex_status(char *str, t_data *data)
 
 int	ft_exit(t_cmd *cmd, t_data *data)
 {
-	int	status;
-	int	i;
-
-	status = 0;
-	i = 0;
+	cmd->cmd_check = BLTN;
+	data->st_code = 0;
 	write(1, "exit\n", ft_strlen("exit\n"));
 	if (cmd->args[1])
-		parse_ex_status(cmd->args[1], data);
+		return (parse_ex_status(cmd->args[1], data));
 	clean_exit(NULL, 0, data);
 	exit (0);
 }

@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/11 15:59:22 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:52:30 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,26 @@
 
 int	path_not_found(t_cmd *cmd, t_data *data)
 {
-	if (data->st_code == 1)
+	if (cmd->cmd_check == CMDNF)
 	{
 		write(2, "Command \'", ft_strlen("Command \'"));
 		write(2, cmd->cmd, ft_strlen(cmd->cmd));
 		write(2, "\' not found\n", strlen("\' not found\n"));
 		data->st_code = 127;
 	}
-	if (data->st_code == 2)
+	if (cmd->cmd_check == ISDIR)
 	{
 		write(2, cmd->cmd, ft_strlen(cmd->cmd));
 		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
 		data->st_code = 126;
 	}
-	if (data->st_code == 3)
+	if (cmd->cmd_check == NSCHFL)
 	{
 		write(2, cmd->cmd, ft_strlen(cmd->cmd));
 		write(2, ": No such file or directory\n",
 			ft_strlen(": No such file or directory\n"));
 		data->st_code = 127;
 	}
-	if (data->st_code == 4)
-		data->st_code = 0;
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
 	return (clean_exit(NULL, data->st_code, data));
@@ -49,15 +47,20 @@ int	child_process(t_cmd *cmd, t_data *data)
 		dup2((data->fd)[1], STDOUT_FILENO);
 		close (data->fd[1]);
 	}
-	if (redirect(cmd))
-		return (clean_exit(NULL, 1, data));
-	data->st_code = check_command(cmd, data);
-	if (data->st_code)
-		return (path_not_found(cmd, data));
-	execve(cmd->cmd, cmd->args, data->envp);
+	check_builtin(cmd, data);
+	if (cmd->cmd_check != BLTN)
+	{
+		if (redirect(cmd, data))
+			return (clean_exit(NULL, 1, data));
+		check_command(cmd, data);
+		if (cmd->cmd_check != BIN)
+			return (path_not_found(cmd, data));
+		execve(cmd->cmd, cmd->args, data->envp);
+		data->st_code = errno;
+	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	return (clean_exit(NULL, errno, data));
+	return (clean_exit(NULL, data->st_code, data));
 }
 
 int	fork_function(t_cmd *cmd, t_data *data)
@@ -110,6 +113,8 @@ int	execute_loop(t_data *data)
 	int		tty_fd;
 
 	cmd = data->cmd;
+	if (cmd && !cmd->next && check_builtin (cmd, data))
+		return (clean_exit(NULL, data->st_code, data));
 	while (cmd)
 	{
 		if (cmd->next)
@@ -117,8 +122,6 @@ int	execute_loop(t_data *data)
 			if (pipe(data->fd) < 0)
 				return (clean_exit("failed to create pipe\n", 1, data));
 		}
-		else if (check_builtin(cmd, data))
-			return (clean_exit(NULL, 0, data));
 		if (fork_function(cmd, data))
 			return (1);
 		cmd = cmd->next;
@@ -129,5 +132,3 @@ int	execute_loop(t_data *data)
 	close(tty_fd);
 	return (0);
 }
-
-

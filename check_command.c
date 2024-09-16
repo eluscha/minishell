@@ -6,20 +6,27 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/02 16:54:33 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 15:59:01 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parce_paths(t_data *data)
+int	parce_paths(t_data *data, t_cmd *cmd)
 {
 	int		i;
 
 	i = 0;
 	while (data->envp[i] && ft_strncmp(data->envp[i], "PATH=", 5))
 		i++;
+	if (!data->envp[i])
+	{
+		cmd->cmd_check = NSCHFL;
+		data->paths = NULL;
+		return (1);
+	}
 	data->paths = ft_split(data->envp[i] + 5, ':');
+	return (0);
 }
 
 int	check_path(t_cmd *cmd)
@@ -27,14 +34,18 @@ int	check_path(t_cmd *cmd)
 	DIR	*dir;
 
 	if (access(cmd->cmd, F_OK))
-		return (3);
-	dir = opendir(cmd->cmd);
-	if (dir)
+		cmd->cmd_check = NSCHFL;
+	else
 	{
-		closedir(dir);
-		return (2);
+		dir = opendir(cmd->cmd);
+		if (dir)
+		{
+			closedir(dir);
+			cmd->cmd_check = ISDIR;
+		}
+		else
+			cmd->args[0] = ft_strdup(ft_strrchr(cmd->cmd, '/') + 1);
 	}
-	cmd->args[0] = ft_strdup(ft_strrchr(cmd->cmd, '/') + 1);
 	return (0);
 }
 
@@ -44,7 +55,8 @@ int	find_binary(t_data *data, t_cmd *cmd)
 	char	*buf;
 	int		i;
 
-	parce_paths(data);
+	if (parce_paths(data, cmd))
+		return (1);
 	i = 0;
 	while (data->paths[i])
 	{
@@ -61,13 +73,12 @@ int	find_binary(t_data *data, t_cmd *cmd)
 		free(path);
 		i++;
 	}
+	cmd->cmd_check = CMDNF;
 	return (1);
 }
 
 int	check_command(t_cmd *cmd, t_data *data)
 {
-	if (check_builtin(cmd, data))
-		return (4);
 	if (ft_strchr(cmd->cmd, '/'))
 		return (check_path(cmd));
 	return (find_binary(data, cmd));
