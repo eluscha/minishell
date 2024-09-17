@@ -53,6 +53,7 @@ void	init_data(t_data *data, char **envp)
 int	new_pid(int pid, t_data *data)
 {
 	t_pids	*new_pid;
+	t_pids	*cur_pid;
 
 	new_pid = malloc(sizeof(t_pids));
 	if (!new_pid)
@@ -61,9 +62,10 @@ int	new_pid(int pid, t_data *data)
 	new_pid->next = NULL;
 	if (data->pids)
 	{
-		while (data->pids->next)
-			data->pids = data->pids->next;
-		data->pids->next = new_pid;
+		cur_pid = data->pids;
+		while (cur_pid->next)
+			cur_pid = cur_pid->next;
+		cur_pid->next = new_pid;
 	}
 	else
 		data->pids = new_pid;
