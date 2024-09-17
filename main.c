@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 10:42:47 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:46:32 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc > 1)
 	{
 		printf ("no arguments required, only program name: %s\n", argv[0]);
-		return (1);
+		exit(EXIT_FAILURE);
 	}
 	init_data(&data, envp);
 	while (1)
@@ -59,8 +59,8 @@ int	main(int argc, char *argv[], char *envp[])
 		execute_loop(&data);
 		free_cmds(data.cmd);
 	}
-	clean_exit(NULL, 0, &data);
-	exit(EXIT_SUCCESS);
+	printf("exit\n");
+	exit(clean_exit(NULL, EXIT_SUCCESS, &data));
 }
 
 t_tok	*read_input(t_data *data)
@@ -69,7 +69,7 @@ t_tok	*read_input(t_data *data)
 	t_tok	*tail;
 	t_tok	*head;
 
-	input = readline("prompt> ");
+	input = readline("minishell> ");
 	if (input == NULL) //will happen with ctrl+D
 		return (NULL);
 	if (*input)

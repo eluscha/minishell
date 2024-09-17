@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 11:12:59 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:46:59 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	execute_loop(t_data *data)
 			return (1);
 		cmd = cmd->next;
 	}
-	wait_loop(data);
+	wait_loop(data); // somewhere here goes signal receiving for CTRL C to kill all the child processes but not exit minishell
 	tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
 	dup2(tty_fd, STDIN_FILENO);
 	close(tty_fd);
