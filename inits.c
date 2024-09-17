@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 12:57:53 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:11:11 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,7 @@ void	init_data(t_data *data, char **envp)
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
 	if (!data->envp)
-	{
-		clean_exit("failed to init data\n", 1, data);
-		exit (1);
-	}
+		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 }
 
 int	new_pid(int pid, t_data *data)

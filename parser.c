@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/17 11:40:31 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:39:17 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	}
 
 	//THIS IS for printing tokens
-
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
