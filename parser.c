@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/16 12:45:49 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:39:17 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	}
 	*/
 	//THIS IS for printing tokens
-	
+	/*
 	t_tok *ptr = head;
 	while (ptr->type != END)
 	{
@@ -53,7 +53,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	
+	*/
 	free_tokens(head);
 	return (cmds);
 	}

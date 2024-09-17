@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 11:33:50 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:41:28 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 
 	envp = data->envp;
 	i = 0;
-	if (start[i] == '?')
+	if (start[i] == '?' && ++i)
 		varvalue = ft_itoa(data->st_code);
 	else
 	{
