@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/16 17:26:58 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:41:03 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 {
 	if (!cmd)
 		return (NULL);
+	if (cmd->cmd)
+		free(cmd->cmd);
 	if (cmd->args)
 	{
 		i = 0;

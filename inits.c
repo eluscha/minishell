@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 17:00:45 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:57:53 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	init_data(t_data *data, char **envp)
 int	new_pid(int pid, t_data *data)
 {
 	t_pids	*new_pid;
+	t_pids	*cur_pid;
 
 	new_pid = malloc(sizeof(t_pids));
 	if (!new_pid)
@@ -64,9 +65,10 @@ int	new_pid(int pid, t_data *data)
 	new_pid->next = NULL;
 	if (data->pids)
 	{
-		while (data->pids->next)
-			data->pids = data->pids->next;
-		data->pids->next = new_pid;
+		cur_pid = data->pids;
+		while (cur_pid->next)
+			cur_pid = cur_pid->next;
+		cur_pid->next = new_pid;
 	}
 	else
 		data->pids = new_pid;
