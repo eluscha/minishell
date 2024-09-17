@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 11:46:32 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:48:38 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ NON-INTERACTIVE MAIN
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
-	int		return_value;
 	t_tok *head;
 	t_tok *tail;
 
@@ -32,17 +31,31 @@ int	main(int argc, char *argv[], char *envp[])
 	head = tail->next;
 	tail->next = NULL;
 	data.cmd = parser(head, &data);
-	return_value = execute_loop(&data);
 	if (data.cmd)
-		clean_exit(NULL, return_value, &data); //
-	clean_exit(NULL, 0, &data);
+		execute_loop(&data);
+	exit(clean_exit(NULL, EXIT_SUCCESS, &data));
 }
 */
+
+void handle_sigint(int sig)
+{
+	(void)sig;
+	printf("\nminishell> ");
+	fflush(stdout); //not allowed function, but was advised in codevault
+} 
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
 	t_tok	*head;
+	struct sigaction sa;
+	sa.sa_handler = &handle_sigint;
+	sa.sa_flags = SA_RESTART;
+	
+	struct sigaction sa_ex;
+	sa_ex.sa_handler = SIG_DFL;
+	
+	sigaction(SIGINT, &sa, NULL);
 
 	if (argc > 1)
 	{
@@ -56,11 +69,11 @@ int	main(int argc, char *argv[], char *envp[])
 		data.cmd = parser(head, &data);
 		if (!data.cmd)
 			break ;
-		execute_loop(&data);
+		execute_loop(&data, &sa, &sa_ex);
 		free_cmds(data.cmd);
 	}
 	printf("exit\n");
-	exit(clean_exit(NULL, EXIT_SUCCESS, &data));
+	exit(clean_exit(NULL, EXIT_SUCCESS, &data)); //when should main return sth other than 0?
 }
 
 t_tok	*read_input(t_data *data)
