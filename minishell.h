@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 16:20:27 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:21:57 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ typedef struct cmd
 	char			**args;
 	struct redirect	*redirect;
 	struct cmd		*next;
-	int				builtin;
 	t_cmd_check		cmd_check;
 }	t_cmd;
 
@@ -157,7 +156,7 @@ int		change_word(t_tok *token, char *var, char *start);
 /* lexer_edge_fts.c */
 t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
 t_tok	*gen_token(t_toktype type, int len, int *err);
-void extend_word(t_tok *tail, int len, int *err);
+void	extend_word(t_tok *tail, int len, int *err);
 t_tok	*set_end(lex_state *state, t_tok *tail, char c, int *err);
 t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);

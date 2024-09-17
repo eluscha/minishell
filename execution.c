@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 15:52:30 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 10:28:28 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ int	child_process(t_cmd *cmd, t_data *data)
 		close (data->fd[1]);
 	}
 	check_builtin(cmd, data);
-	if (cmd->cmd_check != BLTN)
 	{
 		if (redirect(cmd, data))
 			return (clean_exit(NULL, 1, data));
@@ -109,8 +108,8 @@ void	wait_loop(t_data *data)
 
 int	execute_loop(t_data *data)
 {
-	t_cmd	*cmd;
 	int		tty_fd;
+	t_cmd	*cmd;
 
 	cmd = data->cmd;
 	if (cmd && !cmd->next && check_builtin (cmd, data))

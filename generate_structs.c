@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 12:30:10 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/16 17:26:58 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ int	fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r)
 			return (-1);
 		*idx_r = *idx_r + 1;
 	}
+	cmd->cmd_check = BIN;
 	return (0);
 }
 
