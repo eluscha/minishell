@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 10:50:52 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 11:12:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ int	path_not_found(t_cmd *cmd, t_data *data)
 	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	return (clean_exit(NULL, data->st_code, data));
+	clean_exit(NULL, data->st_code, data);
+	exit(data->st_code);
 }
 
 int	child_process(t_cmd *cmd, t_data *data)
@@ -60,7 +61,8 @@ int	child_process(t_cmd *cmd, t_data *data)
 	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	return (clean_exit(NULL, data->st_code, data));
+	clean_exit(NULL, data->st_code, data);
+	exit (data->st_code);
 }
 
 int	fork_function(t_cmd *cmd, t_data *data)
@@ -114,7 +116,7 @@ int	execute_loop(t_data *data)
 
 	cmd = data->cmd;
 	if (cmd && !cmd->next && check_builtin (cmd, data))
-		return (clean_exit(NULL, data->st_code, data));
+		return (data->st_code);
 	while (cmd)
 	{
 		if (cmd->next)
