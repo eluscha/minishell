@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 17:24:12 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 10:42:47 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	main(int argc, char *argv[], char *envp[])
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
-	int		return_value;
 	t_tok	*head;
 
 	if (argc > 1)
@@ -57,12 +56,9 @@ int	main(int argc, char *argv[], char *envp[])
 		data.cmd = parser(head, &data);
 		if (!data.cmd)
 			break ;
-		return_value = execute_loop(&data);
+		execute_loop(&data);
 		free_cmds(data.cmd);
 	}
-	//this looks repetitive, and return value may be not needed here, since the exit is with (0)
-	// if (data.cmd)
-	// 	clean_exit(NULL, return_value, &data);
 	clean_exit(NULL, 0, &data);
 	exit(EXIT_SUCCESS);
 }
