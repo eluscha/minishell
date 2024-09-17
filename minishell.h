@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 11:00:04 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:44:53 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
-int		execute_loop(t_data *data);
+int	execute_loop(t_data *data, struct sigaction *sa, struct sigaction *sa_ex);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 
