@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 12:25:02 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 11:34:25 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	int		fd;
 	int err = 0;
 
+	//sigaction(SIG, sa_ex)
 	while (head != tail)
 	{
 		if (head->type != HEREDOC)
@@ -112,7 +113,7 @@ int	expand_and_write(int fd, char *line, t_data *data)
 	{
 		if (line[idx] == '$')
 			idx += handle_expand(&line[idx + 1], temp, data, &err);
-		else 
+		else
 			temp->word[temp->idx++] = line[idx];
 	}
 	write(fd, temp->word, temp->idx);

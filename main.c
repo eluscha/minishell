@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 13:48:38 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 12:43:30 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,45 @@ int	main(int argc, char *argv[], char *envp[])
 }
 */
 
-void handle_sigint(int sig)
+int g_signal_code = 0;
+
+void	handle_sigint(int sig)
 {
 	(void)sig;
-	printf("\nminishell> ");
-	fflush(stdout); //not allowed function, but was advised in codevault
-} 
+	g_signal_code = 1;
+	//rl_on_new_line();
+	// if (exec_chld)
+	// 	write(1, "\n", 1);
+	// else
+	// 	write(1, "\nminishell> ", ft_strlen("\nminishell> "));
+	// rl_replace_line("", 0);
+	// rl_redisplay();
+	// write(1, "\nminishell> ", ft_strlen("\nminishell> "));
+	// fflush(stdout); //not allowed function, but was advised in codevault
+}
+
+void	handle_sigint_ch(int sig)
+{
+	(void)sig;
+}
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_data	data;
-	t_tok	*head;
-	struct sigaction sa;
+	t_data				data;
+	t_tok				*head;
+	struct sigaction	sa;
+	struct sigaction	sa_ex;
+
+	(void)argv;
 	sa.sa_handler = &handle_sigint;
 	sa.sa_flags = SA_RESTART;
-	
-	struct sigaction sa_ex;
 	sa_ex.sa_handler = SIG_DFL;
-	
+	sa_ex.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-
+	g_signal_code = 0;
 	if (argc > 1)
 	{
-		printf ("no arguments required, only program name: %s\n", argv[0]);
+		ft_putstr_fd ("no arguments required, only program name\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	init_data(&data, envp);
