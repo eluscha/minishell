@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/13 12:23:13 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:21:33 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	clean_exit(char *msg, int r_value, t_data *data)
 	}
 	if (msg)
 		write(2, msg, ft_strlen(msg));
+	clear_history();
 	return (r_value);
 }
 

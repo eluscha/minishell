@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 11:34:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:53:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,11 +77,13 @@ int	get_input(int fd, t_tok *token, t_data *data)
 	size_t	len;
 	int		err;
 
+	//sigaction(SIGINT, data->sa, NULL);
+
 	len = ft_strlen(token->word);
 	err = 0;
 	ft_putstr_fd("> ", 0);
 	line = get_next_line(0);
-	while (line)
+	while (line && lastsignal != 2)
 	{
 		if (ft_strlen(line) == len + 1)
 		{
@@ -89,11 +91,15 @@ int	get_input(int fd, t_tok *token, t_data *data)
 				break ;
 		}
 		expand_and_write(fd, line, data);
-		ft_putstr_fd("> ", 0);
+		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 	}
 	if (line)
 		free(line);
+	else if (lastsignal != 2)
+		ft_putstr_fd("\nwarning: here-document delimited by end-of-file\n", 1);
+	else
+		err = 2;
 	close(fd);
 	return (err);
 }
