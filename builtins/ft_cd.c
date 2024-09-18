@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:55:32 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 16:06:59 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 17:09:17 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,28 +43,56 @@ int	to_home(t_cmd *cmd, t_data *data)
 
 int	set_envp(char **oldpwd, t_data *data)
 {
+	char	*cur_dir;
+	char	*pwd_dir;
+
 	if (ft_export(*oldpwd, NULL, data))
 	{
 		data->st_code = 1;
 		free (*oldpwd);
 		return (1);
 	}
-	if (ft_export(ft_strjoin("PWD=", getcwd(NULL, 0)), NULL, data))
+	cur_dir = getcwd(NULL, 0);
+	pwd_dir = ft_strjoin("PWD=", cur_dir);
+	free(cur_dir);
+	if (ft_export(pwd_dir, NULL, data))
 	{
 		data->st_code = 1;
-		free(*oldpwd);
+		free(pwd_dir);
 		return (1);
 	}
-	free(oldpwd);
+	free(pwd_dir);
+	free(*oldpwd);
 	return (0);
+}
+
+void	prev_dir(t_cmd *cmd, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (data->envp[i])
+	{
+		if (!ft_strncmp(data->envp[i], "OLDPWD=", 7))
+		{
+			free(cmd->args[1]);
+			cmd->args[1] = ft_strdup(data->envp[i] + 7);
+			write(1, cmd->args[1], ft_strlen(cmd->args[1]));
+			write(1, "\n", 1);
+			break ;
+		}
+		i++;
+	}
 }
 
 int	ft_cd(t_cmd *cmd, t_data *data)
 {
 	char	*oldpwd;
+	char	*cur_dir;
 
 	data->st_code = 0;
 	cmd->cmd_check = BLTN;
+	oldpwd = NULL;
 	if (redirect(cmd, data))
 		return (clean_exit(NULL, 1, data));
 	if (!cmd->args[1])
@@ -72,7 +100,13 @@ int	ft_cd(t_cmd *cmd, t_data *data)
 		if (to_home(cmd, data))
 			return (cd_error("HOME not set\n", cmd, data, NULL));
 	}
-	oldpwd = ft_strjoin("OLDPWD=", getcwd(NULL, 0));
+	if (!ft_strcmp(cmd->args[1], "-"))
+		prev_dir(cmd, data);
+	cur_dir = getcwd(NULL, 0);
+	if (!cur_dir)
+		return (cd_error(NULL, cmd, data, oldpwd));
+	oldpwd = ft_strjoin("OLDPWD=", cur_dir);
+	free(cur_dir);
 	if (!oldpwd || chdir(cmd->args[1]))
 		return (cd_error(NULL, cmd, data, oldpwd));
 	return (set_envp(&oldpwd, data));

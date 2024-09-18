@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 13:21:34 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:26:21 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,6 @@ int	ft_echo(t_cmd *cmd, t_data *data)
 	}
 	return (0);
 }
-
-
 
 int	check_builtin(t_cmd *cmd, t_data *data)
 {

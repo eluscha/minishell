@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/16 11:42:54 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:44:12 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tok *set_start(t_tok *tail, t_tok **head, int len, int *err)
+t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err)
 {
 	if (!tail)
 	{
@@ -62,10 +62,10 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	return (token);
 }
 
-void extend_word(t_tok *tail, int len, int *err)
+void	extend_word(t_tok *tail, int len, int *err)
 {
-	int oldlen;
-	char *newword;
+	int		oldlen;
+	char	*newword;
 
 	oldlen = ft_strlen(tail->word);
 	newword = ft_calloc(oldlen + len + 2, sizeof(char));
@@ -80,7 +80,7 @@ void extend_word(t_tok *tail, int len, int *err)
 	tail->word[tail->idx++] = '\n';
 }
 
-t_tok	*set_end(lex_state *state, t_tok *tail, char c, int *err)
+t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
 {
 	if (*state == INSQTS)
 		tail->type = SQERR;
@@ -119,7 +119,7 @@ t_tok	*free_tokens(t_tok *head)
 }
 
 /*won't need this function in a final version*/
-void	print_toktype(t_tok *token) 
+void	print_toktype(t_tok *token)
 {
 	if (token->type == UNDETERM)
 		printf("UNDETERM ");

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/17 11:41:28 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:43:17 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err)
+t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err)
 {
 	if (c == ' ' || c == '\t')
 	{
@@ -28,7 +28,7 @@ t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err)
 	return (tail);
 }
 
-void	handle_quotes(lex_state *state, t_tok *tail, char c)
+void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 {
 	if (c == '\'')
 	{
@@ -50,7 +50,7 @@ void	handle_quotes(lex_state *state, t_tok *tail, char c)
 	}
 }
 
-t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err)
+t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 {
 	if (c == '|')
 	{
