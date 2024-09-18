@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 10:28:55 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:21:34 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ int	ft_echo(t_cmd *cmd, t_data *data)
 
 int	check_builtin(t_cmd *cmd, t_data *data)
 {
+	int	tty_fd;
+
 	if (!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd, data);
 	else if (!ft_strcmp(cmd->cmd, "cd"))
@@ -79,7 +81,12 @@ int	check_builtin(t_cmd *cmd, t_data *data)
 	else if (!ft_strcmp(cmd->cmd, "exit"))
 		ft_exit(cmd, data);
 	if (cmd->cmd_check == BLTN)
+	{
+		tty_fd = open(data->tty_out, O_RDWR, O_APPEND);
+		dup2(tty_fd, STDOUT_FILENO);
+		close(tty_fd);
 		return (1);
+	}
 	else
 		return (0);
 }

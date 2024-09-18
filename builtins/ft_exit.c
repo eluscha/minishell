@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 16:03:14 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:46:29 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	err_exit(char *str, t_data *data)
 {
-	write(1, "exit: ", ft_strlen("exit: "));
-	write(1, str, ft_strlen(str));
-	write(1, ": numeric argument required\n",
+	write(2, "exit: ", ft_strlen("exit: "));
+	write(2, str, ft_strlen(str));
+	write(2, ": numeric argument required\n",
 		ft_strlen(": numeric argument required\n"));
 	data->st_code = 2;
 	return (0);

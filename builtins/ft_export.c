@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 16:00:34 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/17 15:46:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ char	*check_argument(t_export *export, t_data *data)
 	else
 	{
 		if (export->type == EXPORT)
-			write(1, "export: '", ft_strlen("export: '"));
+			write(2, "export: '", ft_strlen("export: '"));
 		if (export->type == UNSET)
-			write(1, "unset: '", ft_strlen("unset: '"));
-		write(1, export->arg, ft_strlen(export->arg));
-		write(1, "': not a valid identifier\n", 26);
+			write(2, "unset: '", ft_strlen("unset: '"));
+		write(2, export->arg, ft_strlen(export->arg));
+		write(2, "': not a valid identifier\n", 26);
 	}
 	if (!res)
 		data->st_code = 1;

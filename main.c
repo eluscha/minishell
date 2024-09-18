@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 13:45:02 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:57:56 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,38 @@ void handle_sigint_ex(int sig)
 	printf("\n");
 }
 
+/*
+int g_signal_code = 0;
+
+void	handle_sigint(int sig)
+{
+	(void)sig;
+	g_signal_code = 1;
+	//rl_on_new_line();
+	// if (exec_chld)
+	// 	write(1, "\n", 1);
+	// else
+	// 	write(1, "\nminishell> ", ft_strlen("\nminishell> "));
+	// rl_replace_line("", 0);
+	// rl_redisplay();
+	// write(1, "\nminishell> ", ft_strlen("\nminishell> "));
+	// fflush(stdout); //not allowed function, but was advised in codevault
+}
+
+void	handle_sigint_ch(int sig)
+{
+	(void)sig;
+}
+
+*/
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
 	t_tok	*head;
-	
+
+	(void)argv;
+
 	struct sigaction sa;
 	sa.sa_handler = &handle_sigint;
 	sa.sa_flags = SA_RESTART;
@@ -69,10 +96,9 @@ int	main(int argc, char *argv[], char *envp[])
 	sa_child.sa_handler = SIG_DFL;
 	
 	sigaction(SIGINT, &sa, NULL);
-
 	if (argc > 1)
 	{
-		printf ("no arguments required, only program name: %s\n", argv[0]);
+		ft_putstr_fd ("no arguments required, only program name\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	init_data(&data, envp, &sa);

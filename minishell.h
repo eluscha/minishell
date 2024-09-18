@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/09/18 13:42:03 by eusatiko         ###   ########.fr       */
+=======
+/*   Updated: 2024/09/18 12:41:13 by auspensk         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +122,7 @@ typedef struct export
 }	t_export;
 
 extern int lastsignal;
+//extern int	g_signal_code;
 
 void	free_cmds(t_cmd	*cmd_list);
 
