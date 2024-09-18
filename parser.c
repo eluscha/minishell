@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 13:42:40 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:56:24 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	else
 		cmds = generate_structs(head, numargs, numredir);
 	//THIS IS for printing structs
-	
+/*
 	t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
 		ptrs = ptrs->next;
 	}
-	/*
+
 	//THIS IS for printing tokens
 	t_tok *ptr = head;
 	while (ptr->type != END)
@@ -63,7 +63,7 @@ t_tok *lexer(char *input, t_tok *tail, t_data *data)
 	t_tok	*head;
 	int		i;
 	int		err;
-	static lex_state state;
+	static	t_lex_state state;
 
 	err = 0;
 	tail = set_start(tail, &head, ft_strlen(input), &err);
