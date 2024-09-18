@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 13:10:05 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:48:37 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ int	get_input(int fd, t_tok *token, t_data *data)
 	}
 	if (line)
 		free(line);
-	else
+	else if (lastsignal != 2)
 		ft_putstr_fd("\nwarning: here-document delimited by end-of-file\n", 1);
+	else
+		err = 2;
 	close(fd);
-	if (lastsignal == 2)
-		return (2);
 	return (err);
 }
 

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 12:45:45 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:45:02 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ void handle_sigint(int sig)
 void handle_sigint_ex(int sig)
 {
 	lastsignal = sig;
+	//rl_replace_line("", 0);
 	printf("\n");
 }
 
@@ -79,7 +80,7 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		lastsignal = 0;
 		head = read_input(&data);
-		if (!head)
+		if (!head && lastsignal != 2) //ctrl + D
 		{
 			data.cmd = NULL;
 			break ;
@@ -104,6 +105,11 @@ t_tok	*read_input(t_data *data)
 	input = readline("minishell> ");
 	if (input == NULL) //will happen with ctrl+D
 		return (NULL);
+	if (lastsignal == 2)
+	{
+		free(input);
+		return (NULL);
+	}
 	if (*input)
 		add_history(input);
 	tail = lexer(input, NULL, data);

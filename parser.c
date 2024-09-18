@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 12:53:42 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:42:40 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	else
 		cmds = generate_structs(head, numargs, numredir);
 	//THIS IS for printing structs
-	/*
+	
 	t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
 		ptrs = ptrs->next;
 	}
-
+	/*
 	//THIS IS for printing tokens
 	t_tok *ptr = head;
 	while (ptr->type != END)
