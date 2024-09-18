@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 11:11:11 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 12:28:44 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char **dup_envp(char **envp)
 	return (dup_envp);
 }
 
-void	init_data(t_data *data, char **envp)
+void	init_data(t_data *data, char **envp, struct sigaction *sa)
 {
 	data->pids = NULL;
 	data->cmd = NULL;
@@ -46,6 +46,7 @@ void	init_data(t_data *data, char **envp)
 	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
+	data->sa = sa;
 	if (!data->envp)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 }

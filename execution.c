@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 12:31:43 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:53:19 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	path_not_found(t_cmd *cmd, t_data *data)
 	exit(data->st_code);
 }
 
-int	child_process(t_cmd *cmd, t_data *data, struct sigaction *sa, struct sigaction *sa_ex)
+int	child_process(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
 {
-	sigaction(SIGINT, sa_ex, sa);
+	sigaction(SIGINT, sa_ex, NULL);
 	if (cmd->next)
 	{
 		close ((data->fd)[0]);
@@ -66,7 +66,7 @@ int	child_process(t_cmd *cmd, t_data *data, struct sigaction *sa, struct sigacti
 	exit (data->st_code);
 }
 
-int	fork_function(t_cmd *cmd, t_data *data, struct sigaction *sa, struct sigaction *sa_ex)
+int	fork_function(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
 {
 	int		pid;
 	int		tty_fd;
@@ -75,7 +75,7 @@ int	fork_function(t_cmd *cmd, t_data *data, struct sigaction *sa, struct sigacti
 	if (pid == -1)
 		return (clean_exit("failed to create child process\n", 1, data));
 	if (pid == 0)
-		return (child_process(cmd, data, sa, sa_ex));
+		return (child_process(cmd, data, sa_ex));
 	if (cmd->next)
 	{
 		close((data->fd)[1]);
@@ -110,7 +110,7 @@ void	wait_loop(t_data *data)
 	}
 }
 
-int	execute_loop(t_data *data, struct sigaction *sa, struct sigaction *sa_ex)
+int	execute_loop(t_data *data, struct sigaction *sa_ex)
 {
 	int		tty_fd;
 	t_cmd	*cmd;
@@ -125,7 +125,7 @@ int	execute_loop(t_data *data, struct sigaction *sa, struct sigaction *sa_ex)
 			if (pipe(data->fd) < 0)
 				return (clean_exit("failed to create pipe\n", 1, data));
 		}
-		if (fork_function(cmd, data, sa, sa_ex))
+		if (fork_function(cmd, data, sa_ex))
 			return (1);
 		cmd = cmd->next;
 	}

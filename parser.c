@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/17 11:39:17 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:42:40 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,19 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		return (NULL);
 	}
 	tail = check_syntax(head);
-	if (tail->type != END || get_heredoc(head, tail, data) == -1)
+	if (tail->type != END || get_heredoc(head, tail, data) != 0)
 		cmds = NULL;
 	else
 		cmds = generate_structs(head, numargs, numredir);
 	//THIS IS for printing structs
-	/*
+	
 	t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
 		ptrs = ptrs->next;
 	}
-
+	/*
 	//THIS IS for printing tokens
 	t_tok *ptr = head;
 	while (ptr->type != END)

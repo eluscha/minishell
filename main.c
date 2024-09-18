@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 12:43:30 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:57:56 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,23 @@ int	main(int argc, char *argv[], char *envp[])
 }
 */
 
+int lastsignal;
+
+void handle_sigint(int sig)
+{
+	lastsignal = sig;
+	printf("\nminishell> ");
+	fflush(stdout);
+}
+
+void handle_sigint_ex(int sig)
+{
+	lastsignal = sig;
+	//rl_replace_line("", 0);
+	printf("\n");
+}
+
+/*
 int g_signal_code = 0;
 
 void	handle_sigint(int sig)
@@ -59,33 +76,46 @@ void	handle_sigint_ch(int sig)
 	(void)sig;
 }
 
+*/
+
 int	main(int argc, char *argv[], char *envp[])
 {
-	t_data				data;
-	t_tok				*head;
-	struct sigaction	sa;
-	struct sigaction	sa_ex;
+	t_data	data;
+	t_tok	*head;
 
 	(void)argv;
+
+	struct sigaction sa;
 	sa.sa_handler = &handle_sigint;
 	sa.sa_flags = SA_RESTART;
-	sa_ex.sa_handler = SIG_DFL;
-	sa_ex.sa_flags = SA_RESTART;
+	
+	struct sigaction sa_ex;
+	sa_ex.sa_handler = &handle_sigint_ex;
+
+	struct sigaction sa_child;
+	sa_child.sa_handler = SIG_DFL;
+	
 	sigaction(SIGINT, &sa, NULL);
-	g_signal_code = 0;
 	if (argc > 1)
 	{
 		ft_putstr_fd ("no arguments required, only program name\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	init_data(&data, envp);
+	init_data(&data, envp, &sa);
 	while (1)
 	{
+		lastsignal = 0;
 		head = read_input(&data);
+		if (!head && lastsignal != 2) //ctrl + D
+		{
+			data.cmd = NULL;
+			break ;
+		}
 		data.cmd = parser(head, &data);
 		if (!data.cmd)
-			break ;
-		execute_loop(&data, &sa, &sa_ex);
+			continue ;
+		sigaction(SIGINT, &sa_ex, &sa);
+		execute_loop(&data, &sa_child);
 		free_cmds(data.cmd);
 	}
 	printf("exit\n");
@@ -101,6 +131,11 @@ t_tok	*read_input(t_data *data)
 	input = readline("minishell> ");
 	if (input == NULL) //will happen with ctrl+D
 		return (NULL);
+	if (lastsignal == 2)
+	{
+		free(input);
+		return (NULL);
+	}
 	if (*input)
 		add_history(input);
 	tail = lexer(input, NULL, data);
