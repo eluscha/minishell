@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 13:48:38 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 12:45:45 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,35 @@ int	main(int argc, char *argv[], char *envp[])
 }
 */
 
+int lastsignal;
+
 void handle_sigint(int sig)
 {
-	(void)sig;
+	lastsignal = sig;
 	printf("\nminishell> ");
-	fflush(stdout); //not allowed function, but was advised in codevault
-} 
+	fflush(stdout);
+}
+
+void handle_sigint_ex(int sig)
+{
+	lastsignal = sig;
+	printf("\n");
+}
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	t_data	data;
 	t_tok	*head;
+	
 	struct sigaction sa;
 	sa.sa_handler = &handle_sigint;
 	sa.sa_flags = SA_RESTART;
 	
 	struct sigaction sa_ex;
-	sa_ex.sa_handler = SIG_DFL;
+	sa_ex.sa_handler = &handle_sigint_ex;
+
+	struct sigaction sa_child;
+	sa_child.sa_handler = SIG_DFL;
 	
 	sigaction(SIGINT, &sa, NULL);
 
@@ -62,14 +74,21 @@ int	main(int argc, char *argv[], char *envp[])
 		printf ("no arguments required, only program name: %s\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	init_data(&data, envp);
+	init_data(&data, envp, &sa);
 	while (1)
 	{
+		lastsignal = 0;
 		head = read_input(&data);
+		if (!head)
+		{
+			data.cmd = NULL;
+			break ;
+		}
 		data.cmd = parser(head, &data);
 		if (!data.cmd)
-			break ;
-		execute_loop(&data, &sa, &sa_ex);
+			continue ;
+		sigaction(SIGINT, &sa_ex, &sa);
+		execute_loop(&data, &sa_child);
 		free_cmds(data.cmd);
 	}
 	printf("exit\n");

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 13:44:53 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 12:29:09 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ typedef struct data
 	char	**paths;
 	char	*tty_in;
 	char	*tty_out;
+	struct sigaction *sa;
 }	t_data;
 
 typedef enum exp_type
@@ -116,6 +117,7 @@ typedef struct export
 	t_exp_unset		type;
 }	t_export;
 
+extern int lastsignal;
 
 void	free_cmds(t_cmd	*cmd_list);
 
@@ -123,9 +125,9 @@ int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
-int	execute_loop(t_data *data, struct sigaction *sa, struct sigaction *sa_ex);
+int		execute_loop(t_data *data, struct sigaction *sa_ex);
 char	**dup_envp(char **envp);
-void	init_data(t_data *data, char **envp);
+void	init_data(t_data *data, char **envp, struct sigaction *sa);
 
 /*builtins*/
 int		check_builtin(t_cmd *cmd, t_data *data);

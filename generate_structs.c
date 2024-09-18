@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/17 12:41:03 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:01:35 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 		i = -1;
 		while (cmd->redirect[++i].value)
 		{
-			if (cmd->redirect[i].type == HEREDOC)
-				unlink(cmd->redirect[i].value);
+			//if (cmd->redirect[i].type == HEREDOC)
+			//	unlink(cmd->redirect[i].value);
 			free(cmd->redirect[i].value);
 		}
 		free(cmd->redirect);

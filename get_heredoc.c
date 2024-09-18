@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/13 12:25:02 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:10:05 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,13 @@ int	get_input(int fd, t_tok *token, t_data *data)
 	size_t	len;
 	int		err;
 
+	//sigaction(SIGINT, data->sa, NULL);
+
 	len = ft_strlen(token->word);
 	err = 0;
 	ft_putstr_fd("> ", 0);
 	line = get_next_line(0);
-	while (line)
+	while (line && lastsignal != 2)
 	{
 		if (ft_strlen(line) == len + 1)
 		{
@@ -88,12 +90,16 @@ int	get_input(int fd, t_tok *token, t_data *data)
 				break ;
 		}
 		expand_and_write(fd, line, data);
-		ft_putstr_fd("> ", 0);
+		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 	}
 	if (line)
 		free(line);
+	else
+		ft_putstr_fd("\nwarning: here-document delimited by end-of-file\n", 1);
 	close(fd);
+	if (lastsignal == 2)
+		return (2);
 	return (err);
 }
 
