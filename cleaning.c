@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 15:50:35 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/23 10:46:41 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,11 @@ void	free_envp(char **envp)
 	while (envp[i])
 	{
 		free(envp[i]);
+		envp[i] = NULL;
 		i++;
 	}
-	free(envp); //added this line
+	free(envp);
+	envp = NULL; //added this line
 }
 
 void	free_cmds(t_cmd	*cmd_list)
@@ -63,6 +65,7 @@ void	free_pids(t_data *data)
 	{
 		next_pid = data->pids->next;
 		free(data->pids);
+		data->pids = NULL;
 		data->pids = next_pid;
 	}
 }

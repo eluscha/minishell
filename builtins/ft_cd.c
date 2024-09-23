@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:55:32 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 17:09:17 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/23 10:50:09 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	prev_dir(t_cmd *cmd, t_data *data)
 		if (!ft_strncmp(data->envp[i], "OLDPWD=", 7))
 		{
 			free(cmd->args[1]);
+			cmd->args[1] = NULL;
 			cmd->args[1] = ft_strdup(data->envp[i] + 7);
 			write(1, cmd->args[1], ft_strlen(cmd->args[1]));
 			write(1, "\n", 1);
@@ -107,6 +108,7 @@ int	ft_cd(t_cmd *cmd, t_data *data)
 		return (cd_error(NULL, cmd, data, oldpwd));
 	oldpwd = ft_strjoin("OLDPWD=", cur_dir);
 	free(cur_dir);
+	cur_dir = NULL;
 	if (!oldpwd || chdir(cmd->args[1]))
 		return (cd_error(NULL, cmd, data, oldpwd));
 	return (set_envp(&oldpwd, data));
