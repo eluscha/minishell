@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/23 11:43:58 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:08:55 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		print_struct(ptrs);
 		ptrs = ptrs->next;
 	}
-	*/
 	//THIS IS for printing tokens
 	/*
 	t_tok *ptr = head;
@@ -56,7 +55,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	*/
 	free_tokens(head);
 	return (cmds);
-	}
+}
 
 t_tok *lexer(char *input, t_tok *tail, t_data *data)
 {
@@ -64,7 +63,7 @@ t_tok *lexer(char *input, t_tok *tail, t_data *data)
 	t_tok	*head;
 	int		i;
 	int		err;
-	static lex_state state;
+	static	t_lex_state state;
 
 	err = 0;
 	tail = set_start(tail, &head, ft_strlen(input), &err);

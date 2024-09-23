@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 12:28:44 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:57:02 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char **dup_envp(char **envp)
+char	**dup_envp(char **envp)
 {
 	int		i;
 	char	**dup_envp;
@@ -36,7 +36,28 @@ char **dup_envp(char **envp)
 	return (dup_envp);
 }
 
-void	init_data(t_data *data, char **envp, struct sigaction *sa)
+void	init_signals(t_data *data)
+{
+	data->sa = ft_calloc(1, sizeof(struct sigaction));
+	if (!data->sa)
+		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
+	data->sa->sa_handler = &handle_sigint;
+	data->sa->sa_flags = SA_RESTART;
+	data->sa_ex = ft_calloc(1, sizeof(struct sigaction));
+	if (!data->sa)
+		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
+	data->sa_ex->sa_handler = &handle_sigint_ex;
+	data->sa_child = ft_calloc(1, sizeof(struct sigaction));
+	if (!data->sa)
+		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
+	data->sa_child->sa_handler = SIG_DFL;
+	data->sa_quit = ft_calloc(1, sizeof(struct sigaction));
+	if (!data->sa)
+		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
+	data->sa_quit->sa_handler = SIG_IGN;
+}
+
+void	init_data(t_data *data, char **envp)
 {
 	data->pids = NULL;
 	data->cmd = NULL;
@@ -46,7 +67,6 @@ void	init_data(t_data *data, char **envp, struct sigaction *sa)
 	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
-	data->sa = sa;
 	if (!data->envp)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 }

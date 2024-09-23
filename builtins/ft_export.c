@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/17 15:46:59 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/18 16:15:16 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ int	ft_export(char *arg, t_cmd *cmd, t_data *data)
 
 	i = 0;
 	data->st_code = 0;
-	cmd->cmd_check = BLTN;
 	if (cmd)
 	{
+		cmd->cmd_check = BLTN;
 		if (redirect(cmd, data))
 			return (1);
 		if (!cmd->args[1])

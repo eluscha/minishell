@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 13:53:19 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/18 15:01:35 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,11 @@ void	wait_loop(t_data *data)
 		cur_pid = cur_pid->next;
 	}
 	if (WIFEXITED(wstatus))
-	{
 		data->st_code = WEXITSTATUS(wstatus);
-	}
+	// if (WIFSTOPPED(wstatus))
+	// 	data->st_code = WSTOPSIG(wstatus);
+	if (lastsignal)
+		data->st_code = lastsignal + 128;
 }
 
 int	execute_loop(t_data *data, struct sigaction *sa_ex)

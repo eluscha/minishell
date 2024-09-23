@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 14:01:19 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:09:17 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef enum e_lex_state
 	WORD,
 	INSQTS,
 	INDQTS
-}	lex_state;
+}	t_lex_state;
 
 typedef enum e_toktype
 {
@@ -92,15 +92,18 @@ typedef struct pids
 
 typedef struct data
 {
-	t_cmd	*cmd;
-	t_pids	*pids;
-	int		st_code;
-	int		fd[2];
-	char	**envp;
-	char	**paths;
-	char	*tty_in;
-	char	*tty_out;
-	struct sigaction *sa;
+	t_cmd				*cmd;
+	t_pids				*pids;
+	int					st_code;
+	int					fd[2];
+	char				**envp;
+	char				**paths;
+	char				*tty_in;
+	char				*tty_out;
+	struct sigaction	*sa;
+	struct sigaction	*sa_child;
+	struct sigaction	*sa_ex;
+	struct sigaction	*sa_quit;
 }	t_data;
 
 typedef enum exp_type
@@ -118,17 +121,15 @@ typedef struct export
 }	t_export;
 
 extern int lastsignal;
-//extern int	g_signal_code;
 
 void	free_cmds(t_cmd	*cmd_list);
-
 int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
 int		execute_loop(t_data *data, struct sigaction *sa_ex);
 char	**dup_envp(char **envp);
-void	init_data(t_data *data, char **envp, struct sigaction *sa);
+void	init_data(t_data *data, char **envp);
 
 /*builtins*/
 int		check_builtin(t_cmd *cmd, t_data *data);
@@ -146,14 +147,14 @@ int		ft_exit(t_cmd *cmd, t_data *data);
 t_tok	*read_input(t_data *data);
 
 /* parser.c */
-t_cmd   *parser(t_tok *head, t_data *data);
+t_cmd	*parser(t_tok *head, t_data *data);
 t_tok	*lexer(char *input, t_tok *tail, t_data *data);
 t_tok	*check_syntax(t_tok *head);
 
 /* lexer_mid_fts.c */
-t_tok	*check_word_border(lex_state *state, t_tok *tail, char c, int *err);
-void	handle_quotes(lex_state *state, t_tok *tail, char c);
-t_tok	*handle_special(lex_state *state, t_tok *tail, char c, int *err);
+t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err);
+void	handle_quotes(t_lex_state *state, t_tok *tail, char c);
+t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err);
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
 int		change_word(t_tok *token, char *var, char *start);
 
@@ -161,7 +162,7 @@ int		change_word(t_tok *token, char *var, char *start);
 t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
 t_tok	*gen_token(t_toktype type, int len, int *err);
 void	extend_word(t_tok *tail, int len, int *err);
-t_tok	*set_end(lex_state *state, t_tok *tail, char c, int *err);
+t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err);
 t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
@@ -182,5 +183,10 @@ t_cmd	*init_struct(int numargs, int numredir, int *err);
 int		fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r);
 t_cmd	*free_cmd(t_cmd *cmd, int i);
 void	print_struct(t_cmd *cmd);
+
+/* signals */
+void	init_signals(t_data *data);
+void	handle_sigint(int sig);
+void	handle_sigint_ex(int sig);
 
 #endif
