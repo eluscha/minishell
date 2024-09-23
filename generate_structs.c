@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 13:01:35 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:58:11 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ t_cmd	*init_struct(int numargs, int numredir, int *err)
 	cmd = ft_calloc(1, sizeof(t_cmd));
 	if (cmd)
 	{
-		cmd->args = ft_calloc(numargs + 2, sizeof(char *));
+		cmd->args = ft_calloc(numargs + 3, sizeof(char *));
 		if (cmd->args)
 		{
 			cmd->redirect = ft_calloc(numredir + 1, sizeof(t_redirect));
@@ -97,18 +97,25 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 	{
 		i = 0;
 		while (cmd->args[++i])
+		{
 			free(cmd->args[i]);
+			cmd->args[i] = NULL;
+		}
 		if (cmd->args[0])
+		{
 			free(cmd->args[0]);
+			cmd->args = NULL;
+		}
 		free(cmd->args);
+		cmd->args = NULL;
 	}
 	if (cmd->redirect)
 	{
 		i = -1;
 		while (cmd->redirect[++i].value)
 		{
-			//if (cmd->redirect[i].type == HEREDOC)
-			//	unlink(cmd->redirect[i].value);
+			if (cmd->redirect[i].type == HEREDOC)
+				unlink(cmd->redirect[i].value);
 			free(cmd->redirect[i].value);
 		}
 		free(cmd->redirect);
