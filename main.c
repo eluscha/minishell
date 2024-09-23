@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 13:57:56 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:03:20 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,17 @@ int lastsignal;
 void handle_sigint(int sig)
 {
 	lastsignal = sig;
-	printf("\nminishell> ");
-	fflush(stdout);
+	printf("\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	//rl_clear_display();
+	
 }
 
 void handle_sigint_ex(int sig)
 {
 	lastsignal = sig;
-	//rl_replace_line("", 0);
 	printf("\n");
 }
 
@@ -104,17 +107,24 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, envp, &sa);
 	while (1)
 	{
+		//printf("in while loop\n");
 		lastsignal = 0;
 		head = read_input(&data);
-		if (!head && lastsignal != 2) //ctrl + D
+		if (!head) //ctrl + D
 		{
 			data.cmd = NULL;
 			break ;
 		}
-		data.cmd = parser(head, &data);
+		if (head->type == END)
+		{
+			free_tokens(head);
+			continue ;
+		}
+		else
+			data.cmd = parser(head, &data);
 		if (!data.cmd)
 			continue ;
-		sigaction(SIGINT, &sa_ex, &sa);
+		sigaction(SIGINT, &sa_ex, NULL);
 		execute_loop(&data, &sa_child);
 		free_cmds(data.cmd);
 	}
@@ -128,14 +138,9 @@ t_tok	*read_input(t_data *data)
 	t_tok	*tail;
 	t_tok	*head;
 
-	input = readline("minishell> ");
+	input = readline("minishell> "); //
 	if (input == NULL) //will happen with ctrl+D
 		return (NULL);
-	if (lastsignal == 2)
-	{
-		free(input);
-		return (NULL);
-	}
 	if (*input)
 		add_history(input);
 	tail = lexer(input, NULL, data);
