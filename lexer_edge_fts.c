@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 14:44:12 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/23 12:10:24 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
 	}
 	else
 	{
+		*state = DELIM;
 		tail->next = gen_token(END, 7, err);
 		if (!*err)
 			tail = tail->next;
