@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 12:07:33 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:01:46 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, envp);
 	while (1)
 	{
-		//printf("in while loop\n");
+		sigaction(SIGINT, data.sa, NULL);
 		lastsignal = 0;
 		head = read_input(&data);
 		if (!head) //ctrl + D
@@ -115,7 +115,7 @@ int	main(int argc, char *argv[], char *envp[])
 			data.cmd = parser(head, &data);
 		if (!data.cmd)
 			continue ;
-		sigaction(SIGINT, data.sa_ex, data.sa);
+		sigaction(SIGINT, data.sa_ex, NULL);
 		execute_loop(&data, data.sa_child);
 		free_cmds(data.cmd);
 	}

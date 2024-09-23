@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/23 12:08:55 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:02:01 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		ptrs = ptrs->next;
 	}
 	//THIS IS for printing tokens
-	/*
+	
 	t_tok *ptr = head;
 	while (ptr)
 	{
