@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_tokens.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eleonora          #+#    #+#             */
-/*   Updated: 2024/09/13 12:27:35 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 11:58:44 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,12 @@ int	io_type(t_tok *token, t_toktype type, int *numredir)
 	*numredir = *numredir + 1;
 	token->type = type;
 	if (type == APPEND || type == HEREDOC)
+	{
 		idx = 2;
+		if (token->word[idx] == '-'
+			&& !token->word[idx + 1] && type == HEREDOC)
+			idx = 3;
+	}
 	else
 		idx = 1;
 	if (!token->word[idx])

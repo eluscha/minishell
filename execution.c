@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 15:01:35 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:22:38 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,10 @@ int	path_not_found(t_cmd *cmd, t_data *data)
 	exit(data->st_code);
 }
 
-int	child_process(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
+int	child_process(t_cmd *cmd, t_data *data)
 {
-	sigaction(SIGINT, sa_ex, NULL);
+	sigaction(SIGINT, data->sa_child, NULL);
+	sigaction(SIGQUIT, data->sa_quit_child, NULL);
 	if (cmd->next)
 	{
 		close ((data->fd)[0]);
@@ -66,7 +67,7 @@ int	child_process(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
 	exit (data->st_code);
 }
 
-int	fork_function(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
+int	fork_function(t_cmd *cmd, t_data *data)
 {
 	int		pid;
 	int		tty_fd;
@@ -75,7 +76,7 @@ int	fork_function(t_cmd *cmd, t_data *data, struct sigaction *sa_ex)
 	if (pid == -1)
 		return (clean_exit("failed to create child process\n", 1, data));
 	if (pid == 0)
-		return (child_process(cmd, data, sa_ex));
+		return (child_process(cmd, data));
 	if (cmd->next)
 	{
 		close((data->fd)[1]);
@@ -106,13 +107,11 @@ void	wait_loop(t_data *data)
 	}
 	if (WIFEXITED(wstatus))
 		data->st_code = WEXITSTATUS(wstatus);
-	// if (WIFSTOPPED(wstatus))
-	// 	data->st_code = WSTOPSIG(wstatus);
 	if (lastsignal)
 		data->st_code = lastsignal + 128;
 }
 
-int	execute_loop(t_data *data, struct sigaction *sa_ex)
+int	execute_loop(t_data *data)
 {
 	int		tty_fd;
 	t_cmd	*cmd;
@@ -127,7 +126,7 @@ int	execute_loop(t_data *data, struct sigaction *sa_ex)
 			if (pipe(data->fd) < 0)
 				return (clean_exit("failed to create pipe\n", 1, data));
 		}
-		if (fork_function(cmd, data, sa_ex))
+		if (fork_function(cmd, data))
 			return (1);
 		cmd = cmd->next;
 	}
