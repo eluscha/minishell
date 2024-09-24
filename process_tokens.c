@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eleonora          #+#    #+#             */
-/*   Updated: 2024/09/13 12:27:35 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:10:33 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,34 @@ int	io_type(t_tok *token, t_toktype type, int *numredir)
 		token->type = DISCARD;
 		if (token->next->type != END)
 			token->next->type = type;
+		return (0);
 	}
-	else
+	if (type == HEREDOC && token->word[2] == '-')
+		return (handle_hddash(token));
+	token->type = type;
+	io_arg = ft_strdup(token->word + idx);
+	if (!io_arg)
+		return (-1);
+	free(token->word);
+	token->word = io_arg;
+	return (0);
+}
+
+int handle_hddash(t_tok *token)
+{
+	int idx = 3;
+	if (!token->word[idx])
 	{
-		token->type = type;
-		io_arg = ft_strdup(token->word + idx);
-		if (!io_arg)
-			return (-1);
-		free(token->word);
-		token->word = io_arg;
+		token->type = DISCARD;
+		if (token->next->type != END)
+			token->next->type = HDDASH;
+		return (0);
 	}
+	token->type = HDDASH;
+	char *arg = ft_strdup(token->word + idx);
+	if (!arg)
+		return (-1);
+	free(token->word);
+	token->word = arg;
 	return (0);
 }

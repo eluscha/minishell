@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 13:53:43 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:18:56 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	//sigaction(SIG, sa_ex)
 	while (head != tail)
 	{
-		if (head->type != HEREDOC)
+		if (head->type != HEREDOC && head->type != HDDASH)
 		{
 			head = head->next;
 			continue ;
@@ -76,8 +76,6 @@ int	get_input(int fd, t_tok *token, t_data *data)
 	char	*line;
 	size_t	len;
 	int		err;
-
-	//sigaction(SIGINT, data->sa, NULL);
 
 	len = ft_strlen(token->word);
 	err = 0;

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/23 12:10:24 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:08:27 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,4 +150,6 @@ void	print_toktype(t_tok *token)
 		printf("APPEND ");
 	else if (token->type == DISCARD)
 		printf("DISCARD ");
+	else if (token->type == HDDASH)
+		printf("HDDASH ");
 }

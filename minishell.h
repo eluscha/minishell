@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 12:09:17 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 13:07:52 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,8 @@ typedef enum e_toktype
 	HEREDOC,
 	INPUT,
 	OUTPUT,
-	APPEND
+	APPEND,
+	HDDASH
 }	t_toktype;
 
 typedef struct s_tok
@@ -170,6 +171,7 @@ void	print_toktype(t_tok *token);
 int		process_tokens(t_tok *token, int *numargs, int *numredir);
 int		handle_notpipe(t_tok *token, int cmd, int *numredir);
 int		io_type(t_tok *token, t_toktype type, int *numredir);
+int handle_hddash(t_tok *token);
 
 /* get_heredoc.c */
 int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
