@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/18 14:43:17 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:54:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 		if (*state == INSQTS)
 			*state = WORD;
 		else if (*state == WORD)
+		{
 			*state = INSQTS;
+			tail->type = NOSPECIAl;
+		}
 		else
 			tail->word[tail->idx++] = c;
 	}
@@ -44,7 +47,10 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 		if (*state == INDQTS)
 			*state = WORD;
 		else if (*state == WORD)
+		{
 			*state = INDQTS;
+			tail->type = NOSPECIAl;
+		}
 		else
 			tail->word[tail->idx++] = c;
 	}
@@ -54,7 +60,7 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 {
 	if (c == '|')
 	{
-		if (!tail->idx)
+		if (!tail->idx) //word is empty so far
 		{
 			//printf("pipe is the first char\n");
 			tail->word[tail->idx++] = c;
@@ -62,7 +68,7 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 			if (!*err)
 				tail = tail->next;
 		}
-		else
+		else //word is not empty
 		{
 			tail->next = gen_token(UNDETERM, 0, err);
 			if (!*err)
@@ -75,7 +81,7 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 		*state = DELIM;
 		return (tail);
 	}
-	else if (tail->idx && tail->word[tail->idx - 1] != c)
+	if (tail->idx && tail->word[tail->idx - 1] != c) // word is not empty and also not consisting of same chars as c
 	{
 		tail->next = gen_token(UNDETERM, 0, err);
 		if (!*err)
@@ -99,6 +105,11 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 	{
 		while (start[i] && ft_isalnum(start[i]))
 			i++;
+		if (!i)
+		{
+			tail->word[tail->idx++] = '$';
+			return (0);
+		}
 		while (*envp)
 		{
 			if (ft_strncmp(*envp, start, i) == 0 && (*envp)[i] == '=')

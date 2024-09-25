@@ -43,7 +43,7 @@ commands=(
 )
 
 # Manual Tests that do not work with this script
-# "exit 0"
+# "exit 20"
 # "env"
 # "echo \$?"
 # ...
