@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/24 13:07:52 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/25 10:42:29 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ typedef struct data
 	struct sigaction	*sa_child;
 	struct sigaction	*sa_ex;
 	struct sigaction	*sa_quit;
+	struct sigaction	*sa_quit_ex;
+	struct sigaction	*sa_quit_child;
 }	t_data;
 
 typedef enum exp_type
@@ -128,7 +130,7 @@ int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
-int		execute_loop(t_data *data, struct sigaction *sa_ex);
+int		execute_loop(t_data *data);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 
@@ -190,5 +192,6 @@ void	print_struct(t_cmd *cmd);
 void	init_signals(t_data *data);
 void	handle_sigint(int sig);
 void	handle_sigint_ex(int sig);
+void	handle_sigquit_ex(int sig);
 
 #endif

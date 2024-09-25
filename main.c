@@ -3,83 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 14:01:46 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:45:51 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*
-NON-INTERACTIVE MAIN
-
-int	main(int argc, char *argv[], char *envp[])
-{
-	t_data	data;
-	t_tok *head;
-	t_tok *tail;
-
-	if (argc > 2)
-	{
-		printf ("no arguments required, only program name: %s\n", argv[0]);
-		return (1);
-	}
-	init_data(&data, envp);
-	tail = lexer(input, NULL, data);
-	head = tail->next;
-	tail->next = NULL;
-	data.cmd = parser(head, &data);
-	if (data.cmd)
-		execute_loop(&data);
-	exit(clean_exit(NULL, EXIT_SUCCESS, &data));
-}
-*/
-
 int lastsignal;
 
-void	handle_sigint(int sig)
+void	main_loop(t_data *data, t_tok **head)
 {
-	lastsignal = sig;
-	printf("\n");
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	//rl_clear_display();
-	
+	while (1)
+	{
+		sigaction(SIGQUIT, data->sa_quit, NULL);
+		sigaction(SIGINT, data->sa, NULL);
+		lastsignal = 0;
+		*head = read_input(data);
+		if (!*head) //ctrl + D
+		{
+			data->cmd = NULL;
+			break ;
+		}
+		if ((*head)->type == END)
+		{
+			free_tokens(*head);
+			continue ;
+		}
+		else
+			data->cmd = parser(*head, data);
+		if (!data->cmd)
+			continue ;
+		sigaction(SIGINT, data->sa_ex, NULL);
+		sigaction(SIGQUIT, data->sa_quit_ex, NULL);
+		execute_loop(data);
+		free_cmds(data->cmd);
+	}
 }
-
-void	handle_sigint_ex(int sig)
-{
-	lastsignal = sig;
-	printf("\n");
-}
-
-/*
-int g_signal_code = 0;
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	g_signal_code = 1;
-	//rl_on_new_line();
-	// if (exec_chld)
-	// 	write(1, "\n", 1);
-	// else
-	// 	write(1, "\nminishell> ", ft_strlen("\nminishell> "));
-	// rl_replace_line("", 0);
-	// rl_redisplay();
-	// write(1, "\nminishell> ", ft_strlen("\nminishell> "));
-	// fflush(stdout); //not allowed function, but was advised in codevault
-}
-
-void	handle_sigint_ch(int sig)
-{
-	(void)sig;
-}
-
-*/
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -87,38 +49,18 @@ int	main(int argc, char *argv[], char *envp[])
 	t_tok	*head;
 
 	(void)argv;
+	if (!isatty(0) || !isatty(1))
+		return (clean_exit("piping ./execs is not supported\n", errno, NULL));
 	init_signals(&data);
-	sigaction(SIGQUIT, data.sa_quit, NULL);
-	sigaction(SIGINT, data.sa, NULL);
+	// sigaction(SIGQUIT, data.sa_quit, NULL);
+	// sigaction(SIGINT, data.sa, NULL);
 	if (argc > 1)
 	{
 		ft_putstr_fd ("no arguments required, only program name\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	init_data(&data, envp);
-	while (1)
-	{
-		sigaction(SIGINT, data.sa, NULL);
-		lastsignal = 0;
-		head = read_input(&data);
-		if (!head) //ctrl + D
-		{
-			data.cmd = NULL;
-			break ;
-		}
-		if (head->type == END)
-		{
-			free_tokens(head);
-			continue ;
-		}
-		else
-			data.cmd = parser(head, &data);
-		if (!data.cmd)
-			continue ;
-		sigaction(SIGINT, data.sa_ex, NULL);
-		execute_loop(&data, data.sa_child);
-		free_cmds(data.cmd);
-	}
+	main_loop(&data, &head);
 	printf("exit\n");
 	exit(clean_exit(NULL, EXIT_SUCCESS, &data)); //when should main return sth other than 0?
 }

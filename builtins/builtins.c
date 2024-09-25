@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 16:26:21 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:54:13 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	ft_pwd(t_cmd *cmd, t_data *data)
 	write(1, dir, strlen(dir));
 	write(1, "\n", 1);
 	free(dir);
+	dir = NULL;
 	return (0);
 }
 
@@ -53,7 +54,8 @@ int	ft_echo(t_cmd *cmd, t_data *data)
 			write(1, " ", 1);
 			i++;
 		}
-		write(1, cmd->args[i], ft_strlen(cmd->args[i]));
+		if (cmd->args[i])
+			write(1, cmd->args[i], ft_strlen(cmd->args[i]));
 		if (strcmp(cmd->args[1], "-n"))
 			write(1, "\n", 1);
 	}
