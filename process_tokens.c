@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/25 10:43:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:02:49 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ int	handle_notpipe(t_tok *token, int cmd, int *numredir)
 	err = 0;
 	if (token->type >= HEREDOC)
 		return (0);
-	else if (token->word[0] == '<')
+	else if (token->type != NOSPECIAl && token->word[0] == '<')
 	{
 		if (token->word[1] == '<')
 			err = io_type(token, HEREDOC, numredir);
 		else
 			err = io_type(token, INPUT, numredir);
 	}
-	else if (token->word[0] == '>')
+	else if (token->type != NOSPECIAl && token->word[0] == '>')
 	{
 		if (token->word[1] == '>')
 			err = io_type(token, APPEND, numredir);

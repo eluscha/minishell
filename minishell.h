@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/25 10:42:29 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/25 11:59:00 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef enum e_lex_state
 typedef enum e_toktype
 {
 	UNDETERM,
+	NOSPECIAl,
 	END,
 	SQERR,
 	DQERR,
