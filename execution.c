@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/24 14:22:38 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/27 10:00:51 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	child_process(t_cmd *cmd, t_data *data)
 {
 	sigaction(SIGINT, data->sa_child, NULL);
 	sigaction(SIGQUIT, data->sa_quit_child, NULL);
+	data->child = 1;
 	if (cmd->next)
 	{
 		close ((data->fd)[0]);

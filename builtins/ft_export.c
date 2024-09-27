@@ -6,11 +6,23 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/18 16:15:16 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/27 17:07:55 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*export_err(t_export *export, t_data *data)
+{
+	if (export->type == EXPORT)
+		write(2, "export: '", ft_strlen("export: '"));
+	if (export->type == UNSET)
+		write(2, "unset: '", ft_strlen("unset: '"));
+	write(2, export->arg, ft_strlen(export->arg));
+	write(2, "': not a valid identifier\n", 26);
+	data->st_code = 1;
+	return (NULL);
+}
 
 char	*check_argument(t_export *export, t_data *data)
 {
@@ -19,21 +31,16 @@ char	*check_argument(t_export *export, t_data *data)
 
 	i = 0;
 	res = NULL;
-	while (ft_isalnum(export->arg[i]))
+	if (!ft_isalpha(export->arg[i]) && export->arg[i] != '_')
+		return (export_err(export, data));
+	while (ft_isalnum(export->arg[i]) || export->arg[i] == '_')
 		i++;
 	if (i && export->arg[i] == '\0')
 		res = strdup(export->arg);
 	else if (i && export->arg[i] == '=' && export->type == EXPORT)
 		res = ft_substr(export->arg, 0, i);
 	else
-	{
-		if (export->type == EXPORT)
-			write(2, "export: '", ft_strlen("export: '"));
-		if (export->type == UNSET)
-			write(2, "unset: '", ft_strlen("unset: '"));
-		write(2, export->arg, ft_strlen(export->arg));
-		write(2, "': not a valid identifier\n", 26);
-	}
+		return (export_err(export, data));
 	if (!res)
 		data->st_code = 1;
 	return (res);
@@ -90,7 +97,7 @@ int	ft_unset(t_cmd *cmd, t_data *data)
 	if (redirect(cmd, data))
 		return (1);
 	if (!cmd->args[1])
-		return (1);
+		return (0);
 	export.arg = cmd->args[1];
 	export.type = UNSET;
 	export.key = check_argument(&export, data);

@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 10:47:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/16 15:18:39 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/27 17:08:45 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ int	print_array(char **array)
 
 	i = 0;
 	if (!array)
-		return (0);
+		return (1);
 	while (array[i])
 	{
-		write(1, array[i], ft_strlen(array[i]));
-		write(1, "\n", 1);
+		write(STDOUT_FILENO, array[i], ft_strlen(array[i]));
+		write(STDOUT_FILENO, "\n", 1);
 		i++;
 	}
 	return (0);
@@ -67,5 +67,5 @@ int	find_key(t_export *export, char **envp, t_data *data)
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
