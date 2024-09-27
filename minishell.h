@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/25 11:59:00 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:07:01 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ typedef struct data
 	t_pids				*pids;
 	int					st_code;
 	int					fd[2];
+	int					child;
 	char				**envp;
 	char				**paths;
 	char				*tty_in;
@@ -137,16 +138,15 @@ void	init_data(t_data *data, char **envp);
 
 /*builtins*/
 int		check_builtin(t_cmd *cmd, t_data *data);
-int		ft_echo(t_cmd *cmd, t_data *data);
+void	ft_echo(t_cmd *cmd, t_data *data);
 int		ft_unset(t_cmd *cmd, t_data *data);
 int		find_key(t_export *export, char **envp, t_data *data);
 int		add_entry(char *entry, char **envp, t_data *data);
-int		print_array(char **array);
 int		unset_variable(int i, char **envp, t_data *data);
 int		ft_export(char *arg, t_cmd *cmd, t_data *data);
 int		print_array(char **array);
-int		ft_cd(t_cmd *cmd, t_data *data);
-int		ft_exit(t_cmd *cmd, t_data *data);
+void	ft_cd(t_cmd *cmd, t_data *data);
+void	ft_exit(t_cmd *cmd, t_data *data);
 
 t_tok	*read_input(t_data *data);
 

@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 10:46:41 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/27 10:20:57 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,28 @@ void	free_pids(t_data *data)
 	}
 }
 
+void free_sas(t_data *data)
+{
+	if (data->sa)
+		free(data->sa);
+	if (data->sa_child)
+		free(data->sa_child);
+	if (data->sa_ex)
+		free(data->sa_ex);
+	if (data->sa_quit)
+		free(data->sa_quit);
+	if (data->sa_quit_child)
+		free(data->sa_quit_child);
+	if (data->sa_quit_ex)
+		free(data->sa_quit_ex);
+	data->sa = NULL;
+	data->sa_child = NULL;
+	data->sa_ex = NULL;
+	data->sa_quit = NULL;
+	data->sa_quit_child = NULL;
+	data->sa_quit_ex = NULL;
+}
+
 int	clean_exit(char *msg, int r_value, t_data *data)
 {
 	if (data)
@@ -79,14 +101,7 @@ int	clean_exit(char *msg, int r_value, t_data *data)
 		free_envp(data->envp);
 		data->envp = NULL;
 		free_pids(data);
-		if (data->sa)
-			free(data->sa);
-		if (data->sa_child)
-			free(data->sa_child);
-		if (data->sa_ex)
-			free(data->sa_ex);
-		if (data->sa_quit)
-			free(data->sa_quit);
+		free_sas(data);
 	}
 	if (msg)
 		write(2, msg, ft_strlen(msg));
