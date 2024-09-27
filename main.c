@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
 /*   Updated: 2024/09/27 16:35:22 by auspensk         ###   ########.fr       */
@@ -49,8 +49,8 @@ int	main(int argc, char *argv[], char *envp[])
 	t_tok	*head;
 
 	(void)argv;
-	// if (!isatty(0) || !isatty(1))
-	// 	return (clean_exit("piping ./execs is not supported\n", errno, NULL));
+	//if (!isatty(0) || !isatty(1))
+	//	return (clean_exit("piping ./execs is not supported\n", errno, NULL));
 	init_signals(&data);
 	// sigaction(SIGQUIT, data.sa_quit, NULL);
 	// sigaction(SIGINT, data.sa, NULL);
