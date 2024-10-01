@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 17:07:55 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/01 16:37:49 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*check_argument(t_export *export, t_data *data)
 	while (ft_isalnum(export->arg[i]) || export->arg[i] == '_')
 		i++;
 	if (i && export->arg[i] == '\0')
-		res = strdup(export->arg);
+		res = ft_strdup(export->arg);
 	else if (i && export->arg[i] == '=' && export->type == EXPORT)
 		res = ft_substr(export->arg, 0, i);
 	else
@@ -46,20 +46,31 @@ char	*check_argument(t_export *export, t_data *data)
 	return (res);
 }
 
-int	unset_variable(int i, char **envp, t_data *data)
+int	export_loop(t_cmd *cmd, t_data *data, t_export *export)
 {
-	while (envp[i])
+	int	i;
+	int	ret;
+
+	i = 1;
+	ret = 0;
+	while ((cmd && cmd->args[i]) || !cmd)
 	{
-		free (envp[i]);
-		if (envp[i + 1])
-			envp[i] = ft_strdup(envp[i + 1]);
-		if (!envp[i])
-			data->st_code = 1;
-		else
-			envp[i] = NULL;
+		if (cmd)
+			export->arg = cmd->args[i];
+		export->type = EXPORT;
+		export->key = check_argument(export, data);
+		if (!export->key)
+			return (1);
+		if (find_key(export, data->envp, data))
+			ret = add_entry(export->arg, data->envp, data);
+		if (export->key)
+			free(export->key);
+		export->key = NULL;
+		if (!cmd)
+			break ;
 		i++;
 	}
-	return (0);
+	return (ret);
 }
 
 int	ft_export(char *arg, t_cmd *cmd, t_data *data)
@@ -77,31 +88,34 @@ int	ft_export(char *arg, t_cmd *cmd, t_data *data)
 		if (!cmd->args[1])
 			return (print_array(data->envp));
 	}
-	export.arg = arg;
-	export.type = EXPORT;
-	export.key = check_argument(&export, data);
-	if (!export.key)
-		return (1);
-	if (find_key(&export, data->envp, data))
-		i = add_entry(export.arg, data->envp, data);
-	free(export.key);
+	if (!cmd)
+		export.arg = arg;
+	i = export_loop(cmd, data, &export);
 	return (i);
 }
 
 int	ft_unset(t_cmd *cmd, t_data *data)
 {
 	t_export	export;
+	int			i;
 
 	data->st_code = 0;
 	cmd->cmd_check = BLTN;
 	if (redirect(cmd, data))
 		return (1);
-	if (!cmd->args[1])
+	i = 1;
+	if (!cmd->args[i])
 		return (0);
-	export.arg = cmd->args[1];
-	export.type = UNSET;
-	export.key = check_argument(&export, data);
-	if (!export.key)
-		return (1);
-	return (find_key(&export, data->envp, data));
+	while (cmd->args[i])
+	{
+		export.arg = cmd->args[i];
+		export.type = UNSET;
+		export.key = check_argument(&export, data);
+		if (!export.key)
+			return (1);
+		if (find_key(&export, data->envp, data))
+			return (1);
+		i++;
+	}
+	return (0);
 }

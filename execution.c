@@ -6,38 +6,25 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 10:00:51 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/01 13:13:25 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	path_not_found(t_cmd *cmd, t_data *data)
+void	exec_child(t_cmd *cmd, t_data *data)
 {
-	if (cmd->cmd_check == CMDNF)
+	if (!redirect(cmd, data))
 	{
-		write(2, "Command \'", ft_strlen("Command \'"));
-		write(2, cmd->cmd, ft_strlen(cmd->cmd));
-		write(2, "\' not found\n", strlen("\' not found\n"));
-		data->st_code = 127;
+		check_command(cmd, data);
+		if (cmd->cmd_check != BIN)
+			path_not_found(cmd, data);
+		execve(cmd->cmd, cmd->args, data->envp);
+		perror("Er");
+		data->st_code = errno;
+		if (data->st_code == 13 || data->st_code == 22)
+			data->st_code = 126;
 	}
-	if (cmd->cmd_check == ISDIR)
-	{
-		write(2, cmd->cmd, ft_strlen(cmd->cmd));
-		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
-		data->st_code = 126;
-	}
-	if (cmd->cmd_check == NSCHFL)
-	{
-		write(2, cmd->cmd, ft_strlen(cmd->cmd));
-		write(2, ": No such file or directory\n",
-			ft_strlen(": No such file or directory\n"));
-		data->st_code = 127;
-	}
-	close(STDIN_FILENO);
-	close(STDOUT_FILENO);
-	clean_exit(NULL, data->st_code, data);
-	exit(data->st_code);
 }
 
 int	child_process(t_cmd *cmd, t_data *data)
@@ -53,25 +40,16 @@ int	child_process(t_cmd *cmd, t_data *data)
 	}
 	check_builtin(cmd, data);
 	if (cmd->cmd_check != BLTN)
-	{
-		if (redirect(cmd, data))
-			return (clean_exit(NULL, 1, data));
-		check_command(cmd, data);
-		if (cmd->cmd_check != BIN)
-			return (path_not_found(cmd, data));
-		execve(cmd->cmd, cmd->args, data->envp);
-		data->st_code = errno;
-	}
+		exec_child(cmd, data);
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
-	clean_exit(NULL, data->st_code, data);
-	exit (data->st_code);
+	close(data->std_in);
+	exit(clean_exit(NULL, data->st_code, data));
 }
 
 int	fork_function(t_cmd *cmd, t_data *data)
 {
 	int		pid;
-	int		tty_fd;
 
 	pid = fork();
 	if (pid == -1)
@@ -86,9 +64,8 @@ int	fork_function(t_cmd *cmd, t_data *data)
 	}
 	else
 	{
-		tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
-		dup2(tty_fd, STDIN_FILENO);
-		close(tty_fd);
+		dup2(data->std_in, STDIN_FILENO);
+		close(data->std_in);
 	}
 	if (new_pid(pid, data) != 0)
 		return (clean_exit("failed to malloc for pids\n", 1, data));
