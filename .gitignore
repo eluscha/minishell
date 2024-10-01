@@ -1,6 +1,10 @@
 # Executable
 minishell
 
+# External Tester
+LucasTester
+./LucasTester/
+
 # Tester files
 diff_output.txt
 
