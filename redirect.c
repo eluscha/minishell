@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/25 12:33:17 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 15:52:38 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/01 14:17:49 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int	duplicate_fds(int *fds, t_cmd *cmd)
 		dup2(fds[0], STDIN_FILENO);
 		close(fds[0]);
 	}
+	if (fds[0] && cmd->cmd_check == BLTN)
+		close(fds[0]);
 	if (fds[1])
 	{
 		dup2(fds[1], STDOUT_FILENO);

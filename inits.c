@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 10:00:24 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/01 11:17:23 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	init_data(t_data *data, char **envp)
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
 	data->child = 0;
+	data->std_in = dup(0);
 	if (!data->envp)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 }

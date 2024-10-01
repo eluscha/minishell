@@ -6,11 +6,38 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 10:44:16 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/01 14:55:28 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	path_not_found(t_cmd *cmd, t_data *data)
+{
+	if (cmd->cmd_check == CMDNF)
+	{
+		write(2, "Command \'", ft_strlen("Command \'"));
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, "\' not found\n", strlen("\' not found\n"));
+		data->st_code = 127;
+	}
+	if (cmd->cmd_check == ISDIR)
+	{
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, ": Is a directory\n", ft_strlen(": Is a directory\n"));
+		data->st_code = 126;
+	}
+	if (cmd->cmd_check == NSCHFL)
+	{
+		write(2, cmd->cmd, ft_strlen(cmd->cmd));
+		write(2, ": No such file or directory\n",
+			ft_strlen(": No such file or directory\n"));
+		data->st_code = 127;
+	}
+	close(STDIN_FILENO);
+	close(STDOUT_FILENO);
+	exit (clean_exit(NULL, data->st_code, data));
+}
 
 int	parce_paths(t_data *data, t_cmd *cmd)
 {
@@ -34,7 +61,10 @@ int	check_path(t_cmd *cmd)
 	DIR	*dir;
 
 	if (access(cmd->cmd, F_OK))
+	{
+		write(2, "failed on access\n", strlen("failed on access\n"));
 		cmd->cmd_check = NSCHFL;
+	}
 	else
 	{
 		dir = opendir(cmd->cmd);
@@ -65,7 +95,7 @@ int	find_binary(t_data *data, t_cmd *cmd)
 		free(buf);
 		if (access(path, F_OK) == 0)
 		{
-			cmd->args[0] = strdup(cmd->cmd);
+			cmd->args[0] = ft_strdup(cmd->cmd);
 			free(cmd->cmd);
 			cmd->cmd = NULL;
 			cmd->cmd = path;
