@@ -21,5 +21,6 @@ int	main(int argc, char *argv[], char *envp[])
 	data.cmd = parser(head, &data);
 	if (data.cmd)
 		execute_loop(&data);
+	close(data.std_in);
 	exit(clean_exit(NULL, EXIT_SUCCESS, &data));
 }

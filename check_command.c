@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 11:52:31 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:09:08 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ int	check_path(t_cmd *cmd)
 	DIR	*dir;
 
 	if (access(cmd->cmd, F_OK))
-	{
-		write(2, "failed on access\n", strlen("failed on access\n"));
 		cmd->cmd_check = NSCHFL;
-	}
 	else
 	{
 		dir = opendir(cmd->cmd);

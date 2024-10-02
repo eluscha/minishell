@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:31:18 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:43:38 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	return (cmds);
 }
 
-t_tok *lexer(char *input, t_tok *tail, t_data *data)
+t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
 	char	c;
 	t_tok	*head;
