@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 15:08:07 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:13:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,9 @@ int	err_exit(char *str, t_data *data)
 void	parse_ex_status(char *str, t_data *data)
 {
 	int	status;
-	int	sign;
 	int	i;
 
 	status = 0;
-	sign = 1;
 	i = 0;
 	if (str[i] == '\0' || ft_strlen(str) > 18)
 		err_exit(str, data);
