@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/25 11:59:00 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:13:05 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@ typedef enum e_lex_state
 	DELIM,
 	WORD,
 	INSQTS,
-	INDQTS
+	INDQTS,
+	INREDIR,
+	OUTREDIR
 }	t_lex_state;
 
 typedef enum e_toktype
 {
 	UNDETERM,
-	NOSPECIAl,
 	END,
 	SQERR,
 	DQERR,
@@ -46,12 +47,11 @@ typedef enum e_toktype
 	PIPE,
 	CMD,
 	ARGS,
-	DISCARD,
+	IOTYPE,
 	HEREDOC,
 	INPUT,
 	OUTPUT,
-	APPEND,
-	HDDASH
+	APPEND
 }	t_toktype;
 
 typedef struct s_tok
@@ -171,10 +171,8 @@ t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
 /* process_tokens.c */
-int		process_tokens(t_tok *token, int *numargs, int *numredir);
-int		handle_notpipe(t_tok *token, int cmd, int *numredir);
-int		io_type(t_tok *token, t_toktype type, int *numredir);
-int handle_hddash(t_tok *token);
+void		process_tokens(t_tok *token, int *numargs, int *numredir);
+void	handle_iotype(t_tok *token, int *numredir);
 
 /* get_heredoc.c */
 int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
