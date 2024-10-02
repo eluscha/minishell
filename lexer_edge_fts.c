@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 13:01:39 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:13:30 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err)
 		*head = tail->next;
 		if (tail->type == PIPERR)
 		{
-			tail->next = gen_token(NWLINE, 1, err);
+			tail->next = gen_token(UNDETERM, len, err);
 			if (!err)
 				tail = tail->next;
 		}
@@ -108,8 +108,10 @@ t_tok	*free_tokens(t_tok *head)
 {
 	t_tok	*ptr;
 
-	while (head != NULL)
+	while (head)
 	{
+		if (head->type >= END && head->type <= PIPERR)
+			break ;
 		if (head->word)
 			free(head->word);
 		ptr = head->next;
@@ -132,8 +134,6 @@ void	print_toktype(t_tok *token)
 		printf("DQERR ");
 	else if (token->type == PIPERR)
 		printf("PIPERR ");
-	else if (token->type == NWLINE)
-		printf("NWLINE ");
 	else if (token->type == PIPE)
 		printf("PIPE ");
 	else if (token->type == CMD)

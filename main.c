@@ -6,20 +6,23 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 10:30:36 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:22:36 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int lastsignal;
+volatile sig_atomic_t lastsignal;
 
 void	main_loop(t_data *data, t_tok **head)
 {
 	while (1)
 	{
+		//printf("begin of while, sig is %d\n", lastsignal);
 		sigaction(SIGQUIT, data->sa_quit, NULL);
 		sigaction(SIGINT, data->sa, NULL);
+		if (lastsignal)
+			printf("\n");
 		lastsignal = 0;
 		*head = read_input(data);
 		if (!*head) //ctrl + D
@@ -38,6 +41,7 @@ void	main_loop(t_data *data, t_tok **head)
 			continue ;
 		sigaction(SIGINT, data->sa_ex, NULL);
 		sigaction(SIGQUIT, data->sa_quit_ex, NULL);
+		//printf("lastsignal is %d\n", lastsignal);
 		execute_loop(data);
 		free_cmds(data->cmd);
 	}
@@ -51,6 +55,7 @@ int	main(int argc, char *argv[], char *envp[])
 	(void)argv;
 	//if (!isatty(0) || !isatty(1))
 	//	return (clean_exit("piping ./execs is not supported\n", errno, NULL));
+	lastsignal = 0;
 	init_signals(&data);
 	// sigaction(SIGQUIT, data.sa_quit, NULL);
 	// sigaction(SIGINT, data.sa, NULL);
@@ -77,12 +82,13 @@ t_tok	*read_input(t_data *data)
 	if (*input)
 		add_history(input);
 	tail = lexer(input, NULL, data);
+	lastsignal = 0;
 	while (tail && tail->type >= SQERR && tail->type <= PIPERR)
 	{
 		free(input);
 		input = readline("> ");
 		if (input == NULL) //will happen with ctrl+D
-			tail = free_tokens(tail->next);
+			return(free_tokens(tail->next));
 		tail = lexer(input, tail, data);
 	}
 	if (input)

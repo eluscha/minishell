@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 11:17:23 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:15:55 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	init_signals(t_data *data)
 	if (!data->sa_ex)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 	data->sa_ex->sa_handler = &handle_sigint_ex;
+	data->sa_ex->sa_flags = SA_RESTART;
 	data->sa_child = ft_calloc(1, sizeof(struct sigaction));
 	if (!data->sa_child)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
