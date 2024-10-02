@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/25 12:22:23 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:00:45 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 	if (!head)
 		return (NULL);
-	/*
+	
 	t_tok *ptr = head;
 	while (ptr)
 	{
@@ -32,14 +32,9 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	*/
-	if (process_tokens(head, &numargs, &numredir) == -1)
-	{
-		//printf("process tokens returned -1\n");
-		free_tokens(head);
-		return (NULL);
-	}
-	/*
+	
+	process_tokens(head, &numargs, &numredir);
+
 	printf("after process: \n");
 	ptr = head;
 	while (ptr)
@@ -48,7 +43,6 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	*/
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) != 0)
 		cmds = NULL;
@@ -83,11 +77,11 @@ t_tok *lexer(char *input, t_tok *tail, t_data *data)
 	while (input[++i] && !err)
 	{
 		c = input[i];
-		if (state == DELIM || state == WORD)
+		if (state != INSQTS && state != INDQTS)
 			tail = check_word_border(&state, tail, c, &err);
 		if (c == '\'' || c == '\"')
 			handle_quotes(&state, tail, c);
-		else if (state == WORD && (c == '|' || c == '>' || c == '<'))
+		else if (c == '|' || c == '>' || c == '<')
 			tail = handle_special(&state, tail, c, &err);
 		else if (c == '$' && (state == WORD || state == INDQTS))
 			i += handle_expand(input + i + 1, tail, data, &err);
@@ -111,9 +105,9 @@ t_tok	*check_syntax(t_tok *head)
 	while (head->type != END)
 	{
 		ntype = head->next->type;
-		if (head->type == PIPE && ntype != CMD && ntype < DISCARD)
+		if (head->type == PIPE && ntype != CMD && ntype < IOTYPE)
 			err = 1;
-		else if (head->type == DISCARD && ntype < HEREDOC)
+		else if (head->type == IOTYPE && ntype < HEREDOC)
 			err = 1;
 		head = head->next;
 		if (err)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/24 13:18:56 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:20:40 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	//sigaction(SIG, sa_ex)
 	while (head != tail)
 	{
-		if (head->type != HEREDOC && head->type != HDDASH)
+		if (head->type != HEREDOC)
 		{
 			head = head->next;
 			continue ;
