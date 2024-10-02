@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 10:00:00 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/02 13:55:07 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ typedef enum e_toktype
 	SQERR,
 	DQERR,
 	PIPERR,
-	NWLINE,
 	PIPE,
 	CMD,
 	ARGS,
@@ -126,7 +125,7 @@ typedef struct export
 	t_exp_unset		type;
 }	t_export;
 
-extern int lastsignal;
+extern volatile sig_atomic_t lastsignal;
 
 void	free_cmds(t_cmd	*cmd_list);
 int		clean_exit(char *msg, int r_value, t_data *data);
