@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/25 11:59:40 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:01:39 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,6 @@ void	print_toktype(t_tok *token)
 {
 	if (token->type == UNDETERM)
 		printf("UNDETERM ");
-	if (token->type == NOSPECIAl)
-		printf("NOSPECIAl ");
 	else if (token->type == END)
 		printf("END\n");
 	else if (token->type == SQERR)
@@ -142,6 +140,8 @@ void	print_toktype(t_tok *token)
 		printf("CMD ");
 	else if (token->type == ARGS)
 		printf("ARGS ");
+	else if (token->type == IOTYPE)
+		printf("IOTYPE ");
 	else if (token->type == HEREDOC)
 		printf("HEREDOC ");
 	else if (token->type == INPUT)
@@ -150,8 +150,4 @@ void	print_toktype(t_tok *token)
 		printf("OUTPUT ");
 	else if (token->type == APPEND)
 		printf("APPEND ");
-	else if (token->type == DISCARD)
-		printf("DISCARD ");
-	else if (token->type == HDDASH)
-		printf("HDDASH ");
 }

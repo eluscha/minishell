@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/25 12:54:43 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/09/30 12:38:20 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,19 @@ t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err)
 		tail->next = gen_token(UNDETERM, 0, err);
 		if (!*err)
 			tail = tail->next;
+		return (tail);
 	}
-	else
-		*state = WORD;
+	else if (*state == INREDIR && tail->idx == 1 && c == '<')
+		return (tail);
+	else if (*state == OUTREDIR && tail->idx == 1 && c == '>')
+		return (tail);
+	else if (*state >= INREDIR || c == '|')
+	{
+		tail->next = gen_token(UNDETERM, 0, err);
+		if (!*err)
+			tail = tail->next;
+	}
+	*state = WORD;
 	return (tail);
 }
 
@@ -34,11 +44,8 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 	{
 		if (*state == INSQTS)
 			*state = WORD;
-		else if (*state == WORD)
-		{
+		else if (*state == WORD )
 			*state = INSQTS;
-			tail->type = NOSPECIAl;
-		}
 		else
 			tail->word[tail->idx++] = c;
 	}
@@ -47,10 +54,7 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 		if (*state == INDQTS)
 			*state = WORD;
 		else if (*state == WORD)
-		{
 			*state = INDQTS;
-			tail->type = NOSPECIAl;
-		}
 		else
 			tail->word[tail->idx++] = c;
 	}
@@ -58,34 +62,30 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 
 t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 {
-	if (c == '|')
+	if (*state != INDQTS && *state != INSQTS)
 	{
-		if (!tail->idx) //word is empty so far
+		if (c == '|')
 		{
-			//printf("pipe is the first char\n");
+			printf("we are here \n");
+			tail->type = PIPE;
 			tail->word[tail->idx++] = c;
 			tail->next = gen_token(UNDETERM, 0, err);
 			if (!*err)
 				tail = tail->next;
+			*state = DELIM;
+			return (tail);
 		}
-		else //word is not empty
+		else if (*state == WORD && tail->idx)
 		{
 			tail->next = gen_token(UNDETERM, 0, err);
 			if (!*err)
 				tail = tail->next;
-			tail->word[tail->idx++] = c;
-			tail->next = gen_token(UNDETERM, 0, err);
-			if (!*err)
-				tail = tail->next;
 		}
-		*state = DELIM;
-		return (tail);
-	}
-	if (tail->idx && tail->word[tail->idx - 1] != c) // word is not empty and also not consisting of same chars as c
-	{
-		tail->next = gen_token(UNDETERM, 0, err);
-		if (!*err)
-			tail = tail->next;
+		if (c == '<')
+			*state = INREDIR;
+		else if (c == '>')
+			*state = OUTREDIR;
+		tail->type = IOTYPE;
 	}
 	tail->word[tail->idx++] = c;
 	return (tail);
