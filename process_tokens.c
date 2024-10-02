@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 10:48:50 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:27:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ void	process_tokens(t_tok *token, int *numargs, int *numredir)
 			cmd = 0;
 		else if (token->type == IOTYPE)
 			handle_iotype(token, numredir);
-		else if (token->type == UNDETERM)
+		else if (token->type <= PIPERR)
 		{
 			if (!cmd)
 			{
 				cmd = 1;
 				token->type = CMD;
 			}
-			else
+			else 
 			{
 				token->type = ARGS;
 				*numargs = *numargs + 1;
