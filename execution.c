@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 11:04:41 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 12:47:48 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 		check_command(cmd, data);
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);
+		close(data->std_in);
 		execve(cmd->cmd, cmd->args, data->envp);
 		perror("Er");
 		write(2, cmd->cmd, strlen(cmd->cmd));
@@ -79,6 +80,7 @@ void	wait_loop(t_data *data)
 	t_pids	*cur_pid;
 
 	cur_pid = data->pids;
+	wstatus = 0;
 	while (cur_pid)
 	{
 		waitpid(cur_pid->pid, &wstatus, 0);
