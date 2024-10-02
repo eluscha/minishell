@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 13:13:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:04:41 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 			path_not_found(cmd, data);
 		execve(cmd->cmd, cmd->args, data->envp);
 		perror("Er");
+		write(2, cmd->cmd, strlen(cmd->cmd));
 		data->st_code = errno;
 		if (data->st_code == 13 || data->st_code == 22)
 			data->st_code = 126;

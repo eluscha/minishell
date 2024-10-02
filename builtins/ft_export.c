@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 16:37:49 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:36:10 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	ft_unset(t_cmd *cmd, t_data *data)
 		if (!export.key)
 			return (1);
 		if (find_key(&export, data->envp, data))
-			return (1);
+			return (0);
 		i++;
 	}
 	return (0);

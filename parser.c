@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 13:00:45 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:29:48 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 	if (!head)
 		return (NULL);
-	
+	/*
 	t_tok *ptr = head;
 	while (ptr)
 	{
@@ -32,9 +32,9 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	
+	*/
 	process_tokens(head, &numargs, &numredir);
-
+	/*
 	printf("after process: \n");
 	ptr = head;
 	while (ptr)
@@ -43,6 +43,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
+	*/
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) != 0)
 		cmds = NULL;
@@ -57,8 +58,8 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		ptrs = ptrs->next;
 	}
 	*/
-	//THIS IS for printing tokens	
-	
+	//THIS IS for printing tokens
+
 	free_tokens(head);
 	return (cmds);
 }
