@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:28:03 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:43:38 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,13 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		ptrs = ptrs->next;
 	}
 	*/
-	//THIS IS for printing tokens	
-	
+	//THIS IS for printing tokens
+
 	free_tokens(head);
 	return (cmds);
 }
 
-t_tok *lexer(char *input, t_tok *tail, t_data *data)
+t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
 	char	c;
 	t_tok	*head;

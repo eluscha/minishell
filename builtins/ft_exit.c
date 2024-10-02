@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 10:19:03 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 14:52:50 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	err_exit(char *str, t_data *data)
 	write(2, str, ft_strlen(str));
 	write(2, ": numeric argument required\n",
 		ft_strlen(": numeric argument required\n"));
+	close(data->std_in);
 	exit (clean_exit(NULL, 2, data));
 }
 
@@ -44,6 +45,7 @@ void	parse_ex_status(char *str, t_data *data)
 		status = status % 256;
 	if (*str == '-')
 		status = 256 - status;
+	close(data->std_in);
 	exit (clean_exit (NULL, status, data));
 }
 
@@ -66,5 +68,6 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	}
 	if (cmd->args[1])
 		return (parse_ex_status(cmd->args[1], data));
+	close(data->std_in);
 	exit (clean_exit(NULL, 0, data));
 }
