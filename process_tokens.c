@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_tokens.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 13:17:17 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:48:50 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ void	process_tokens(t_tok *token, int *numargs, int *numredir)
 			handle_iotype(token, numredir);
 		else if (token->type == UNDETERM)
 		{
-			if (!cmd++)
+			if (!cmd)
+			{
+				cmd = 1;
 				token->type = CMD;
-			else 
+			}
+			else
 			{
 				token->type = ARGS;
 				*numargs = *numargs + 1;
