@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 13:00:45 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:55:53 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 	if (!head)
 		return (NULL);
-	
+	/*
 	t_tok *ptr = head;
 	while (ptr)
 	{
@@ -32,9 +32,10 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
-	
+	*/
 	process_tokens(head, &numargs, &numredir);
-
+	/*
+	t_tok *ptr = head;
 	printf("after process: \n");
 	ptr = head;
 	while (ptr)
@@ -43,6 +44,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
         printf("%s\n", ptr->word);
 		ptr = ptr->next;
 	}
+	*/
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) != 0)
 		cmds = NULL;

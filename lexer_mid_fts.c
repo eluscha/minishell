@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 12:38:20 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:33:39 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err)
 		return (tail);
 	else if (*state == OUTREDIR && tail->idx == 1 && c == '>')
 		return (tail);
-	else if (*state >= INREDIR || c == '|')
+	else if (*state >= INREDIR || (c == '|' && tail->idx))
 	{
 		tail->next = gen_token(UNDETERM, 0, err);
 		if (!*err)
@@ -66,7 +66,6 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 	{
 		if (c == '|')
 		{
-			printf("we are here \n");
 			tail->type = PIPE;
 			tail->word[tail->idx++] = c;
 			tail->next = gen_token(UNDETERM, 0, err);
