@@ -6,13 +6,13 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:55:32 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/23 10:50:09 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/09/27 15:08:51 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	cd_error(char *msg, t_cmd *cmd, t_data *data, char *oldpwd)
+void	cd_error(char *msg, t_cmd *cmd, t_data *data, char *oldpwd)
 {
 	write(2, "cd: ", 4);
 	if (msg)
@@ -22,7 +22,7 @@ int	cd_error(char *msg, t_cmd *cmd, t_data *data, char *oldpwd)
 	data->st_code = 1;
 	if (oldpwd)
 		free(oldpwd);
-	return (1);
+	return ;
 }
 
 int	to_home(t_cmd *cmd, t_data *data)
@@ -41,7 +41,7 @@ int	to_home(t_cmd *cmd, t_data *data)
 	return (0);
 }
 
-int	set_envp(char **oldpwd, t_data *data)
+void	set_envp(char **oldpwd, t_data *data)
 {
 	char	*cur_dir;
 	char	*pwd_dir;
@@ -50,7 +50,7 @@ int	set_envp(char **oldpwd, t_data *data)
 	{
 		data->st_code = 1;
 		free (*oldpwd);
-		return (1);
+		return ;
 	}
 	cur_dir = getcwd(NULL, 0);
 	pwd_dir = ft_strjoin("PWD=", cur_dir);
@@ -59,34 +59,14 @@ int	set_envp(char **oldpwd, t_data *data)
 	{
 		data->st_code = 1;
 		free(pwd_dir);
-		return (1);
+		return ;
 	}
 	free(pwd_dir);
 	free(*oldpwd);
-	return (0);
+	return ;
 }
 
-void	prev_dir(t_cmd *cmd, t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (data->envp[i])
-	{
-		if (!ft_strncmp(data->envp[i], "OLDPWD=", 7))
-		{
-			free(cmd->args[1]);
-			cmd->args[1] = NULL;
-			cmd->args[1] = ft_strdup(data->envp[i] + 7);
-			write(1, cmd->args[1], ft_strlen(cmd->args[1]));
-			write(1, "\n", 1);
-			break ;
-		}
-		i++;
-	}
-}
-
-int	ft_cd(t_cmd *cmd, t_data *data)
+void	ft_cd(t_cmd *cmd, t_data *data)
 {
 	char	*oldpwd;
 	char	*cur_dir;
@@ -95,14 +75,14 @@ int	ft_cd(t_cmd *cmd, t_data *data)
 	cmd->cmd_check = BLTN;
 	oldpwd = NULL;
 	if (redirect(cmd, data))
-		return (clean_exit(NULL, 1, data));
+		return ;
 	if (!cmd->args[1])
 	{
 		if (to_home(cmd, data))
 			return (cd_error("HOME not set\n", cmd, data, NULL));
 	}
-	if (!ft_strcmp(cmd->args[1], "-"))
-		prev_dir(cmd, data);
+	if (cmd->args[2])
+		return (cd_error("too many arguments\n", cmd, data, NULL));
 	cur_dir = getcwd(NULL, 0);
 	if (!cur_dir)
 		return (cd_error(NULL, cmd, data, oldpwd));

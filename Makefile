@@ -20,6 +20,7 @@ SRC = execution.c \
 		builtins/ft_export_utils.c \
 		builtins/ft_exit.c \
 		builtins/ft_cd.c \
+		builtins/ft_echo.c
 
 OBJS = $(SRC:.c=.o)
 

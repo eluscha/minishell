@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/30 13:13:05 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:00:00 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ typedef struct data
 	t_pids				*pids;
 	int					st_code;
 	int					fd[2];
+	int					child;
+	int					std_in;
 	char				**envp;
 	char				**paths;
 	char				*tty_in;
@@ -134,19 +136,19 @@ int		check_command(t_cmd *cmd, t_data *data);
 int		execute_loop(t_data *data);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
+int		path_not_found(t_cmd *cmd, t_data *data);
 
 /*builtins*/
 int		check_builtin(t_cmd *cmd, t_data *data);
-int		ft_echo(t_cmd *cmd, t_data *data);
+void	ft_echo(t_cmd *cmd, t_data *data);
 int		ft_unset(t_cmd *cmd, t_data *data);
-int		find_key(t_export *export, char **envp, t_data *data);
+int		find_key(t_export *ex, char **envp, t_data *data);
 int		add_entry(char *entry, char **envp, t_data *data);
-int		print_array(char **array);
 int		unset_variable(int i, char **envp, t_data *data);
 int		ft_export(char *arg, t_cmd *cmd, t_data *data);
 int		print_array(char **array);
-int		ft_cd(t_cmd *cmd, t_data *data);
-int		ft_exit(t_cmd *cmd, t_data *data);
+void	ft_cd(t_cmd *cmd, t_data *data);
+void	ft_exit(t_cmd *cmd, t_data *data);
 
 t_tok	*read_input(t_data *data);
 

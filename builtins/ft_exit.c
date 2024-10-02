@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/30 12:23:21 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:14:38 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,41 +18,53 @@ int	err_exit(char *str, t_data *data)
 	write(2, str, ft_strlen(str));
 	write(2, ": numeric argument required\n",
 		ft_strlen(": numeric argument required\n"));
-	data->st_code = 2;
-	clean_exit(NULL, 0, data);
-	exit (data->st_code);
+	exit (clean_exit(NULL, 2, data));
 }
 
-int	parse_ex_status(char *str, t_data *data)
+void	parse_ex_status(char *str, t_data *data)
 {
 	int	status;
+	int	i;
 
 	status = 0;
-	if (*str == '\0' || ft_strlen(str) > 18)
-		return (err_exit(str, data));
-	if (*str == '-' || *str == '+')
+	i = 0;
+	if (str[i] == '\0' || ft_strlen(str) > 18)
+		err_exit(str, data);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i] != '\0')
 	{
-		str++;
-	}
-	while (*str != '\0')
-	{
-		if (*str > 47 && *str < 58)
-			status = (status * 10) + (*str - 48);
+		if (str[i] > 47 && *str < 58)
+			status = (status * 10) + (str[i] - 48);
 		else
-			return (err_exit(str, data));
-		str++;
+			err_exit(str, data);
+		i++;
 	}
-	clean_exit(NULL, 0, data);
-	exit (status);
+	while (status > 255)
+		status = status % 256;
+	if (*str == '-')
+		status = 256 - status;
+	exit (clean_exit (NULL, status, data));
 }
 
-int	ft_exit(t_cmd *cmd, t_data *data)
+void	ft_exit(t_cmd *cmd, t_data *data)
 {
 	cmd->cmd_check = BLTN;
 	data->st_code = 0;
-	write(1, "exit\n", ft_strlen("exit\n"));
+	if (redirect(cmd, data))
+	{
+		clean_exit(NULL, data->st_code, data);
+		return ;
+	}
+	if (!data->child)
+		write(1, "exit\n", ft_strlen("exit\n"));
+	if (cmd->args[2])
+	{
+		write(2, "exit: too many arguments\n", 25);
+		data->st_code = 1;
+		return ;
+	}
 	if (cmd->args[1])
 		return (parse_ex_status(cmd->args[1], data));
-	clean_exit(NULL, 0, data);
-	exit (0);
+	exit (clean_exit(NULL, 0, data));
 }
