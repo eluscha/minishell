@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 10:29:48 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 11:18:58 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	*/
 	process_tokens(head, &numargs, &numredir);
 	/*
+	t_tok *ptr = head;
 	printf("after process: \n");
 	ptr = head;
 	while (ptr)
