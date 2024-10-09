@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:34:19 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:14:44 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@ void	main_loop(t_data *data, t_tok **head)
 	{
 		sigaction(SIGQUIT, data->sa_quit, NULL);
 		sigaction(SIGINT, data->sa, NULL);
+		if (lastsignal == SIGINT)
+			printf("\n");
+		if (lastsignal == SIGQUIT)
+			write(2, "Quit\n", 5);
 		lastsignal = 0;
 		*head = read_input(data);
 		if (!*head) //ctrl + D
@@ -57,7 +61,8 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, envp);
 	main_loop(&data, &head);
 	printf("exit\n");
-	exit(clean_exit(NULL, 0, &data));
+	close (data.std_in);
+	exit(clean_exit(NULL, data.st_code, &data));
 }
 
 t_tok	*read_input(t_data *data)
