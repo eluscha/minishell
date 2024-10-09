@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 10:20:57 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/08 11:48:10 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	free_cmds(t_cmd	*cmd_list)
 	while (cmd_list)
 	{
 		next_node = cmd_list->next;
-		free_cmd(cmd_list, 0); //changed to my function, now this is so short can be maybe unuted with clean_exit
+		free_cmd(cmd_list, 0); //can be maybe unuted with clean_exit
 		cmd_list = next_node;
 	}
 }
@@ -94,18 +94,22 @@ void free_sas(t_data *data)
 
 int	clean_exit(char *msg, int r_value, t_data *data)
 {
+	int code;
+	
+	code = data->st_code;
 	if (data)
 	{
 		free_cmds(data->cmd);
 		data->cmd = NULL;
 		free_envp(data->envp);
-		data->envp = NULL;
 		free_pids(data);
 		free_sas(data);
 	}
 	if (msg)
 		write(2, msg, ft_strlen(msg));
 	clear_history();
-	return (r_value);
+	if (r_value)
+		return (r_value);
+	return (code);
 }
 

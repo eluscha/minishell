@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 10:19:03 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:07:07 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	parse_ex_status(char *str, t_data *data)
 void	ft_exit(t_cmd *cmd, t_data *data)
 {
 	cmd->cmd_check = BLTN;
-	data->st_code = 0;
+	//data->st_code = 0;  Why was it necessary ?
 	if (redirect(cmd, data))
 	{
 		clean_exit(NULL, data->st_code, data);

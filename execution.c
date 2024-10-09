@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 13:13:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:22:27 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,20 +89,21 @@ void	wait_loop(t_data *data)
 		data->st_code = lastsignal + 128;
 }
 
-int	execute_loop(t_data *data)
+int	execute_loop(t_data *data) // is return value used somehwre ?
 {
 	int		tty_fd;
 	t_cmd	*cmd;
 
+	lastsignal = 0; //was important to catch signal that happened during read_input somewhere in parser, after that we need to reset before wait loop
 	cmd = data->cmd;
-	if (cmd && !cmd->next && check_builtin (cmd, data))
+	if (cmd && !cmd->next && check_builtin(cmd, data))
 		return (data->st_code);
 	while (cmd)
 	{
 		if (cmd->next)
 		{
 			if (pipe(data->fd) < 0)
-				return (clean_exit("failed to create pipe\n", 1, data));
+				return (clean_exit(strerror(errno), 1, data));
 		}
 		if (fork_function(cmd, data))
 			return (1);

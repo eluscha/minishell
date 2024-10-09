@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 13:55:07 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:37:24 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 typedef enum e_lex_state
 {
 	DELIM,
+	EXPAND,
 	WORD,
 	INSQTS,
 	INDQTS,
@@ -160,7 +161,10 @@ t_tok	*check_syntax(t_tok *head);
 t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err);
 void	handle_quotes(t_lex_state *state, t_tok *tail, char c);
 t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err);
+
+/* expand.c */
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
+char *find_var(char **list, char *start, int i);
 int		change_word(t_tok *token, char *var, char *start);
 
 /* lexer_edge_fts.c */
@@ -169,6 +173,7 @@ t_tok	*gen_token(t_toktype type, int len, int *err);
 void	extend_word(t_tok *tail, int len, int *err);
 t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err);
 t_tok	*free_tokens(t_tok *head);
+
 void	print_toktype(t_tok *token);
 
 /* process_tokens.c */

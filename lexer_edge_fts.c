@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:13:30 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:35:19 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
 		tail->type = DQERR;
 	else if (c == '|')
 		tail->type = PIPERR;
-	else if (*state == DELIM)
+	else if (*state == DELIM || *state == EXPAND)
 	{
 		tail->type = END;
 		ft_strlcpy(tail->word, "newline", 8);
@@ -117,6 +117,12 @@ t_tok	*free_tokens(t_tok *head)
 		ptr = head->next;
 		free(head);
 		head = ptr;
+	}
+	if (head)
+	{
+		if (head->word)
+			free(head->word);
+		free(head);
 	}
 	return (NULL);
 }

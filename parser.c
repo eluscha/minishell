@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:28:03 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:22:06 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	int numargs;
 	int numredir;
 	t_tok *tail;
-	t_cmd *cmds = NULL;
+	t_cmd *cmds;
 
-	if (!head)
-		return (NULL);
+	numargs = 0;
+	numredir = 0;	
 	/*
 	t_tok *ptr = head;
 	while (ptr)
@@ -52,15 +52,14 @@ t_cmd	*parser(t_tok *head, t_data *data)
 		cmds = generate_structs(head, numargs, numredir);
 	//THIS IS for printing structs
 	/*
+	printf("about to print\n");
 	t_cmd *ptrs = cmds;
 	while (ptrs)
 	{
 		print_struct(ptrs);
 		ptrs = ptrs->next;
 	}
-	*/
-	//THIS IS for printing tokens	
-	
+	*/	
 	free_tokens(head);
 	return (cmds);
 }
@@ -86,7 +85,11 @@ t_tok *lexer(char *input, t_tok *tail, t_data *data)
 		else if (c == '|' || c == '>' || c == '<')
 			tail = handle_special(&state, tail, c, &err);
 		else if (c == '$' && (state == WORD || state == INDQTS))
+		{
 			i += handle_expand(input + i + 1, tail, data, &err);
+			if (!tail->idx)
+				state = EXPAND;
+		}
 		else if (state != DELIM)
 			tail->word[tail->idx++] = c;
 	}
