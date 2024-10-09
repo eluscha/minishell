@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:27:54 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:49:48 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	free_envp(char **envp)
 		i++;
 	}
 	free(envp);
-	envp = NULL;
 }
 
 void	free_cmds(t_cmd	*cmd_list)

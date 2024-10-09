@@ -3,10 +3,9 @@
 int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 {
 	char	*varvalue;
-	char	**envp;
+	char	*varname;
 	int		i;
 
-	envp = data->envp;
 	i = 0;
 	if (start[i] == '?' && ++i)
 		varvalue = ft_itoa(data->st_code);
@@ -19,11 +18,11 @@ int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
 			tail->word[tail->idx++] = '$';
 			return (0);
 		}
-		*envp = find_var(envp, start, i);
-		if (!*envp)
+		varname = find_var(data->envp, start, i);
+		if (!varname)
 			varvalue = (ft_strdup(""));
 		else
-			varvalue = ft_strdup(*envp + i + 1);
+			varvalue = ft_strdup(varname + i + 1);
 	}
 	*err = change_word(tail, varvalue, start + i);
 	return (i);
