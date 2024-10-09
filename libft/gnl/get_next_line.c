@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 11:43:08 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/10 10:45:25 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 12:37:10 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,10 @@ char	*ft_save_line(char **static_adr)
 	if (!line)
 		return (NULL);
 	ft_strlcpy(line, *static_adr, i + 2);
-	remainder = ft_strdup(*(static_adr) + i + 1);
+	if (*(static_adr) + i + 1)
+		remainder = ft_strdup(*(static_adr) + i + 1);
+	else
+		remainder = NULL;
 	free(*static_adr);
 	*static_adr = remainder;
 	return (line);

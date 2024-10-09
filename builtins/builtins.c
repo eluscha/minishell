@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 16:17:53 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/08 11:57:36 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,5 @@ int	check_builtin(t_cmd *cmd, t_data *data)
 		ft_envp(cmd, data);
 	else if (!ft_strcmp(cmd->cmd, "exit"))
 		ft_exit(cmd, data);
-	return (set_output (cmd, data));
+	return (set_output(cmd, data));
 }

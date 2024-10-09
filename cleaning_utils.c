@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 11:57:10 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:27:54 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	free_cmds(t_cmd	*cmd_list)
 	while (cmd_list)
 	{
 		next_node = cmd_list->next;
-		free_cmd(cmd_list, 0);
+		free_cmd(cmd_list, 0); //can be maybe unuted with clean_exit
 		cmd_list = next_node;
 	}
 }
@@ -91,6 +91,3 @@ void	free_sas(t_data *data)
 	data->sa_quit_child = NULL;
 	data->sa_quit_ex = NULL;
 }
-
-
-
