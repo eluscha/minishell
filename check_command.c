@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 14:55:28 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/02 15:09:08 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	path_not_found(t_cmd *cmd, t_data *data)
 	}
 	close(STDIN_FILENO);
 	close(STDOUT_FILENO);
+	close(data->std_in);
 	exit (clean_exit(NULL, data->st_code, data));
 }
 
@@ -61,10 +62,7 @@ int	check_path(t_cmd *cmd)
 	DIR	*dir;
 
 	if (access(cmd->cmd, F_OK))
-	{
-		write(2, "failed on access\n", strlen("failed on access\n"));
 		cmd->cmd_check = NSCHFL;
-	}
 	else
 	{
 		dir = opendir(cmd->cmd);
@@ -110,7 +108,16 @@ int	find_binary(t_data *data, t_cmd *cmd)
 
 int	check_command(t_cmd *cmd, t_data *data)
 {
+	int	i;
+
 	if (ft_strchr(cmd->cmd, '/'))
 		return (check_path(cmd));
-	return (find_binary(data, cmd));
+	if (*cmd->cmd == '\0')
+	{
+		cmd->cmd_check = CMDNF;
+		return (1);
+	}
+	i = find_binary(data, cmd);
+	free_paths(data);
+	return (i);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/08 14:22:06 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:30:37 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	return (cmds);
 }
 
-t_tok *lexer(char *input, t_tok *tail, t_data *data)
+t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
 	char	c;
 	t_tok	*head;

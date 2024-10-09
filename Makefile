@@ -10,7 +10,8 @@ SRC = execution.c \
 		process_tokens.c \
 		generate_structs.c \
 		get_heredoc.c \
-		cleaning.c \
+		clean_exit.c \
+		cleaning_utils.c \
 		builtins/builtins.c \
 		check_command.c \
 		main.c \

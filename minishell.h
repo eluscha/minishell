@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/08 13:37:24 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:30:05 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,8 +128,6 @@ typedef struct export
 
 extern volatile sig_atomic_t lastsignal;
 
-void	free_cmds(t_cmd	*cmd_list);
-int		clean_exit(char *msg, int r_value, t_data *data);
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
 int		check_command(t_cmd *cmd, t_data *data);
@@ -137,6 +135,14 @@ int		execute_loop(t_data *data);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 int		path_not_found(t_cmd *cmd, t_data *data);
+
+/*cleaning*/
+int		clean_exit(char *msg, int r_value, t_data *data);
+void	free_paths(t_data *data);
+void	free_sas(t_data *data);
+void	free_pids(t_data *data);
+void	free_cmds(t_cmd	*cmd_list);
+void	free_envp(char **envp);
 
 /*builtins*/
 int		check_builtin(t_cmd *cmd, t_data *data);
@@ -177,7 +183,7 @@ t_tok	*free_tokens(t_tok *head);
 void	print_toktype(t_tok *token);
 
 /* process_tokens.c */
-void		process_tokens(t_tok *token, int *numargs, int *numredir);
+void	process_tokens(t_tok *token, int *numargs, int *numredir);
 void	handle_iotype(t_tok *token, int *numredir);
 
 /* get_heredoc.c */
