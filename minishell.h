@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:30:05 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:26:58 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,6 @@ void	print_struct(t_cmd *cmd);
 /* signals */
 void	init_signals(t_data *data);
 void	handle_sigint(int sig);
-void	handle_sigint_ex(int sig);
-void	handle_sigquit_ex(int sig);
+void	handle_sig_ex(int sig);
 
 #endif
