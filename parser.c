@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 10:30:37 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:21:11 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	t_cmd *cmds;
 
 	numargs = 0;
-	numredir = 0;	
+	numredir = 0;
 	/*
 	t_tok *ptr = head;
 	while (ptr)
@@ -34,32 +34,11 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	}
 	*/
 	process_tokens(head, &numargs, &numredir);
-	/*
-	t_tok *ptr = head;
-	printf("after process: \n");
-	ptr = head;
-	while (ptr)
-	{
-        print_toktype(ptr);
-        printf("%s\n", ptr->word);
-		ptr = ptr->next;
-	}
-	*/
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) != 0)
 		cmds = NULL;
 	else
 		cmds = generate_structs(head, numargs, numredir);
-	//THIS IS for printing structs
-	/*
-	printf("about to print\n");
-	t_cmd *ptrs = cmds;
-	while (ptrs)
-	{
-		print_struct(ptrs);
-		ptrs = ptrs->next;
-	}
-	*/	
 	free_tokens(head);
 	return (cmds);
 }
@@ -67,38 +46,30 @@ t_cmd	*parser(t_tok *head, t_data *data)
 t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
 	char	c;
-	t_tok	*head;
 	int		i;
-	int		err;
-	static	t_lex_state state;
+	t_lex	*lex;
 
-	err = 0;
-	tail = set_start(tail, &head, ft_strlen(input), &err);
+	lex = init_lex();
+	if (!lex)
+		return (NULL);
+	c = '\0';
 	i = -1;
-	while (input[++i] && !err)
+	while (input[++i] && !lex->err)
 	{
 		c = input[i];
-		if (state != INSQTS && state != INDQTS)
-			tail = check_word_border(&state, tail, c, &err);
+		if (*lex->state != INSQTS && *lex->state != INDQTS)
+			check_word_border(lex, c);
 		if (c == '\'' || c == '\"')
-			handle_quotes(&state, tail, c);
+			handle_quotes(lex, c);
 		else if (c == '|' || c == '>' || c == '<')
-			tail = handle_special(&state, tail, c, &err);
-		else if (c == '$' && (state == WORD || state == INDQTS))
-		{
-			i += handle_expand(input + i + 1, tail, data, &err);
-			if (!tail->idx)
-				state = EXPAND;
-		}
+			handle_special(lex, c);
+		else if (c == '$' && (*lex->state == WORD || *lex->state == INDQTS))
+			i += handle_expand(lex, i + 1);
 		else if (state != DELIM)
 			tail->word[tail->idx++] = c;
 	}
 	tail = set_end(&state, tail, c, &err);
-	if (err)
-		tail = free_tokens(head);
-	else
-		tail->next = head;
-	return (tail);
+	return (connect_ends(tail, head, &err));
 }
 
 t_tok	*check_syntax(t_tok *head)
@@ -123,4 +94,28 @@ t_tok	*check_syntax(t_tok *head)
 		}
 	}
 	return (head);
+}
+
+
+t_tok	*free_tokens(t_tok *head)
+{
+	t_tok	*ptr;
+
+	while (head)
+	{
+		if (head->type >= END && head->type <= PIPERR)
+			break ;
+		if (head->word)
+			free(head->word);
+		ptr = head->next;
+		free(head);
+		head = ptr;
+	}
+	if (head)
+	{
+		if (head->word)
+			free(head->word);
+		free(head);
+	}
+	return (NULL);
 }

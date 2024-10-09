@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:30:05 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:27:26 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,6 @@
 # include <fcntl.h>
 # include <dirent.h>
 # include <signal.h>
-
-typedef enum e_lex_state
-{
-	DELIM,
-	EXPAND,
-	WORD,
-	INSQTS,
-	INDQTS,
-	INREDIR,
-	OUTREDIR
-}	t_lex_state;
 
 typedef enum e_toktype
 {
@@ -61,6 +50,28 @@ typedef struct s_tok
 	struct s_tok	*next;
 	t_toktype		type;
 }	t_tok;
+
+typedef enum e_lex_state
+{
+	DELIM,
+	EXPAND,
+	WORD,
+	INSQTS,
+	INDQTS,
+	INREDIR,
+	OUTREDIR
+}	t_lex_state;
+
+typedef struct s_lex
+{
+	t_lex_state	*state;
+	char		*input;
+	t_tok		*tail;
+	t_tok		*head;
+	char		**envp;
+	int			st_code;
+	int			err; 
+}	t_lex;
 
 typedef enum cmd_check
 {
@@ -162,15 +173,18 @@ t_tok	*read_input(t_data *data);
 t_cmd	*parser(t_tok *head, t_data *data);
 t_tok	*lexer(char *input, t_tok *tail, t_data *data);
 t_tok	*check_syntax(t_tok *head);
+t_tok	*free_tokens(t_tok *head);
 
 /* lexer_mid_fts.c */
 t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err);
+int		check_qts_pipe_io(t_lex_state *state, t_tok **tail, char c, int *err);
 void	handle_quotes(t_lex_state *state, t_tok *tail, char c);
 t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err);
+t_tok	*handle_pipe(t_lex_state *state, t_tok *tail, int *err);
 
 /* expand.c */
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
-char *find_var(char **list, char *start, int i);
+char	*find_var(char **list, char *start, int i);
 int		change_word(t_tok *token, char *var, char *start);
 
 /* lexer_edge_fts.c */
@@ -178,7 +192,7 @@ t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
 t_tok	*gen_token(t_toktype type, int len, int *err);
 void	extend_word(t_tok *tail, int len, int *err);
 t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err);
-t_tok	*free_tokens(t_tok *head);
+t_tok	*connect_ends(t_tok *tail, t_tok *head, int *err);
 
 void	print_toktype(t_tok *token);
 
@@ -197,7 +211,9 @@ t_cmd	*generate_structs(t_tok *head, int numargs, int numredir);
 t_cmd	*init_struct(int numargs, int numredir, int *err);
 int		fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r);
 t_cmd	*free_cmd(t_cmd *cmd, int i);
-void	print_struct(t_cmd *cmd);
+void	free_redirs(t_redirect *redir);
+
+//void	print_struct(t_cmd *cmd);
 
 /* signals */
 void	init_signals(t_data *data);

@@ -1,30 +1,30 @@
 #include "minishell.h"
 
-int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
+int	handle_expand(t_lex *lex, int dist)
 {
 	char	*varvalue;
-	char	*varname;
 	int		i;
+	char	*start;
 
 	i = 0;
+	start = lex->input + dist;
 	if (start[i] == '?' && ++i)
-		varvalue = ft_itoa(data->st_code);
+		varvalue = ft_itoa(lex->st_code);
 	else
 	{
 		while (start[i] && ft_isalnum(start[i]))
 			i++;
 		if (!i)
 		{
-			tail->word[tail->idx++] = '$';
+			lex->tail->word[lex->tail->idx++] = '$';
 			return (0);
 		}
-		varname = find_var(data->envp, start, i);
-		if (!varname)
-			varvalue = (ft_strdup(""));
-		else
-			varvalue = ft_strdup(varname + i + 1);
+		varvalue = find_var(lex->envp, start, i);
 	}
-	*err = change_word(tail, varvalue, start + i);
+	if (!varvalue)
+		lex->err = -1;
+	else
+		change_word(lex->tail, varvalue, start + i);
 	return (i);
 }
 
@@ -36,7 +36,10 @@ char *find_var(char **list, char *start, int i)
 			break ;
 		list++;
 	}
-	return (*list);
+	if (!*list)
+		return (ft_strdup(""));
+	else
+		return (ft_strdup(*list + i + 1));
 }
 
 int	change_word(t_tok *token, char *var, char *start)
@@ -46,8 +49,6 @@ int	change_word(t_tok *token, char *var, char *start)
 	int		sum;
 	char	*newword;
 
-	if (!var)
-		return (-1);
 	lenword = ft_strlen(token->word);
 	lenvar = ft_strlen(var);
 	sum = lenword + lenvar + ft_strlen(start);
@@ -63,5 +64,7 @@ int	change_word(t_tok *token, char *var, char *start)
 	free(var);
 	token->word = newword;
 	token->idx += lenvar;
+	if (!tail->idx)
+		*lex->state = EXPAND;
 	return (0);
 }

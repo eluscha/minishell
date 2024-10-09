@@ -3,38 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/08 12:35:19 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:27:01 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err)
+t_lex *init_lex(char *input, t_tok *tail, t_data *data)
 {
-	if (!tail)
+	static t_lex_state	state;
+	t_lex	*lex;
+
+	lex = ft_calloc(1, sizeof(t_lex));
+	if (!lex)
+		return (NULL);
+	lex->envp = data->envp;
+	lex->st_code = data->st_code;
+	lex->err = 0;
+	lex->tail = tail;
+	lex->state = &state;
+	set_start(lex, ft_strlen(input));
+	return (lex);
+}
+
+void	set_start(t_lex *lex, int len)
+{
+	if (!lex->tail)
 	{
-		tail = gen_token(UNDETERM, len, err);
-		*head = tail;
+		lex->tail = gen_token(UNDETERM, len, lex);
+		lex->head = lex->tail;
 	}
 	else
 	{
-		*head = tail->next;
-		if (tail->type == PIPERR)
+		lex->head = lex->tail->next;
+		if (lex->tail->type == PIPERR)
 		{
-			tail->next = gen_token(UNDETERM, len, err);
-			if (!err)
-				tail = tail->next;
+			lex->tail->next = gen_token(UNDETERM, len, lex);
+			if (!lex->err)
+				lex->tail = lex->tail->next;
 		}
 		else
-			extend_word(tail, len, err);
+			extend_word(lex->tail, len, lex);
 	}
-	return (tail);
 }
 
-t_tok	*gen_token(t_toktype type, int len, int *err)
+t_tok	*gen_token(t_toktype type, int len, t_lex *lex)
 {
 	t_tok		*token;
 	static int	input_len;
@@ -46,7 +62,7 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	token = malloc(sizeof(t_tok));
 	if (!token)
 	{
-		*err = -1;
+		lex->err = -1;
 		return (NULL);
 	}
 	token->next = NULL;
@@ -56,7 +72,7 @@ t_tok	*gen_token(t_toktype type, int len, int *err)
 	if (!token->word)
 	{
 		free(token);
-		*err = -1;
+		lex->err = -1;
 		return (NULL);
 	}
 	return (token);
@@ -91,7 +107,10 @@ t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
 	else if (*state == DELIM || *state == EXPAND)
 	{
 		tail->type = END;
-		ft_strlcpy(tail->word, "newline", 8);
+		free(tail->word);
+		tail->word = ft_strdup("newline");
+		if (!tail->word)
+			*err = -1;
 	}
 	else
 	{
@@ -103,28 +122,12 @@ t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
 	return (tail);
 }
 
-
-t_tok	*free_tokens(t_tok *head)
+t_tok *connect_ends(t_tok* tail, t_tok *head, int *err)
 {
-	t_tok	*ptr;
-
-	while (head)
-	{
-		if (head->type >= END && head->type <= PIPERR)
-			break ;
-		if (head->word)
-			free(head->word);
-		ptr = head->next;
-		free(head);
-		head = ptr;
-	}
-	if (head)
-	{
-		if (head->word)
-			free(head->word);
-		free(head);
-	}
-	return (NULL);
+	if (*err)
+		return (free_tokens(head));
+	tail->next = head;
+	return (tail);
 }
 
 /*won't need this function in a final version*/

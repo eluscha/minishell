@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/08 14:21:40 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 12:22:29 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,20 +110,26 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 		cmd->args = NULL;
 	}
 	if (cmd->redirect)
-	{
-		i = -1;
-		while (cmd->redirect[++i].value)
-		{
-			if (cmd->redirect[i].type == HEREDOC)
-				unlink(cmd->redirect[i].value);
-			free(cmd->redirect[i].value);
-		}
-		free(cmd->redirect);
-	}
+		free_redirs(cmd->redirect);
 	free(cmd);
 	return (NULL);
 }
 
+void	free_redirs(t_redirect *redir)
+{
+	int i;
+	
+	i = -1;
+	while (redir[++i].value)
+	{
+		if (redir[i].type == HEREDOC)
+			unlink(redir[i].value);
+		free(redir[i].value);
+	}
+	free(redir);
+}
+
+/*
 void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
 {
 	if (!cmd)
@@ -139,3 +145,4 @@ void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
 		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
 	}
 }
+*/
