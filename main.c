@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 14:57:42 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:27:54 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	main(int argc, char *argv[], char *envp[])
 	init_data(&data, envp);
 	main_loop(&data, &head);
 	printf("exit\n");
-	exit(clean_exit(NULL, EXIT_SUCCESS, &data)); //when should main return sth other than 0?
+	exit(clean_exit(NULL, data.st_code, &data)); //when should main return sth other than 0?
 }
 
 t_tok	*read_input(t_data *data)
