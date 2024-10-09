@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 10:33:39 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:27:42 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err)
 {
-	if (c == ' ' || c == '\t')
+	if (c == ' ')
 	{
-		if (*state == DELIM)
+		if (*state == DELIM || *state == EXPAND)
+		{
+			*state = DELIM;
 			return (tail);
+		}
 		*state = DELIM;
 		tail->next = gen_token(UNDETERM, 0, err);
 		if (!*err)
@@ -90,64 +93,3 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
 	return (tail);
 }
 
-int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
-{
-	char	*varvalue;
-	char	**envp;
-	int		i;
-
-	envp = data->envp;
-	i = 0;
-	if (start[i] == '?' && ++i)
-		varvalue = ft_itoa(data->st_code);
-	else
-	{
-		while (start[i] && ft_isalnum(start[i]))
-			i++;
-		if (!i)
-		{
-			tail->word[tail->idx++] = '$';
-			return (0);
-		}
-		while (*envp)
-		{
-			if (ft_strncmp(*envp, start, i) == 0 && (*envp)[i] == '=')
-				break ;
-			envp++;
-		}
-		if (!*envp)
-			varvalue = (ft_strdup(""));
-		else
-			varvalue = ft_strdup(*envp + i + 1);
-	}
-	*err = change_word(tail, varvalue, start + i);
-	return (i);
-}
-
-
-int	change_word(t_tok *token, char *var, char *start)
-{
-	int		lenword;
-	int		lenvar;
-	int		sum;
-	char	*newword;
-
-	if (!var)
-		return (1);
-	lenword = ft_strlen(token->word);
-	lenvar = ft_strlen(var);
-	sum = lenword + lenvar + ft_strlen(start);
-	newword = ft_calloc(sum + 1, sizeof(char));
-	if (!newword)
-	{
-		free(var);
-		return (1);
-	}
-	ft_strlcpy(newword, token->word, lenword + 1);
-	ft_strlcat(newword, var, sum + 1);
-	free(token->word);
-	free(var);
-	token->word = newword;
-	token->idx += lenvar;
-	return (0);
-}

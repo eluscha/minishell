@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process_tokens.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/06 10:25:11 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:27:43 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:17:55 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ void	process_tokens(t_tok *token, int *numargs, int *numredir)
 	int	cmd;
 
 	cmd = 0;
-	*numargs = 0;
-	*numredir = 0;
 	while (token->type != END)
 	{
 		if (token->type == PIPE)

@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
+<<<<<<< HEAD
+/*   Updated: 2024/10/09 10:15:56 by eusatiko         ###   ########.fr       */
+=======
 /*   Updated: 2024/10/02 14:52:50 by auspensk         ###   ########.fr       */
+>>>>>>> origin/main
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +56,6 @@ void	parse_ex_status(char *str, t_data *data)
 void	ft_exit(t_cmd *cmd, t_data *data)
 {
 	cmd->cmd_check = BLTN;
-	data->st_code = 0;
 	if (redirect(cmd, data))
 	{
 		clean_exit(NULL, data->st_code, data);

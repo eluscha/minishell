@@ -5,6 +5,7 @@ CC = cc
 SRC = execution.c \
 		parser.c \
 		lexer_mid_fts.c \
+		expand.c \
 		lexer_edge_fts.c \
 		process_tokens.c \
 		generate_structs.c \

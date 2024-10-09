@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 12:47:48 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:28:44 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 			path_not_found(cmd, data);
 		close(data->std_in);
 		execve(cmd->cmd, cmd->args, data->envp);
-		perror("Er");
-		write(2, cmd->cmd, strlen(cmd->cmd));
+		perror(cmd->cmd);
 		data->st_code = errno;
 		if (data->st_code == 13 || data->st_code == 22)
 			data->st_code = 126;
@@ -97,15 +96,16 @@ int	execute_loop(t_data *data)
 	int		tty_fd;
 	t_cmd	*cmd;
 
+	lastsignal = 0;
 	cmd = data->cmd;
-	if (cmd && !cmd->next && check_builtin (cmd, data))
+	if (cmd && !cmd->next && check_builtin(cmd, data))
 		return (data->st_code);
 	while (cmd)
 	{
 		if (cmd->next)
 		{
 			if (pipe(data->fd) < 0)
-				return (clean_exit("failed to create pipe\n", 1, data));
+				return (clean_exit(strerror(errno), 1, data));
 		}
 		if (fork_function(cmd, data))
 			return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/02 14:01:48 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/08 14:21:40 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
 	int idx_r;
 	int	err;
 
-	//printf("in gen struct\n");
 	err = 0;
 	cmd = init_struct(numargs, numredir, &err);
 	idx_a = 1;
@@ -125,7 +124,7 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 	return (NULL);
 }
 
-void print_struct(t_cmd *cmd)
+void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
 {
 	if (!cmd)
 		return ;
