@@ -3,14 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2024/10/09 10:15:56 by eusatiko         ###   ########.fr       */
-=======
-/*   Updated: 2024/10/02 14:52:50 by auspensk         ###   ########.fr       */
->>>>>>> origin/main
+/*   Updated: 2024/10/09 10:33:40 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +68,5 @@ void	ft_exit(t_cmd *cmd, t_data *data)
 	if (cmd->args[1])
 		return (parse_ex_status(cmd->args[1], data));
 	close(data->std_in);
-	exit (clean_exit(NULL, 0, data));
+	exit (clean_exit(NULL, data->st_code, data));
 }
