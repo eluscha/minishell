@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/08 14:22:27 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:17:49 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);
 		execve(cmd->cmd, cmd->args, data->envp);
-		perror("Er");
+		perror(cmd->cmd);
 		data->st_code = errno;
 		if (data->st_code == 13 || data->st_code == 22)
 			data->st_code = 126;
@@ -89,12 +89,12 @@ void	wait_loop(t_data *data)
 		data->st_code = lastsignal + 128;
 }
 
-int	execute_loop(t_data *data) // is return value used somehwre ?
+int	execute_loop(t_data *data)
 {
 	int		tty_fd;
 	t_cmd	*cmd;
 
-	lastsignal = 0; //was important to catch signal that happened during read_input somewhere in parser, after that we need to reset before wait loop
+	lastsignal = 0;
 	cmd = data->cmd;
 	if (cmd && !cmd->next && check_builtin(cmd, data))
 		return (data->st_code);
