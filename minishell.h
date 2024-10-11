@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 11:06:32 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:36:20 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ typedef struct data
 	int					std_in;
 	char				**envp;
 	char				**paths;
-	char				*tty_in;
 	char				*tty_out;
 	struct sigaction	*sa;
 	struct sigaction	*sa_child;
