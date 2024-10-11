@@ -1,34 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/10/11 10:27:21 by eusatiko          #+#    #+#             */
+/*   Updated: 2024/10/11 10:27:22 by eusatiko         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	handle_expand(char *start, t_tok *tail, t_data *data, int *err)
+int	handle_expand(t_lex *lex, int dist)
 {
 	char	*varvalue;
-	char	*varname;
 	int		i;
+	char	*start;
 
 	i = 0;
-	if (start[i] == '?' && ++i)
-		varvalue = ft_itoa(data->st_code);
+	if (*lex->state != WORD && *lex->state != INDQTS)
+		lex->tail->word[lex->tail->idx++] = '$';
 	else
 	{
-		while (start[i] && ft_isalnum(start[i]))
-			i++;
-		if (!i)
-		{
-			tail->word[tail->idx++] = '$';
-			return (0);
-		}
-		varname = find_var(data->envp, start, i);
-		if (!varname)
-			varvalue = (ft_strdup(""));
+		start = lex->input + dist;
+		if (start[i] == '?' && ++i)
+			varvalue = ft_itoa(lex->data->st_code);
 		else
-			varvalue = ft_strdup(varname + i + 1);
+		{
+			while (start[i] && ft_isalnum(start[i]))
+				i++;
+			if (!i)
+				lex->tail->word[lex->tail->idx++] = '$';
+			else
+				varvalue = find_var(lex->data->envp, start, i);
+		}
+		if (i)
+			lex->err = change_word(lex->tail, varvalue, start + i, lex->state);
 	}
-	*err = change_word(tail, varvalue, start + i);
 	return (i);
 }
 
-char *find_var(char **list, char *start, int i)
+char	*find_var(char **list, char *start, int i)
 {
 	while (*list)
 	{
@@ -36,10 +49,13 @@ char *find_var(char **list, char *start, int i)
 			break ;
 		list++;
 	}
-	return (*list);
+	if (!*list)
+		return (ft_strdup(""));
+	else
+		return (ft_strdup(*list + i + 1));
 }
 
-int	change_word(t_tok *token, char *var, char *start)
+int	change_word(t_tok *token, char *var, char *start, t_lex_state *state)
 {
 	int		lenword;
 	int		lenvar;
@@ -63,5 +79,7 @@ int	change_word(t_tok *token, char *var, char *start)
 	free(var);
 	token->word = newword;
 	token->idx += lenvar;
+	if (!token->idx && state)
+		*state = EXPAND;
 	return (0);
 }
