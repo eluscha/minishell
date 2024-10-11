@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 14:10:58 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:06:37 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);
 		close(data->std_in);
-		if (!ft_strcmp (cmd->args[0], "minishell")) 
+		if (!ft_strcmp (cmd->args[0], "minishell"))
 			iterate_shlvl(data);
 		execve(cmd->cmd, cmd->args, data->envp);
 		perror(cmd->cmd);
@@ -98,8 +98,8 @@ void	wait_loop(t_data *data)
 
 int	execute_loop(t_data *data)
 {
-	int		tty_fd;
 	t_cmd	*cmd;
+	int		tty_fd;
 
 	lastsignal = 0;
 	cmd = data->cmd;

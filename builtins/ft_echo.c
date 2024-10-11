@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:52:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 15:09:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:33:56 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	write_echo(t_cmd *cmd)
 	int	i;
 
 	i = 1;
-	if (!strcmp(cmd->args[1], "-n"))
+	if (!ft_strcmp(cmd->args[1], "-n"))
 		i = 2;
 	while (cmd->args[i + 1])
 	{
@@ -27,7 +27,7 @@ void	write_echo(t_cmd *cmd)
 	}
 	if (cmd->args[i])
 		write(1, cmd->args[i], ft_strlen(cmd->args[i]));
-	if (strcmp(cmd->args[1], "-n"))
+	if (ft_strcmp(cmd->args[1], "-n"))
 		write(1, "\n", 1);
 }
 
