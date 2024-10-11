@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 14:27:26 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 08:51:29 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,34 +68,10 @@ typedef struct s_lex
 	char		*input;
 	t_tok		*tail;
 	t_tok		*head;
-	char		**envp;
-	int			st_code;
-	int			err; 
+	struct data	*data;
+	int			err;
 }	t_lex;
 
-typedef enum cmd_check
-{
-	BLTN,
-	NSCHFL,
-	CMDNF,
-	ISDIR,
-	BIN
-}	t_cmd_check;
-
-typedef struct cmd
-{
-	char			*cmd;
-	char			**args;
-	struct redirect	*redirect;
-	struct cmd		*next;
-	t_cmd_check		cmd_check;
-}	t_cmd;
-
-typedef struct redirect
-{
-	t_toktype		type;
-	char			*value;
-}	t_redirect;
 
 typedef struct pids
 {
@@ -105,7 +81,7 @@ typedef struct pids
 
 typedef struct data
 {
-	t_cmd				*cmd;
+	struct cmd			*cmd;
 	t_pids				*pids;
 	int					st_code;
 	int					fd[2];
@@ -123,12 +99,20 @@ typedef struct data
 	struct sigaction	*sa_quit_child;
 }	t_data;
 
+typedef enum cmd_check
+{
+	BLTN,
+	NSCHFL,
+	CMDNF,
+	ISDIR,
+	BIN
+}	t_cmd_check;
+
 typedef enum exp_type
 {
 	UNSET,
 	EXPORT
 }	t_exp_unset;
-
 
 typedef struct export
 {
@@ -137,7 +121,22 @@ typedef struct export
 	t_exp_unset		type;
 }	t_export;
 
-extern volatile sig_atomic_t lastsignal;
+typedef struct cmd
+{
+	char			*cmd;
+	char			**args;
+	struct redirect	*redirect;
+	struct cmd		*next;
+	t_cmd_check		cmd_check;
+}	t_cmd;
+
+typedef struct redirect
+{
+	t_toktype	type;
+	char		*value;
+}	t_redirect;
+
+extern volatile sig_atomic_t	lastsignal;
 
 int		redirect(t_cmd *cmd, t_data *data);
 int		new_pid(int pid, t_data *data);
@@ -175,26 +174,25 @@ t_tok	*lexer(char *input, t_tok *tail, t_data *data);
 t_tok	*check_syntax(t_tok *head);
 t_tok	*free_tokens(t_tok *head);
 
-/* lexer_mid_fts.c */
-t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err);
-int		check_qts_pipe_io(t_lex_state *state, t_tok **tail, char c, int *err);
-void	handle_quotes(t_lex_state *state, t_tok *tail, char c);
-t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err);
-t_tok	*handle_pipe(t_lex_state *state, t_tok *tail, int *err);
-
-/* expand.c */
-int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
-char	*find_var(char **list, char *start, int i);
-int		change_word(t_tok *token, char *var, char *start);
-
 /* lexer_edge_fts.c */
-t_tok	*set_start(t_tok *tail, t_tok **head, int len, int *err);
-t_tok	*gen_token(t_toktype type, int len, int *err);
-void	extend_word(t_tok *tail, int len, int *err);
-t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err);
-t_tok	*connect_ends(t_tok *tail, t_tok *head, int *err);
+t_lex	*init_lex(char *input, t_tok *tail, t_data *data);
+void	set_start(t_lex *lex, int len);
+t_tok	*gen_token(t_toktype type, int len, t_lex *lex);
+void	extend_word(t_lex *lex, int len);
+t_tok	*set_end(t_lex *lex);
 
 void	print_toktype(t_tok *token);
+
+/* lexer_mid_fts.c */
+void	check_word_border(t_lex *lex, char c);
+void	handle_quotes(t_lex *lex, char c);
+void	handle_special(t_lex *lex, char c);
+void	handle_pipe(t_lex *lex);
+
+/* expand.c */
+int		handle_expand(t_lex *lex, int dist);
+char	*find_var(char **list, char *start, int i);
+int		change_word(t_tok *token, char *var, char *start, t_lex_state *state);
 
 /* process_tokens.c */
 void	process_tokens(t_tok *token, int *numargs, int *numredir);
@@ -205,6 +203,8 @@ int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
 int		open_tmp_file(char **name);
 int		get_input(int fd, t_tok *token, t_data *data);
 int		expand_and_write(int fd, char *line, t_data *data);
+int		handle_hd_expand(char *start, t_tok *token, t_data *data, int *err);
+
 
 /* generate_structs.c */
 t_cmd	*generate_structs(t_tok *head, int numargs, int numredir);

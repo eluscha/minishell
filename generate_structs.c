@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 12:22:29 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/10 14:53:34 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	free_redirs(t_redirect *redir)
 	i = -1;
 	while (redir[++i].value)
 	{
-		if (redir[i].type == HEREDOC)
+		if (redir[i].type == HEREDOC) // not ideal, might try to delete sth which was EOF chars
 			unlink(redir[i].value);
 		free(redir[i].value);
 	}

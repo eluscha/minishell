@@ -3,25 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 14:27:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 08:50:51 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_lex *init_lex(char *input, t_tok *tail, t_data *data)
+t_lex	*init_lex(char *input, t_tok *tail, t_data *data)
 {
 	static t_lex_state	state;
-	t_lex	*lex;
+	t_lex				*lex;
 
 	lex = ft_calloc(1, sizeof(t_lex));
 	if (!lex)
 		return (NULL);
-	lex->envp = data->envp;
-	lex->st_code = data->st_code;
+	lex->data = data;
 	lex->err = 0;
 	lex->tail = tail;
 	lex->state = &state;
@@ -46,7 +45,7 @@ void	set_start(t_lex *lex, int len)
 				lex->tail = lex->tail->next;
 		}
 		else
-			extend_word(lex->tail, len, lex);
+			extend_word(lex, len);
 	}
 }
 
@@ -78,57 +77,53 @@ t_tok	*gen_token(t_toktype type, int len, t_lex *lex)
 	return (token);
 }
 
-void	extend_word(t_tok *tail, int len, int *err)
+void	extend_word(t_lex *lex, int len)
 {
 	int		oldlen;
 	char	*newword;
 
-	oldlen = ft_strlen(tail->word);
+	oldlen = ft_strlen(lex->tail->word);
 	newword = ft_calloc(oldlen + len + 2, sizeof(char));
 	if (!newword)
 	{
-		*err = -1;
+		lex->err = -1;
 		return ;
 	}
-	ft_strlcpy(newword, tail->word, oldlen + 1);
-	free(tail->word);
-	tail->word = newword;
-	tail->word[tail->idx++] = '\n';
+	ft_strlcpy(newword, lex->tail->word, oldlen + 1);
+	free(lex->tail->word);
+	lex->tail->word = newword;
+	lex->tail->word[lex->tail->idx++] = '\n';
 }
 
-t_tok	*set_end(t_lex_state *state, t_tok *tail, char c, int *err)
+t_tok	*set_end(t_lex *lex)
 {
-	if (*state == INSQTS)
-		tail->type = SQERR;
-	else if (*state == INDQTS)
-		tail->type = DQERR;
-	else if (c == '|')
-		tail->type = PIPERR;
-	else if (*state == DELIM || *state == EXPAND)
+	if (*lex->state == INSQTS)
+		lex->tail->type = SQERR;
+	else if (*lex->state == INDQTS)
+		lex->tail->type = DQERR;
+	else if (lex->tail->type == PIPE)
+		lex->tail->type = PIPERR;
+	else if (*lex->state == DELIM || *lex->state == EXPAND)
 	{
-		tail->type = END;
-		free(tail->word);
-		tail->word = ft_strdup("newline");
-		if (!tail->word)
-			*err = -1;
+		lex->tail->type = END;
+		free(lex->tail->word);
+		lex->tail->word = ft_strdup("newline");
+		if (!lex->tail->word)
+			lex->err = -1;
 	}
 	else
 	{
-		*state = DELIM;
-		tail->next = gen_token(END, 7, err);
-		if (!*err)
-			tail = tail->next;
+		*lex->state = DELIM;
+		lex->tail->next = gen_token(END, 7, lex);
+		if (!lex->err)
+			lex->tail = lex->tail->next;
 	}
-	return (tail);
+	if (lex->err)
+		return (free_tokens(lex->head));
+	lex->tail->next = lex->head;
+	return (lex->tail);
 }
 
-t_tok *connect_ends(t_tok* tail, t_tok *head, int *err)
-{
-	if (*err)
-		return (free_tokens(head));
-	tail->next = head;
-	return (tail);
-}
 
 /*won't need this function in a final version*/
 void	print_toktype(t_tok *token)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 14:20:39 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 08:40:39 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tok	*check_word_border(t_lex *lex, char c)
+void	check_word_border(t_lex *lex, char c)
 {
 	if (c == ' ')
 	{
@@ -99,3 +99,4 @@ void handle_pipe(t_lex *lex)
 	*lex->state = DELIM;
 }
 
+/* find handle_expand(t_lex *lex, int dist) in a separate file called expand.c */

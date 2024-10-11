@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 14:21:11 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 08:10:50 by eleonora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,31 +45,29 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
-	char	c;
 	int		i;
 	t_lex	*lex;
 
-	lex = init_lex();
+	lex = init_lex(input, tail, data);
 	if (!lex)
 		return (NULL);
-	c = '\0';
 	i = -1;
 	while (input[++i] && !lex->err)
 	{
-		c = input[i];
 		if (*lex->state != INSQTS && *lex->state != INDQTS)
-			check_word_border(lex, c);
-		if (c == '\'' || c == '\"')
-			handle_quotes(lex, c);
-		else if (c == '|' || c == '>' || c == '<')
-			handle_special(lex, c);
-		else if (c == '$' && (*lex->state == WORD || *lex->state == INDQTS))
+			check_word_border(lex, input[i]);
+		if (input[i] == '\'' || input[i] == '\"')
+			handle_quotes(lex, input[i]);
+		else if (input[i] == '|' || input[i] == '>' || input[i] == '<')
+			handle_special(lex, input[i]);
+		else if (input[i] == '$')
 			i += handle_expand(lex, i + 1);
-		else if (state != DELIM)
-			tail->word[tail->idx++] = c;
+		else if (*lex->state != DELIM)
+			lex->tail->word[lex->tail->idx++] = input[i];
 	}
-	tail = set_end(&state, tail, c, &err);
-	return (connect_ends(tail, head, &err));
+	tail = set_end(lex);
+	free(lex);
+	return (tail);
 }
 
 t_tok	*check_syntax(t_tok *head)
