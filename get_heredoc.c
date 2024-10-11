@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 10:32:56 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:33:10 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,16 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	char	*name;
 	int		fd;
 	int		err;
+	int		pid;
+	int		status = 0;
 
+	t_tok *curr = head;
 	err = 0;
-	while (head != tail)
+	while (curr != tail && !err)
 	{
-		if (head->type != HEREDOC)
+		if (curr->type != HEREDOC)
 		{
-			head = head->next;
+			curr = curr->next;
 			continue ;
 		}
 		name = NULL;
@@ -34,10 +37,22 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 				free(name);
 			return (-1);
 		}
-		err = get_input(fd, head, data);
-		free(head->word);
-		head->word = name;
-		head = head->next;
+		signal(SIGINT, SIG_IGN);
+		pid = fork();
+		if (pid == 0)
+			exit(get_input(fd, curr, head, data));
+		close(fd);
+		free(curr->word);
+		curr->word = name; //change toktype ?
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			err = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+		{
+			err = 1;
+			lastsignal = WTERMSIG(status);
+		}
+		curr = curr->next;
 	}
 	return (err);
 }
@@ -70,35 +85,34 @@ int	open_tmp_file(char **name)
 	return (fd);
 }
 
-int	get_input(int fd, t_tok *token, t_data *data)
+int	get_input(int fd, t_tok *token, t_tok *head, t_data *data)
 {
-	char	*line;
+	char	*line = NULL;
 	size_t	len;
 	int		err;
 
+	signal(SIGINT, SIG_DFL);
 	len = ft_strlen(token->word);
 	err = 0;
-	ft_putstr_fd("> ", 0);
-	line = get_next_line(0);
-	while (line && lastsignal != 2)
+	while (!err)
 	{
-		if (ft_strlen(line) == len + 1)
-		{
-			if (ft_strncmp(line, token->word, len) == 0)
-				break ;
-		}
+		if (line)
+			free(line);
+		line = NULL;
+		line = readline("> ");
+		if (!line)
+			break ;
+		if (ft_strlen(line) == len && ft_strncmp(line, token->word, len) == 0)
+			break ;
 		err = expand_and_write(fd, line, data);
-		ft_putstr_fd("> ", 1);
-		line = get_next_line(0);
 	}
 	if (line)
 		free(line);
-	else if (lastsignal != 2)
-		ft_putstr_fd("\nwarning: here-document delimited by end-of-file\n", 1);
 	else
-		err = 2;
+		ft_putstr_fd("warning: here-document delimited by end-of-file\n", 2);
 	close(fd);
-	return (err);
+	free_tokens(head);
+	return (clean_exit(NULL, err, data));
 }
 
 int	expand_and_write(int fd, char *line, t_data *data)
@@ -123,7 +137,7 @@ int	expand_and_write(int fd, char *line, t_data *data)
 			temp->word[temp->idx++] = line[idx];
 	}
 	write(fd, temp->word, temp->idx);
-	free(line);
+	write(fd, "\n", 1);
 	free(temp->word);
 	free(temp);
 	return (err);

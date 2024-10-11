@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 11:06:42 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:11:42 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,19 +21,17 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 	numargs = 0;
 	numredir = 0;
-	/*
-	t_tok *ptr = head;
-	while (ptr)
-	{
-        print_toktype(ptr);
-        printf("%s\n", ptr->word);
-		ptr = ptr->next;
-	}
-	*/
 	process_tokens(head, &numargs, &numredir);
 	tail = check_syntax(head);
 	if (tail->type != END || get_heredoc(head, tail, data) != 0)
+	{
+		if (lastsignal)
+		{
+			data->st_code = lastsignal + 128;
+			lastsignal = 0;
+		}
 		cmds = NULL;
+	}
 	else
 		cmds = generate_structs(head, numargs, numredir);
 	free_tokens(head);
