@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 08:51:29 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:37:57 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,6 @@ void	free_redirs(t_redirect *redir);
 /* signals */
 void	init_signals(t_data *data);
 void	handle_sigint(int sig);
-void	handle_sigint_ex(int sig);
-void	handle_sigquit_ex(int sig);
+void	handle_sig_ex(int sig);
 
 #endif

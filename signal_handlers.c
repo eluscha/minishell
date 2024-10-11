@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signal_handlers.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 14:34:28 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 09:12:04 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 11:24:42 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,7 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void	handle_sigint_ex(int sig)
+void	handle_sig_ex(int sig)
 {
 	lastsignal = sig;
-}
-
-void	handle_sigquit_ex(int sig) // this handler united with prev one ?
-{
-	lastsignal = sig;
-	write(2, "Quit\n", 5);
 }
