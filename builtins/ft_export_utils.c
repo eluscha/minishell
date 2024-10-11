@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 10:47:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/01 16:33:22 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 12:42:31 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,12 @@ int	find_key(t_export *ex, char **envp, t_data *data)
 		if (!ft_strncmp(ex->key, envp[i], ft_strlen(ex->key)))
 		{
 			i = do_unset_ex(ex, envp, data, i);
-			if (ex->key)
-				free(ex->key);
-			ex->key = NULL;
 			break ;
 		}
 		i++;
 	}
+	if (ex->key)
+		free(ex->key);
+	ex->key = NULL;
 	return (i);
 }

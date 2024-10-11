@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 12:14:44 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/09 13:31:08 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	main_loop(t_data *data, t_tok **head)
 			write(2, "Quit\n", 5);
 		lastsignal = 0;
 		*head = read_input(data);
-		if (!*head) //ctrl + D
+		if (!(*head)) //ctrl + D
 		{
 			data->cmd = NULL;
 			break ;

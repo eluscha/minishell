@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 13:55:32 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 15:08:51 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:09:27 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,3 @@ void	ft_cd(t_cmd *cmd, t_data *data)
 		return (cd_error(NULL, cmd, data, oldpwd));
 	return (set_envp(&oldpwd, data));
 }
-
