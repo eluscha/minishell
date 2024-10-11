@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_edge_fts.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 08:50:51 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:34:01 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_lex	*init_lex(char *input, t_tok *tail, t_data *data)
 	lex->err = 0;
 	lex->tail = tail;
 	lex->state = &state;
+	lex->input = input;
 	set_start(lex, ft_strlen(input));
 	return (lex);
 }
@@ -124,8 +125,7 @@ t_tok	*set_end(t_lex *lex)
 	return (lex->tail);
 }
 
-
-/*won't need this function in a final version*/
+/*won't need this function in a final version
 void	print_toktype(t_tok *token)
 {
 	if (token->type == UNDETERM)
@@ -155,3 +155,4 @@ void	print_toktype(t_tok *token)
 	else if (token->type == APPEND)
 		printf("APPEND ");
 }
+*/

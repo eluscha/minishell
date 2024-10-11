@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 08:40:39 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:34:41 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handle_quotes(t_lex *lex, char c)
 	{
 		if (*lex->state == INSQTS)
 			*lex->state = WORD;
-		else if (*lex->state == WORD )
+		else if (*lex->state == WORD)
 			*lex->state = INSQTS;
 		else
 			lex->tail->word[lex->tail->idx++] = c;
@@ -89,7 +89,7 @@ void	handle_special(t_lex *lex, char c)
 	lex->tail->word[lex->tail->idx++] = c;
 }
 
-void handle_pipe(t_lex *lex)
+void	handle_pipe(t_lex *lex)
 {
 	lex->tail->type = PIPE;
 	lex->tail->word[lex->tail->idx++] = '|';
@@ -99,4 +99,4 @@ void handle_pipe(t_lex *lex)
 	*lex->state = DELIM;
 }
 
-/* find handle_expand(t_lex *lex, int dist) in a separate file called expand.c */
+/*find handle_expand(t_lex *lex, int dist) in expand.c */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 08:58:56 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:32:56 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 {
 	char	*name;
 	int		fd;
-	int err = 0;
+	int		err;
 
-	//sigaction(SIG, sa_ex)
+	err = 0;
 	while (head != tail)
 	{
 		if (head->type != HEREDOC)
@@ -41,7 +41,6 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	}
 	return (err);
 }
-
 
 int	open_tmp_file(char **name)
 {

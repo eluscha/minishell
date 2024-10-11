@@ -3,24 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 08:10:50 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:35:47 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "minishell.h"
-
-//void print_struct(t_cmd *cmd);
 
 t_cmd	*parser(t_tok *head, t_data *data)
 {
-	int numargs;
-	int numredir;
-	t_tok *tail;
-	t_cmd *cmds;
+	int		numargs;
+	int		numredir;
+	t_tok	*tail;
+	t_cmd	*cmds;
 
 	numargs = 0;
 	numredir = 0;
@@ -93,7 +90,6 @@ t_tok	*check_syntax(t_tok *head)
 	}
 	return (head);
 }
-
 
 t_tok	*free_tokens(t_tok *head)
 {
