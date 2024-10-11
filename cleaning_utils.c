@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 11:38:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:16:31 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,29 +64,7 @@ void	free_pids(t_data *data)
 	{
 		next_pid = data->pids->next;
 		free(data->pids);
-		data->pids = NULL;
+		//data->pids = NULL;
 		data->pids = next_pid;
 	}
-}
-
-void	free_sas(t_data *data)
-{
-	if (data->sa)
-		free(data->sa);
-	if (data->sa_child)
-		free(data->sa_child);
-	if (data->sa_ex)
-		free(data->sa_ex);
-	if (data->sa_quit)
-		free(data->sa_quit);
-	if (data->sa_quit_child)
-		free(data->sa_quit_child);
-	if (data->sa_quit_ex)
-		free(data->sa_quit_ex);
-	data->sa = NULL;
-	data->sa_child = NULL;
-	data->sa_ex = NULL;
-	data->sa_quit = NULL;
-	data->sa_quit_child = NULL;
-	data->sa_quit_ex = NULL;
 }

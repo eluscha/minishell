@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:28:44 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:38:19 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ void	exec_child(t_cmd *cmd, t_data *data)
 
 int	child_process(t_cmd *cmd, t_data *data)
 {
-	sigaction(SIGINT, data->sa_child, NULL);
-	sigaction(SIGQUIT, data->sa_quit_child, NULL);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	data->child = 1;
 	if (cmd->next)
 	{
@@ -86,9 +86,12 @@ void	wait_loop(t_data *data)
 		cur_pid = cur_pid->next;
 	}
 	if (WIFEXITED(wstatus))
-		data->st_code = WEXITSTATUS(wstatus);
-	if (lastsignal)
+        data->st_code = WEXITSTATUS(wstatus);
+    else if (WIFSIGNALED(wstatus))
+	{
+        lastsignal = WTERMSIG(wstatus);
 		data->st_code = lastsignal + 128;
+	}
 }
 
 int	execute_loop(t_data *data)

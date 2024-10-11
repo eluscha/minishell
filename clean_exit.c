@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_exit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:56:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 11:57:15 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:30:34 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ int	clean_exit(char *msg, int r_value, t_data *data)
 		free_envp(data->envp);
 		data->envp = NULL;
 		free_pids(data);
-		free_sas(data);
+		data->pids = NULL;
+		if (data->sa)
+			free(data->sa);
+		data->sa = NULL;
 		free_paths(data);
 	}
 	if (msg)

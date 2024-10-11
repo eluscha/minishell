@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 12:14:44 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:28:15 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ void	main_loop(t_data *data, t_tok **head)
 {
 	while (1)
 	{
-		sigaction(SIGQUIT, data->sa_quit, NULL);
+		//sigaction(SIGQUIT, data->sa_quit, NULL);
 		sigaction(SIGINT, data->sa, NULL);
+		signal(SIGQUIT, SIG_IGN);
 		if (lastsignal == SIGINT)
 			printf("\n");
 		if (lastsignal == SIGQUIT)
@@ -39,10 +40,11 @@ void	main_loop(t_data *data, t_tok **head)
 		data->cmd = parser(*head, data);
 		if (!data->cmd)
 			continue ;
-		sigaction(SIGINT, data->sa_ex, NULL);
-		sigaction(SIGQUIT, data->sa_quit_ex, NULL);
+		signal(SIGINT, SIG_IGN);
+		//sigaction(SIGQUIT, data->sa_quit_ex, NULL);
 		execute_loop(data);
 		free_cmds(data->cmd);
+		data->cmd = NULL;
 	}
 }
 
