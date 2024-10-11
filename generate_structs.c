@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   generate_structs.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/08 14:21:40 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:28:38 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_cmd *generate_structs(t_tok *head, int numargs, int numredir)
+t_cmd	*generate_structs(t_tok *head, int numargs, int numredir)
 {
-	t_cmd *cmd;
-	int idx_a;
-	int idx_r;
-	int	err;
+	t_cmd	*cmd;
+	int		idx_a;
+	int		idx_r;
+	int		err;
 
 	err = 0;
 	cmd = init_struct(numargs, numredir, &err);
@@ -110,20 +110,26 @@ t_cmd	*free_cmd(t_cmd *cmd, int i)
 		cmd->args = NULL;
 	}
 	if (cmd->redirect)
-	{
-		i = -1;
-		while (cmd->redirect[++i].value)
-		{
-			if (cmd->redirect[i].type == HEREDOC)
-				unlink(cmd->redirect[i].value);
-			free(cmd->redirect[i].value);
-		}
-		free(cmd->redirect);
-	}
+		free_redirs(cmd->redirect);
 	free(cmd);
 	return (NULL);
 }
 
+void	free_redirs(t_redirect *redir)
+{
+	int	i;
+
+	i = -1;
+	while (redir[++i].value)
+	{
+		if (redir[i].type == HEREDOC) // not ideal, might try to delete sth which was EOF chars
+			unlink(redir[i].value);
+		free(redir[i].value);
+	}
+	free(redir);
+}
+
+/*
 void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
 {
 	if (!cmd)
@@ -139,3 +145,4 @@ void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
 		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
 	}
 }
+*/

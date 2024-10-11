@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/09/30 13:20:40 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:32:56 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 {
 	char	*name;
 	int		fd;
-	int err = 0;
+	int		err;
 
-	//sigaction(SIG, sa_ex)
+	err = 0;
 	while (head != tail)
 	{
 		if (head->type != HEREDOC)
@@ -41,7 +41,6 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 	}
 	return (err);
 }
-
 
 int	open_tmp_file(char **name)
 {
@@ -88,7 +87,7 @@ int	get_input(int fd, t_tok *token, t_data *data)
 			if (ft_strncmp(line, token->word, len) == 0)
 				break ;
 		}
-		expand_and_write(fd, line, data);
+		err = expand_and_write(fd, line, data);
 		ft_putstr_fd("> ", 1);
 		line = get_next_line(0);
 	}
@@ -109,14 +108,17 @@ int	expand_and_write(int fd, char *line, t_data *data)
 	int		err;
 
 	err = 0;
-	temp = gen_token(0, ft_strlen(line), &err);
-	if (err)
-		return (err);
+	temp = ft_calloc(1, sizeof(t_tok));
+	if (!temp)
+		return (-1);
+	temp->word = ft_calloc(ft_strlen(line) + 1, sizeof(char));
+	if (!temp->word)
+		return (-1);
 	idx = -1;
-	while (line[++idx])
+	while (line[++idx] && !err)
 	{
 		if (line[idx] == '$')
-			idx += handle_expand(&line[idx + 1], temp, data, &err);
+			idx += handle_hd_expand(&line[idx + 1], temp, data, &err);
 		else
 			temp->word[temp->idx++] = line[idx];
 	}
@@ -125,4 +127,27 @@ int	expand_and_write(int fd, char *line, t_data *data)
 	free(temp->word);
 	free(temp);
 	return (err);
+}
+
+int	handle_hd_expand(char *start, t_tok *token, t_data *data, int *err)
+{
+	char	*varvalue;
+	int		i;
+
+	i = 0;
+	if (start[i] == '?' && ++i)
+		varvalue = ft_itoa(data->st_code);
+	else
+	{
+		while (start[i] && ft_isalnum(start[i]))
+			i++;
+		if (!i)
+		{
+			token->word[token->idx++] = '$';
+			return (0);
+		}
+		varvalue = find_var(data->envp, start, i);
+	}
+	*err = change_word(token, varvalue, start + i, NULL);
+	return (i);
 }

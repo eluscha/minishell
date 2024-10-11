@@ -6,90 +6,97 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/09 14:08:39 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 11:06:17 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_tok	*check_word_border(t_lex_state *state, t_tok *tail, char c, int *err)
+void	check_word_border(t_lex *lex, char c)
 {
 	if (c == ' ')
 	{
-		if (*state == DELIM || *state == EXPAND)
+		if (*lex->state == DELIM || *lex->state == EXPAND)
+			*lex->state = DELIM;
+		else
 		{
-			*state = DELIM;
-			return (tail);
+			*lex->state = DELIM;
+			lex->tail->next = gen_token(UNDETERM, 0, lex);
+			if (!lex->err)
+				lex->tail = lex->tail->next;
 		}
-		*state = DELIM;
-		tail->next = gen_token(UNDETERM, 0, err);
-		if (!*err)
-			tail = tail->next;
-		return (tail);
+		return ;
 	}
-	else if (*state == INREDIR && tail->idx == 1 && c == '<')
-		return (tail);
-	else if (*state == OUTREDIR && tail->idx == 1 && c == '>')
-		return (tail);
-	else if (*state >= INREDIR || (c == '|' && tail->idx))
+	else if (*lex->state == INREDIR && lex->tail->idx == 1 && c == '<')
+		return ;
+	else if (*lex->state == OUTREDIR && lex->tail->idx == 1 && c == '>')
+		return ;
+	else if (*lex->state >= INREDIR || (c == '|' && lex->tail->idx))
 	{
-		tail->next = gen_token(UNDETERM, 0, err);
-		if (!*err)
-			tail = tail->next;
+		lex->tail->next = gen_token(UNDETERM, 0, lex);
+		if (!lex->err)
+			lex->tail = lex->tail->next;
 	}
-	*state = WORD;
-	return (tail);
+	*lex->state = WORD;
+	return ;
 }
 
-void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
+void	handle_quotes(t_lex *lex, char c)
 {
 	if (c == '\'')
 	{
-		if (*state == INSQTS)
-			*state = WORD;
-		else if (*state == WORD)
-			*state = INSQTS;
+		if (*lex->state == INSQTS)
+			*lex->state = WORD;
+		else if (*lex->state == WORD)
+			*lex->state = INSQTS;
 		else
-			tail->word[tail->idx++] = c;
+			lex->tail->word[lex->tail->idx++] = c;
 	}
 	else if (c == '\"')
 	{
-		if (*state == INDQTS)
-			*state = WORD;
-		else if (*state == WORD)
-			*state = INDQTS;
+		if (*lex->state == INDQTS)
+			*lex->state = WORD;
+		else if (*lex->state == WORD)
+			*lex->state = INDQTS;
 		else
-			tail->word[tail->idx++] = c;
+			lex->tail->word[lex->tail->idx++] = c;
 	}
 }
 
-t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err)
+void	handle_special(t_lex *lex, char c)
 {
-	if (*state != INDQTS && *state != INSQTS)
+	if (*lex->state == INDQTS || *lex->state == INSQTS)
 	{
-		if (c == '|')
-		{
-			tail->type = PIPE;
-			tail->word[tail->idx++] = c;
-			tail->next = gen_token(UNDETERM, 0, err);
-			if (!*err)
-				tail = tail->next;
-			*state = DELIM;
-			return (tail);
-		}
-		else if (*state == WORD && tail->idx)
-		{
-			tail->next = gen_token(UNDETERM, 0, err);
-			if (!*err)
-				tail = tail->next;
-		}
-		if (c == '<')
-			*state = INREDIR;
-		else if (c == '>')
-			*state = OUTREDIR;
-		tail->type = IOTYPE;
+		lex->tail->word[lex->tail->idx++] = c;
+		return ;
 	}
-	tail->word[tail->idx++] = c;
-	return (tail);
+	if (c == '|')
+	{
+		handle_pipe(lex);
+		return ;
+	}
+	if (*lex->state == WORD && lex->tail->idx)
+	{
+		lex->tail->next = gen_token(UNDETERM, 0, lex);
+		if (!lex->err)
+			lex->tail = lex->tail->next;
+	}
+	if (c == '<')
+		*lex->state = INREDIR;
+	else if (c == '>')
+		*lex->state = OUTREDIR;
+	lex->tail->type = IOTYPE;
+	lex->tail->word[lex->tail->idx++] = c;
 }
 
+void	handle_pipe(t_lex *lex)
+{
+	lex->tail->type = PIPE;
+	lex->tail->word[lex->tail->idx++] = '|';
+	lex->tail->next = gen_token(UNDETERM, 0, lex);
+	if (!lex->err)
+		lex->tail = lex->tail->next;
+	*lex->state = DELIM;
+}
+
+/*find handle_expand(t_lex *lex, int dist) in expand.c */
