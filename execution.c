@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 10:57:08 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:10:58 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);
 		close(data->std_in);
-		if (!strcmp (cmd->args[0], "minishell"))
+		if (!ft_strcmp (cmd->args[0], "minishell")) 
 			iterate_shlvl(data);
 		execve(cmd->cmd, cmd->args, data->envp);
 		perror(cmd->cmd);
@@ -32,8 +32,8 @@ void	exec_child(t_cmd *cmd, t_data *data)
 
 int	child_process(t_cmd *cmd, t_data *data)
 {
-	sigaction(SIGINT, data->sa_child, NULL);
-	sigaction(SIGQUIT, data->sa_quit_child, NULL);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	data->child = 1;
 	if (cmd->next)
 	{
@@ -89,8 +89,11 @@ void	wait_loop(t_data *data)
 	}
 	if (WIFEXITED(wstatus))
 		data->st_code = WEXITSTATUS(wstatus);
-	if (lastsignal)
+	else if (WIFSIGNALED(wstatus))
+	{
+		lastsignal = WTERMSIG(wstatus);
 		data->st_code = lastsignal + 128;
+	}
 }
 
 int	execute_loop(t_data *data)

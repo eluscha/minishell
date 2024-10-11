@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 11:06:32 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:11:19 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ void	handle_iotype(t_tok *token, int *numredir);
 /* get_heredoc.c */
 int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
 int		open_tmp_file(char **name);
-int		get_input(int fd, t_tok *token, t_data *data);
+int		get_input(int fd, t_tok *token, t_tok *head, t_data *data);
 int		expand_and_write(int fd, char *line, t_data *data);
 int		handle_hd_expand(char *start, t_tok *token, t_data *data, int *err);
 

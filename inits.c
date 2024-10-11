@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 11:37:28 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 13:11:11 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,6 @@ char	**dup_envp(char **envp)
 	return (dup_envp);
 }
 
-void	init_signals_quits(t_data *data)
-{
-	data->sa_quit = ft_calloc(1, sizeof(struct sigaction));
-	if (!data->sa_quit)
-		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
-	data->sa_quit->sa_handler = SIG_IGN;
-	data->sa_quit_child = ft_calloc(1, sizeof(struct sigaction));
-	if (!data->sa_quit_child)
-		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
-	data->sa_quit_child->sa_handler = SIG_DFL;
-	data->sa_quit_ex = ft_calloc(1, sizeof(struct sigaction));
-	if (!data->sa_quit_ex)
-		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
-	data->sa_quit_ex->sa_handler = &handle_sig_ex;
-	data->sa_quit_ex->sa_flags = SA_RESTART;
-}
-
 void	init_signals(t_data *data)
 {
 	data->sa = ft_calloc(1, sizeof(struct sigaction));
@@ -60,16 +43,6 @@ void	init_signals(t_data *data)
 		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
 	data->sa->sa_handler = &handle_sigint;
 	data->sa->sa_flags = SA_RESTART;
-	data->sa_ex = ft_calloc(1, sizeof(struct sigaction));
-	if (!data->sa_ex)
-		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
-	data->sa_ex->sa_handler = &handle_sig_ex;
-	data->sa_ex->sa_flags = SA_RESTART;
-	data->sa_child = ft_calloc(1, sizeof(struct sigaction));
-	if (!data->sa_child)
-		exit(clean_exit("failed to init data\n", EXIT_FAILURE, data));
-	data->sa_child->sa_handler = SIG_DFL;
-	init_signals_quits(data);
 }
 
 void	init_data(t_data *data, char **envp)
