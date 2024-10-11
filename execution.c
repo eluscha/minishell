@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 14:46:33 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:06:37 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void	wait_loop(t_data *data)
 int	execute_loop(t_data *data)
 {
 	t_cmd	*cmd;
+	int		tty_fd;
 
 	lastsignal = 0;
 	cmd = data->cmd;
@@ -116,6 +117,8 @@ int	execute_loop(t_data *data)
 		cmd = cmd->next;
 	}
 	wait_loop(data);
-	dup2(data->std_in, STDIN_FILENO);
+	tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
+	dup2(tty_fd, STDIN_FILENO);
+	close(tty_fd);
 	return (0);
 }
