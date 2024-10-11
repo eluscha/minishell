@@ -18,6 +18,7 @@ SRC = execution.c \
 		redirect.c \
 		inits.c \
 		signal_handlers.c \
+		iterate_shlvl.c \
 		builtins/ft_export.c \
 		builtins/ft_export_utils.c \
 		builtins/ft_exit.c \

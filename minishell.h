@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 12:52:24 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 14:11:19 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,6 +145,7 @@ int		execute_loop(t_data *data);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 int		path_not_found(t_cmd *cmd, t_data *data);
+void	iterate_shlvl(t_data *data);
 
 /*cleaning*/
 int		clean_exit(char *msg, int r_value, t_data *data);
