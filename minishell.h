@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 11:26:58 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/11 10:50:49 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ int		execute_loop(t_data *data);
 char	**dup_envp(char **envp);
 void	init_data(t_data *data, char **envp);
 int		path_not_found(t_cmd *cmd, t_data *data);
+void	iterate_shlvl(t_data *data);
 
 /*cleaning*/
 int		clean_exit(char *msg, int r_value, t_data *data);
@@ -170,7 +171,7 @@ t_tok	*handle_special(t_lex_state *state, t_tok *tail, char c, int *err);
 
 /* expand.c */
 int		handle_expand(char *start, t_tok *tail, t_data *data, int *err);
-char *find_var(char **list, char *start, int i);
+char	*find_var(char **list, char *start, int i);
 int		change_word(t_tok *token, char *var, char *start);
 
 /* lexer_edge_fts.c */

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/08 13:27:42 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/09 14:08:39 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	handle_quotes(t_lex_state *state, t_tok *tail, char c)
 	{
 		if (*state == INSQTS)
 			*state = WORD;
-		else if (*state == WORD )
+		else if (*state == WORD)
 			*state = INSQTS;
 		else
 			tail->word[tail->idx++] = c;
