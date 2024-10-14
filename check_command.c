@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 15:09:08 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:40:55 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,6 @@ int	check_command(t_cmd *cmd, t_data *data)
 		return (1);
 	}
 	i = find_binary(data, cmd);
-	free_paths(data);
+	free_paths(data->paths);
 	return (i);
 }

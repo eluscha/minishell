@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 14:11:42 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:34:44 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	numargs = 0;
 	numredir = 0;
 	process_tokens(head, &numargs, &numredir);
-	tail = check_syntax(head);
-	if (tail->type != END || get_heredoc(head, tail, data) != 0)
+	tail = check_syntax(head, data);
+	if (tail->type != END || get_heredoc(head, tail, data) != 0) //?
 	{
 		if (lastsignal)
 		{
@@ -40,8 +40,9 @@ t_cmd	*parser(t_tok *head, t_data *data)
 
 t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 {
-	int		i;
 	t_lex	*lex;
+	int		i;
+	char	c;
 
 	lex = init_lex(input, tail, data);
 	if (!lex)
@@ -49,23 +50,24 @@ t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 	i = -1;
 	while (input[++i] && !lex->err)
 	{
+		c = input[i];
 		if (*lex->state != INSQTS && *lex->state != INDQTS)
-			check_word_border(lex, input[i]);
-		if (input[i] == '\'' || input[i] == '\"')
-			handle_quotes(lex, input[i]);
-		else if (input[i] == '|' || input[i] == '>' || input[i] == '<')
-			handle_special(lex, input[i]);
-		else if (input[i] == '$')
+			check_word_border(lex, c);
+		if (c == '\'' || c == '\"')
+			handle_quotes(lex, c);
+		else if (c == '|' || c == '>' || c == '<')
+			handle_special(lex, c);
+		else if (c == '$')
 			i += handle_expand(lex, i + 1);
 		else if (*lex->state != DELIM)
-			lex->tail->word[lex->tail->idx++] = input[i];
+			lex->tail->word[lex->tail->idx++] = c;
 	}
 	tail = set_end(lex);
 	free(lex);
 	return (tail);
 }
 
-t_tok	*check_syntax(t_tok *head)
+t_tok	*check_syntax(t_tok *head, t_data *data)
 {
 	t_toktype	ntype;
 	int			err;
@@ -81,12 +83,27 @@ t_tok	*check_syntax(t_tok *head)
 		head = head->next;
 		if (err)
 		{
+			data->st_code = 2;
 			printf("syntax error near unexpected token `");
 			printf("%s\'\n", head->word);
 			break ;
 		}
 	}
 	return (head);
+}
+
+int	multi_pipe_check(t_tok *head)
+{
+	t_toktype	ntype;
+
+	while (head->next)
+	{
+		ntype = head->next->type;
+		if (head->type == PIPE && ntype == PIPE)
+			return (1);
+		head = head->next;
+	}
+	return (0);
 }
 
 t_tok	*free_tokens(t_tok *head)

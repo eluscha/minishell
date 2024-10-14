@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 10:34:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:37:16 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ t_lex	*init_lex(char *input, t_tok *tail, t_data *data)
 	if (!lex)
 		return (NULL);
 	lex->data = data;
-	lex->err = 0;
 	lex->tail = tail;
 	lex->state = &state;
 	lex->input = input;
@@ -41,9 +40,11 @@ void	set_start(t_lex *lex, int len)
 		lex->head = lex->tail->next;
 		if (lex->tail->type == PIPERR)
 		{
-			lex->tail->next = gen_token(UNDETERM, len, lex);
-			if (!lex->err)
-				lex->tail = lex->tail->next;
+			lex->tail->type = UNDETERM;
+			free(lex->tail->word);
+			lex->tail->word = ft_calloc(len + 1, sizeof(char));
+			if (!lex->tail->word)
+				lex->err = -1;
 		}
 		else
 			extend_word(lex, len);
@@ -59,15 +60,13 @@ t_tok	*gen_token(t_toktype type, int len, t_lex *lex)
 		len = input_len;
 	else
 		input_len = len;
-	token = malloc(sizeof(t_tok));
+	token = ft_calloc(1, sizeof(t_tok));
 	if (!token)
 	{
 		lex->err = -1;
 		return (NULL);
 	}
-	token->next = NULL;
 	token->type = type;
-	token->idx = 0;
 	token->word = ft_calloc(len + 1, sizeof(char));
 	if (!token->word)
 	{
@@ -102,13 +101,13 @@ t_tok	*set_end(t_lex *lex)
 		lex->tail->type = SQERR;
 	else if (*lex->state == INDQTS)
 		lex->tail->type = DQERR;
-	else if (lex->tail->type == PIPE)
+	else if (lex->lastchar == '|' && !multi_pipe_check(lex->head))
 		lex->tail->type = PIPERR;
 	else if (*lex->state == DELIM || *lex->state == EXPAND)
 	{
 		lex->tail->type = END;
 		free(lex->tail->word);
-		lex->tail->word = ft_strdup("newline");
+		lex->tail->word = ft_strdup("newline"); //
 		if (!lex->tail->word)
 			lex->err = -1;
 	}
@@ -124,35 +123,3 @@ t_tok	*set_end(t_lex *lex)
 	lex->tail->next = lex->head;
 	return (lex->tail);
 }
-
-/*won't need this function in a final version
-void	print_toktype(t_tok *token)
-{
-	if (token->type == UNDETERM)
-		printf("UNDETERM ");
-	else if (token->type == END)
-		printf("END\n");
-	else if (token->type == SQERR)
-		printf("SQERR ");
-	else if (token->type == DQERR)
-		printf("DQERR ");
-	else if (token->type == PIPERR)
-		printf("PIPERR ");
-	else if (token->type == PIPE)
-		printf("PIPE ");
-	else if (token->type == CMD)
-		printf("CMD ");
-	else if (token->type == ARGS)
-		printf("ARGS ");
-	else if (token->type == IOTYPE)
-		printf("IOTYPE ");
-	else if (token->type == HEREDOC)
-		printf("HEREDOC ");
-	else if (token->type == INPUT)
-		printf("INPUT ");
-	else if (token->type == OUTPUT)
-		printf("OUTPUT ");
-	else if (token->type == APPEND)
-		printf("APPEND ");
-}
-*/
