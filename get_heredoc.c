@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 13:33:10 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:59:18 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	get_input(int fd, t_tok *token, t_tok *head, t_data *data)
 	else
 		ft_putstr_fd("warning: here-document delimited by end-of-file\n", 2);
 	close(fd);
+	close(data->std_in);
 	free_tokens(head);
 	return (clean_exit(NULL, err, data));
 }

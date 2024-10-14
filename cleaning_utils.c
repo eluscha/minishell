@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 16:54:48 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 14:09:56 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/11 16:44:17 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ void	free_pids(t_data *data)
 	{
 		next_pid = data->pids->next;
 		free(data->pids);
-		//data->pids = NULL;
 		data->pids = next_pid;
 	}
 }
