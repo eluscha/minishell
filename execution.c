@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 12:30:14 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:05:29 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	exec_child(t_cmd *cmd, t_data *data)
 {
 	if (!redirect(cmd, data))
 	{
+		if (!cmd->cmd)
+			return ;
 		check_command(cmd, data);
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);

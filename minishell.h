@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 12:44:37 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:07:57 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef struct s_lex
 	t_tok		*head;
 	struct data	*data;
 	int			err;
+	char		lastchar;
 }	t_lex;
 
 typedef struct pids
@@ -136,41 +137,16 @@ typedef struct redirect
 
 extern volatile sig_atomic_t	lastsignal;
 
-int		redirect(t_cmd *cmd, t_data *data);
-int		new_pid(int pid, t_data *data);
-int		check_command(t_cmd *cmd, t_data *data);
-int		execute_loop(t_data *data);
-char	**dup_envp(char **envp);
-void	init_data(t_data *data, char **envp);
-int		path_not_found(t_cmd *cmd, t_data *data);
-void	iterate_shlvl(t_data *data);
-
-/*cleaning*/
-int		clean_exit(char *msg, int r_value, t_data *data);
-void	free_paths(t_data *data);
-void	free_sas(t_data *data);
-void	free_pids(t_data *data);
-void	free_cmds(t_cmd	*cmd_list);
-void	free_envp(char **envp);
-
-/*builtins*/
-int		check_builtin(t_cmd *cmd, t_data *data);
-void	ft_echo(t_cmd *cmd, t_data *data);
-int		ft_unset(t_cmd *cmd, t_data *data);
-int		find_key(t_export *ex, char **envp, t_data *data);
-int		add_entry(char *entry, char **envp, t_data *data);
-int		unset_variable(int i, char **envp, t_data *data);
-int		ft_export(char *arg, t_cmd *cmd, t_data *data);
-int		print_array(char **array);
-void	ft_cd(t_cmd *cmd, t_data *data);
-void	ft_exit(t_cmd *cmd, t_data *data);
-
+/* main.c */
+void	main_loop(t_data *data, t_tok **head);
 t_tok	*read_input(t_data *data);
+t_tok	*accept_multiline_input(t_tok *tail, char **input, t_data *data);
 
 /* parser.c */
 t_cmd	*parser(t_tok *head, t_data *data);
 t_tok	*lexer(char *input, t_tok *tail, t_data *data);
-t_tok	*check_syntax(t_tok *head);
+int		check_syntax(t_tok *head, t_tok **end, t_data *data);
+int		multi_pipe_check(t_tok *head);
 t_tok	*free_tokens(t_tok *head);
 
 /* lexer_edge_fts.c */
@@ -179,8 +155,6 @@ void	set_start(t_lex *lex, int len);
 t_tok	*gen_token(t_toktype type, int len, t_lex *lex);
 void	extend_word(t_lex *lex, int len);
 t_tok	*set_end(t_lex *lex);
-
-void	print_toktype(t_tok *token);
 
 /* lexer_mid_fts.c */
 void	check_word_border(t_lex *lex, char c);
@@ -199,8 +173,13 @@ void	handle_iotype(t_tok *token, int *numredir);
 
 /* get_heredoc.c */
 int		get_heredoc(t_tok *head, t_tok *tail, t_data *data);
+int		hd_found(t_tok *curr, t_tok *head, t_data *data);
 int		open_tmp_file(char **name);
-int		get_input(int fd, t_tok *token, t_tok *head, t_data *data);
+int		hd_parent(int fd, int pid, t_tok *token, char *name);
+
+/* get_hd_input.c */
+int		hd_child(int fd, t_tok *token, t_tok *head, t_data *data);
+int		get_input(char **line, char *word, int fd, t_data *data);
 int		expand_and_write(int fd, char *line, t_data *data);
 int		handle_hd_expand(char *start, t_tok *token, t_data *data, int *err);
 
@@ -211,11 +190,51 @@ int		fill_struct(t_tok *head, t_cmd *cmd, int *idx_a, int *idx_r);
 t_cmd	*free_cmd(t_cmd *cmd, int i);
 void	free_redirs(t_redirect *redir);
 
-//void	print_struct(t_cmd *cmd);
+/* execution.c */
+int		execute_loop(t_data *data);
+void	wait_loop(t_data *data);
+int		fork_function(t_cmd *cmd, t_data *data);
+int		child_process(t_cmd *cmd, t_data *data);
+void	exec_child(t_cmd *cmd, t_data *data);
 
-/* signals */
-void	init_signals(t_data *data);
+/* redirect.c */
+int		redirect(t_cmd *cmd, t_data *data);
+
+/* iterative_shlvl.c */
+void	iterate_shlvl(t_data *data);
+
+/* check_command.c */
+int		check_command(t_cmd *cmd, t_data *data);
+int		find_binary(t_data *data, t_cmd *cmd);
+int		check_path(t_cmd *cmd);
+int		parce_paths(t_data *data, t_cmd *cmd);
+int		path_not_found(t_cmd *cmd, t_data *data);
+
+/* inits.c */
+void	init_data(t_data *data, char **envp);
 void	handle_sigint(int sig);
-void	handle_sig_ex(int sig);
+char	**dup_envp(char **envp);
+int		new_pid(int pid, t_data *data);
+
+/* clean_exit.c */
+int		clean_exit(char *msg, int r_value, t_data *data);
+char	**free_paths(char **paths);
+t_pids	*free_pids(t_pids *pids);
+t_cmd	*free_cmds(t_cmd *cmd_list);
+char	**free_envp(char **envp);
+
+/* builtins folder */
+int		check_builtin(t_cmd *cmd, t_data *data);
+void	ft_echo(t_cmd *cmd, t_data *data);
+int		ft_unset(t_cmd *cmd, t_data *data);
+void	ft_cd(t_cmd *cmd, t_data *data);
+void	ft_exit(t_cmd *cmd, t_data *data);
+int		ft_export(char *arg, t_cmd *cmd, t_data *data);
+
+/* ft_export_utils.c */
+int		print_array(char **array);
+int		find_key(t_export *ex, char **envp, t_data *data);
+int		add_entry(char *entry, char **envp, t_data *data);
+int		unset_variable(int i, char **envp, t_data *data);
 
 #endif

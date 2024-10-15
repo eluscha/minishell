@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 09:59:34 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 10:28:38 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:14:16 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,27 +122,9 @@ void	free_redirs(t_redirect *redir)
 	i = -1;
 	while (redir[++i].value)
 	{
-		if (redir[i].type == HEREDOC) // not ideal, might try to delete sth which was EOF chars
+		if (redir[i].type == HEREDOC)
 			unlink(redir[i].value);
 		free(redir[i].value);
 	}
 	free(redir);
 }
-
-/*
-void print_struct(t_cmd *cmd) //sth is wrong here sometimes..
-{
-	if (!cmd)
-		return ;
-	printf("CMD: %s ARGS: ", cmd->cmd);
-	int i = 0;
-	while (cmd->args[++i])
-		printf("%s ", cmd->args[i]);
-	printf("%s\n", cmd->args[i]);
-	i = -1;
-	while (cmd->redirect[++i].value)
-	{
-		printf("redirect type is %d value is %s\n", cmd->redirect[i].type, cmd->redirect[i].value);
-	}
-}
-*/

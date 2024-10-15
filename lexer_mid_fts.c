@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_mid_fts.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:19:14 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/11 11:06:17 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 10:57:20 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_word_border(t_lex *lex, char c)
 			lex->tail = lex->tail->next;
 	}
 	*lex->state = WORD;
-	return ;
+	lex->lastchar = c;
 }
 
 void	handle_quotes(t_lex *lex, char c)

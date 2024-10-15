@@ -10,15 +10,14 @@ SRC = execution.c \
 		process_tokens.c \
 		generate_structs.c \
 		get_heredoc.c \
+		get_hd_input.c \
 		clean_exit.c \
-		cleaning_utils.c \
-		builtins/builtins.c \
 		check_command.c \
 		main.c \
 		redirect.c \
 		inits.c \
-		signal_handlers.c \
 		iterate_shlvl.c \
+		builtins/builtins.c \
 		builtins/ft_export.c \
 		builtins/ft_export_utils.c \
 		builtins/ft_exit.c \
