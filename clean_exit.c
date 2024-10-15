@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:56:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 14:24:03 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 09:18:43 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int	clean_exit(char *msg, int r_value, t_data *data)
 {
-	printf("in clean exit\n");
 	if (data)
 	{
 		data->cmd = free_cmds(data->cmd);
@@ -28,13 +27,11 @@ int	clean_exit(char *msg, int r_value, t_data *data)
 	if (msg)
 		write(2, msg, ft_strlen(msg));
 	clear_history();
-	printf("ready to return\n");
 	return (r_value);
 }
 
 char	**free_paths(char **paths)
 {
-	printf("in paths \n");
 	int	i;
 
 	i = 0;
@@ -51,7 +48,6 @@ char	**free_paths(char **paths)
 
 char	**free_envp(char **envp)
 {
-	printf("in envp \n");
 	int	i;
 
 	i = 0;
@@ -69,7 +65,6 @@ char	**free_envp(char **envp)
 
 t_cmd	*free_cmds(t_cmd *cmd_list)
 {
-	printf("in cmds \n");
 	t_cmd	*next_node;
 
 	while (cmd_list)
@@ -83,7 +78,6 @@ t_cmd	*free_cmds(t_cmd *cmd_list)
 
 t_pids	*free_pids(t_pids *pids)
 {
-	printf("in pids \n");
 	t_pids	*next_pid;
 
 	while (pids)

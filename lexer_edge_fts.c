@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/14 14:37:16 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 09:13:20 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,10 @@ t_tok	*gen_token(t_toktype type, int len, t_lex *lex)
 		return (NULL);
 	}
 	token->type = type;
-	token->word = ft_calloc(len + 1, sizeof(char));
+	if (type == END)
+		token->word = ft_strdup("newline");
+	else
+		token->word = ft_calloc(len + 1, sizeof(char));
 	if (!token->word)
 	{
 		free(token);
@@ -107,7 +110,7 @@ t_tok	*set_end(t_lex *lex)
 	{
 		lex->tail->type = END;
 		free(lex->tail->word);
-		lex->tail->word = ft_strdup("newline"); //
+		lex->tail->word = ft_strdup("newline");
 		if (!lex->tail->word)
 			lex->err = -1;
 	}

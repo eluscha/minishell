@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 14:10:58 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 09:55:35 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	exec_child(t_cmd *cmd, t_data *data)
 {
 	if (!redirect(cmd, data))
 	{
+		if (!cmd->cmd)
+			return ;
 		check_command(cmd, data);
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);

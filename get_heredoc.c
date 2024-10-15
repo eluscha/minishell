@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/14 14:18:28 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 09:05:02 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	hd_found(t_tok *curr, t_tok *head, t_data *data)
 	{
 		free(name);
 		err = hd_child(fd, curr, head, data);
-		clean_exit(NULL, err, data);
+		exit(clean_exit(NULL, err, data));
 	}
 	err = hd_parent(fd, pid, curr, name);
 	return (err);

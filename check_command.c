@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 13:40:55 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 09:46:28 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,6 @@ int	check_command(t_cmd *cmd, t_data *data)
 		return (1);
 	}
 	i = find_binary(data, cmd);
-	free_paths(data->paths);
+	data->paths = free_paths(data->paths);
 	return (i);
 }
