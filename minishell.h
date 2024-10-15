@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 14:14:01 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:03:21 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,7 @@ t_tok	*accept_multiline_input(t_tok *tail, char **input, t_data *data);
 /* parser.c */
 t_cmd	*parser(t_tok *head, t_data *data);
 t_tok	*lexer(char *input, t_tok *tail, t_data *data);
-t_tok	*check_syntax(t_tok *head, t_data *data);
+int		check_syntax(t_tok *head, t_tok **end, t_data *data);
 int		multi_pipe_check(t_tok *head);
 t_tok	*free_tokens(t_tok *head);
 

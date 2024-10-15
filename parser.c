@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/14 14:34:44 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:03:30 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@ t_cmd	*parser(t_tok *head, t_data *data)
 {
 	int		numargs;
 	int		numredir;
-	t_tok	*tail;
+	t_tok	*end;
 	t_cmd	*cmds;
+	int		syntax_err;
 
 	numargs = 0;
 	numredir = 0;
 	process_tokens(head, &numargs, &numredir);
-	tail = check_syntax(head, data);
-	if (tail->type != END || get_heredoc(head, tail, data) != 0) //?
+	syntax_err = check_syntax(head, &end, data);
+	if (get_heredoc(head, end, data) != 0 || syntax_err)
 	{
 		if (lastsignal)
 		{
@@ -67,7 +68,7 @@ t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 	return (tail);
 }
 
-t_tok	*check_syntax(t_tok *head, t_data *data)
+int		check_syntax(t_tok *head, t_tok **end, t_data *data)
 {
 	t_toktype	ntype;
 	int			err;
@@ -84,12 +85,13 @@ t_tok	*check_syntax(t_tok *head, t_data *data)
 		if (err)
 		{
 			data->st_code = 2;
+			*end = head;
 			printf("syntax error near unexpected token `");
 			printf("%s\'\n", head->word);
 			break ;
 		}
 	}
-	return (head);
+	return (err);
 }
 
 int	multi_pipe_check(t_tok *head)
