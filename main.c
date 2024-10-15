@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:07:50 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 13:38:43 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:40:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-volatile sig_atomic_t	lastsignal;
+volatile sig_atomic_t	g_lastsignal;
 
 int	main(int argc, char *argv[], char *envp[])
 {
@@ -38,17 +38,17 @@ void	main_loop(t_data *data, t_tok **head)
 	{
 		sigaction(SIGINT, data->sa, NULL);
 		signal(SIGQUIT, SIG_IGN);
-		if (lastsignal == SIGINT)
+		if (g_lastsignal == SIGINT)
 			printf("\n");
-		if (lastsignal == SIGQUIT)
+		if (g_lastsignal == SIGQUIT)
 			write(2, "Quit\n", 5);
-		lastsignal = 0;
+		g_lastsignal = 0;
 		*head = read_input(data);
 		if (!(*head))
 			break ;
 		if ((*head)->type == END)
 		{
-			lastsignal = 0;
+			g_lastsignal = 0;
 			free_tokens(*head);
 			continue ;
 		}
@@ -68,8 +68,8 @@ t_tok	*read_input(t_data *data)
 	t_tok	*head;
 
 	input = readline("minishell> ");
-	if (lastsignal)
-		data->st_code = lastsignal + 128;
+	if (g_lastsignal)
+		data->st_code = g_lastsignal + 128;
 	if (!input)
 		return (NULL);
 	if (*input)

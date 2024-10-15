@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 12:28:16 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:49:07 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,10 +76,7 @@ int	check_builtin(t_cmd *cmd, t_data *data)
 			data->st_code = 1;
 	}
 	else if (!ft_strcmp(cmd->cmd, "unset"))
-	{
-		if (ft_unset(cmd, data))
-			data->st_code = 1;
-	}
+		ft_unset(cmd, data);
 	else if (!ft_strcmp(cmd->cmd, "env"))
 		ft_envp(cmd, data);
 	else if (!ft_strcmp(cmd->cmd, "exit"))

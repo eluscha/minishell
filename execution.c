@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 10:05:29 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:40:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	wait_loop(t_data *data)
 		data->st_code = WEXITSTATUS(wstatus);
 	else if (WIFSIGNALED(wstatus))
 	{
-		lastsignal = WTERMSIG(wstatus);
-		data->st_code = lastsignal + 128;
+		g_lastsignal = WTERMSIG(wstatus);
+		data->st_code = g_lastsignal + 128;
 	}
 }
 
@@ -99,7 +99,7 @@ int	execute_loop(t_data *data)
 {
 	t_cmd	*cmd;
 
-	lastsignal = 0;
+	g_lastsignal = 0;
 	cmd = data->cmd;
 	if (cmd && !cmd->next && check_builtin(cmd, data))
 		return (data->st_code);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_command.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 10:38:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 09:46:28 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:57:56 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	path_not_found(t_cmd *cmd, t_data *data)
 	{
 		write(2, "Command \'", ft_strlen("Command \'"));
 		write(2, cmd->cmd, ft_strlen(cmd->cmd));
-		write(2, "\' not found\n", strlen("\' not found\n"));
+		write(2, "\' not found\n", ft_strlen("\' not found\n"));
 		data->st_code = 127;
 	}
 	if (cmd->cmd_check == ISDIR)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/15 10:16:10 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:42:16 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	syntax_err = check_syntax(head, &end, data);
 	if (get_heredoc(head, end, data) != 0 || syntax_err)
 	{
-		if (lastsignal)
+		if (g_lastsignal)
 		{
-			data->st_code = lastsignal + 128;
-			lastsignal = 0;
+			data->st_code = g_lastsignal + 128;
+			g_lastsignal = 0;
 		}
 		cmds = NULL;
 	}
@@ -68,7 +68,7 @@ t_tok	*lexer(char *input, t_tok *tail, t_data *data)
 	return (tail);
 }
 
-int		check_syntax(t_tok *head, t_tok **end, t_data *data)
+int	check_syntax(t_tok *head, t_tok **end, t_data *data)
 {
 	t_toktype	ntype;
 	int			err;
