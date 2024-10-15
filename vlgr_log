@@ -1,99 +1,175 @@
-==11987== Memcheck, a memory error detector
-==11987== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==11987== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
-==11987== Command: ./minishell
-==11987== Parent PID: 4939
-==11987== 
-==12058== 
-==12058== HEAP SUMMARY:
-==12058==     in use at exit: 208,163 bytes in 222 blocks
-==12058==   total heap usage: 583 allocs, 361 frees, 237,674 bytes allocated
-==12058== 
-==12058== LEAK SUMMARY:
-==12058==    definitely lost: 0 bytes in 0 blocks
-==12058==    indirectly lost: 0 bytes in 0 blocks
-==12058==      possibly lost: 0 bytes in 0 blocks
-==12058==    still reachable: 0 bytes in 0 blocks
-==12058==         suppressed: 208,163 bytes in 222 blocks
-==12058== 
-==12058== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
---12058-- 
---12058-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,163 bytes in 222 blocks
-==12058== 
-==12058== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==12168== Invalid read of size 1
-==12168==    at 0x406985: ft_strchr (ft_strchr.c:20)
-==12168==    by 0x404020: check_command (check_command.c:113)
-==12168==    by 0x401362: exec_child (execution.c:19)
-==12168==    by 0x4014B6: child_process (execution.c:46)
-==12168==    by 0x401548: fork_function (execution.c:61)
-==12168==    by 0x40177C: execute_loop (execution.c:115)
-==12168==    by 0x404271: main_loop (main.c:59)
-==12168==    by 0x404117: main (main.c:29)
-==12168==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==12168== 
-==12168== 
-==12168== Process terminating with default action of signal 11 (SIGSEGV)
-==12168==  Access not within mapped region at address 0x0
-==12168==    at 0x406985: ft_strchr (ft_strchr.c:20)
-==12168==    by 0x404020: check_command (check_command.c:113)
-==12168==    by 0x401362: exec_child (execution.c:19)
-==12168==    by 0x4014B6: child_process (execution.c:46)
-==12168==    by 0x401548: fork_function (execution.c:61)
-==12168==    by 0x40177C: execute_loop (execution.c:115)
-==12168==    by 0x404271: main_loop (main.c:59)
-==12168==    by 0x404117: main (main.c:29)
-==12168==  If you believe this happened as a result of a stack
-==12168==  overflow in your program's main thread (unlikely but
-==12168==  possible), you can try to increase the size of the
-==12168==  main thread stack using the --main-stacksize= flag.
-==12168==  The main thread stack size used in this run was 8388608.
-==12168== 
-==12168== HEAP SUMMARY:
-==12168==     in use at exit: 222,232 bytes in 334 blocks
-==12168==   total heap usage: 562 allocs, 228 frees, 237,453 bytes allocated
-==12168== 
-==12168== LEAK SUMMARY:
-==12168==    definitely lost: 0 bytes in 0 blocks
-==12168==    indirectly lost: 0 bytes in 0 blocks
-==12168==      possibly lost: 0 bytes in 0 blocks
-==12168==    still reachable: 7,776 bytes in 78 blocks
-==12168==         suppressed: 214,456 bytes in 256 blocks
-==12168== Reachable blocks (those to which a pointer was found) are not shown.
-==12168== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==12168== 
-==12168== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-==12168== 
-==12168== 1 errors in context 1 of 1:
-==12168== Invalid read of size 1
-==12168==    at 0x406985: ft_strchr (ft_strchr.c:20)
-==12168==    by 0x404020: check_command (check_command.c:113)
-==12168==    by 0x401362: exec_child (execution.c:19)
-==12168==    by 0x4014B6: child_process (execution.c:46)
-==12168==    by 0x401548: fork_function (execution.c:61)
-==12168==    by 0x40177C: execute_loop (execution.c:115)
-==12168==    by 0x404271: main_loop (main.c:59)
-==12168==    by 0x404117: main (main.c:29)
-==12168==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==12168== 
---12168-- 
---12168-- used_suppression:     80 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 214,456 bytes in 256 blocks
-==12168== 
-==12168== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-==11987== 
-==11987== HEAP SUMMARY:
-==11987==     in use at exit: 208,181 bytes in 222 blocks
-==11987==   total heap usage: 580 allocs, 358 frees, 237,789 bytes allocated
-==11987== 
-==11987== LEAK SUMMARY:
-==11987==    definitely lost: 0 bytes in 0 blocks
-==11987==    indirectly lost: 0 bytes in 0 blocks
-==11987==      possibly lost: 0 bytes in 0 blocks
-==11987==    still reachable: 0 bytes in 0 blocks
-==11987==         suppressed: 208,181 bytes in 222 blocks
-==11987== 
-==11987== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
---11987-- 
---11987-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,181 bytes in 222 blocks
-==11987== 
-==11987== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==15666== Memcheck, a memory error detector
+==15666== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==15666== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==15666== Command: ./minishell
+==15666== Parent PID: 4939
+==15666== 
+==15793== 
+==15793== HEAP SUMMARY:
+==15793==     in use at exit: 208,163 bytes in 222 blocks
+==15793==   total heap usage: 564 allocs, 342 frees, 237,392 bytes allocated
+==15793== 
+==15793== LEAK SUMMARY:
+==15793==    definitely lost: 0 bytes in 0 blocks
+==15793==    indirectly lost: 0 bytes in 0 blocks
+==15793==      possibly lost: 0 bytes in 0 blocks
+==15793==    still reachable: 0 bytes in 0 blocks
+==15793==         suppressed: 208,163 bytes in 222 blocks
+==15793== 
+==15793== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--15793-- 
+--15793-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,163 bytes in 222 blocks
+==15793== 
+==15793== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==15805== 
+==15805== HEAP SUMMARY:
+==15805==     in use at exit: 208,181 bytes in 222 blocks
+==15805==   total heap usage: 562 allocs, 340 frees, 237,453 bytes allocated
+==15805== 
+==15805== LEAK SUMMARY:
+==15805==    definitely lost: 0 bytes in 0 blocks
+==15805==    indirectly lost: 0 bytes in 0 blocks
+==15805==      possibly lost: 0 bytes in 0 blocks
+==15805==    still reachable: 0 bytes in 0 blocks
+==15805==         suppressed: 208,181 bytes in 222 blocks
+==15805== 
+==15805== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--15805-- 
+--15805-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,181 bytes in 222 blocks
+==15805== 
+==15805== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==15896== 
+==15896== HEAP SUMMARY:
+==15896==     in use at exit: 208,181 bytes in 222 blocks
+==15896==   total heap usage: 595 allocs, 373 frees, 238,070 bytes allocated
+==15896== 
+==15896== LEAK SUMMARY:
+==15896==    definitely lost: 0 bytes in 0 blocks
+==15896==    indirectly lost: 0 bytes in 0 blocks
+==15896==      possibly lost: 0 bytes in 0 blocks
+==15896==    still reachable: 0 bytes in 0 blocks
+==15896==         suppressed: 208,181 bytes in 222 blocks
+==15896== 
+==15896== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--15896-- 
+--15896-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,181 bytes in 222 blocks
+==15896== 
+==15896== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==15990== 
+==15990== HEAP SUMMARY:
+==15990==     in use at exit: 208,163 bytes in 222 blocks
+==15990==   total heap usage: 665 allocs, 443 frees, 239,391 bytes allocated
+==15990== 
+==15990== LEAK SUMMARY:
+==15990==    definitely lost: 0 bytes in 0 blocks
+==15990==    indirectly lost: 0 bytes in 0 blocks
+==15990==      possibly lost: 0 bytes in 0 blocks
+==15990==    still reachable: 0 bytes in 0 blocks
+==15990==         suppressed: 208,163 bytes in 222 blocks
+==15990== 
+==15990== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--15990-- 
+--15990-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,163 bytes in 222 blocks
+==15990== 
+==15990== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==16124== 
+==16124== HEAP SUMMARY:
+==16124==     in use at exit: 208,163 bytes in 222 blocks
+==16124==   total heap usage: 735 allocs, 513 frees, 240,693 bytes allocated
+==16124== 
+==16124== LEAK SUMMARY:
+==16124==    definitely lost: 0 bytes in 0 blocks
+==16124==    indirectly lost: 0 bytes in 0 blocks
+==16124==      possibly lost: 0 bytes in 0 blocks
+==16124==    still reachable: 0 bytes in 0 blocks
+==16124==         suppressed: 208,163 bytes in 222 blocks
+==16124== 
+==16124== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--16124-- 
+--16124-- used_suppression:     63 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,163 bytes in 222 blocks
+==16124== 
+==16124== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==16193== 
+==16193== Process terminating with default action of signal 2 (SIGINT)
+==16193==    at 0x490575B: kill (syscall-template.S:120)
+==16193==    by 0x48A2F39: _rl_signal_handler (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==16193==    by 0x48A3BEC: rl_getc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==16193==    by 0x48A3460: rl_read_key (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==16193==    by 0x4887C86: readline_internal_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==16193==    by 0x4890D14: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==16193==    by 0x403599: get_input (get_hd_input.c:53)
+==16193==    by 0x4034D8: hd_child (get_hd_input.c:31)
+==16193==    by 0x403236: hd_found (get_heredoc.c:56)
+==16193==    by 0x40317F: get_heredoc (get_heredoc.c:28)
+==16193==    by 0x401803: parser (parser.c:27)
+==16193==    by 0x4041FC: main_loop (main.c:55)
+==16193== 
+==16193== HEAP SUMMARY:
+==16193==     in use at exit: 222,668 bytes in 355 blocks
+==16193==   total heap usage: 781 allocs, 426 frees, 241,597 bytes allocated
+==16193== 
+==16193== LEAK SUMMARY:
+==16193==    definitely lost: 0 bytes in 0 blocks
+==16193==    indirectly lost: 0 bytes in 0 blocks
+==16193==      possibly lost: 0 bytes in 0 blocks
+==16193==    still reachable: 7,761 bytes in 81 blocks
+==16193==         suppressed: 214,907 bytes in 274 blocks
+==16193== Reachable blocks (those to which a pointer was found) are not shown.
+==16193== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==16193== 
+==16193== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--16193-- 
+--16193-- used_suppression:     83 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 214,907 bytes in 274 blocks
+==16193== 
+==16193== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==16252== 
+==16252== HEAP SUMMARY:
+==16252==     in use at exit: 208,420 bytes in 225 blocks
+==16252==   total heap usage: 804 allocs, 579 frees, 241,887 bytes allocated
+==16252== 
+==16252== LEAK SUMMARY:
+==16252==    definitely lost: 0 bytes in 0 blocks
+==16252==    indirectly lost: 0 bytes in 0 blocks
+==16252==      possibly lost: 0 bytes in 0 blocks
+==16252==    still reachable: 0 bytes in 0 blocks
+==16252==         suppressed: 208,420 bytes in 225 blocks
+==16252== 
+==16252== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--16252-- 
+--16252-- used_suppression:     66 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,420 bytes in 225 blocks
+==16252== 
+==16252== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==16272== 
+==16272== HEAP SUMMARY:
+==16272==     in use at exit: 208,463 bytes in 227 blocks
+==16272==   total heap usage: 785 allocs, 558 frees, 241,798 bytes allocated
+==16272== 
+==16272== LEAK SUMMARY:
+==16272==    definitely lost: 0 bytes in 0 blocks
+==16272==    indirectly lost: 0 bytes in 0 blocks
+==16272==      possibly lost: 0 bytes in 0 blocks
+==16272==    still reachable: 0 bytes in 0 blocks
+==16272==         suppressed: 208,463 bytes in 227 blocks
+==16272== 
+==16272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--16272-- 
+--16272-- used_suppression:     68 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,463 bytes in 227 blocks
+==16272== 
+==16272== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==15666== 
+==15666== HEAP SUMMARY:
+==15666==     in use at exit: 208,438 bytes in 225 blocks
+==15666==   total heap usage: 845 allocs, 620 frees, 275,765 bytes allocated
+==15666== 
+==15666== LEAK SUMMARY:
+==15666==    definitely lost: 0 bytes in 0 blocks
+==15666==    indirectly lost: 0 bytes in 0 blocks
+==15666==      possibly lost: 0 bytes in 0 blocks
+==15666==    still reachable: 0 bytes in 0 blocks
+==15666==         suppressed: 208,438 bytes in 225 blocks
+==15666== 
+==15666== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+--15666-- 
+--15666-- used_suppression:     66 readline_leak /home/eusatiko/.valgrind/default.supp:2 suppressed: 208,438 bytes in 225 blocks
+==15666== 
+==15666== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

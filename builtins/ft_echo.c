@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 14:52:44 by auspensk          #+#    #+#             */
-/*   Updated: 2024/09/27 15:09:25 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:30:39 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	write_echo(t_cmd *cmd)
 	int	i;
 
 	i = 1;
-	if (!strcmp(cmd->args[1], "-n"))
+	if (!ft_strcmp(cmd->args[1], "-n"))
 		i = 2;
 	while (cmd->args[i + 1])
 	{
@@ -27,23 +27,20 @@ void	write_echo(t_cmd *cmd)
 	}
 	if (cmd->args[i])
 		write(1, cmd->args[i], ft_strlen(cmd->args[i]));
-	if (strcmp(cmd->args[1], "-n"))
+	if (ft_strcmp(cmd->args[1], "-n"))
 		write(1, "\n", 1);
 }
 
 void	ft_echo(t_cmd *cmd, t_data *data)
 {
-	int	tty_fd;
-
 	cmd->cmd_check = BLTN;
 	data->st_code = 0;
 	if (redirect(cmd, data))
 		return ;
 	if (data->child)
 	{
-		tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
-		dup2(tty_fd, STDIN_FILENO);
-		close(tty_fd);
+		dup2(data->std_in, STDIN_FILENO);
+		close (data->std_in);
 	}
 	if (!cmd->args[1])
 		write(1, "\n", 1);

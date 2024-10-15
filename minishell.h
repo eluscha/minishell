@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 10:03:21 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:07:57 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ typedef struct data
 	int					std_in;
 	char				**envp;
 	char				**paths;
-	char				*tty_in;
 	char				*tty_out;
 	struct sigaction	*sa;
 	struct sigaction	*sa_child;

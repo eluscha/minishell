@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/15 09:05:02 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:12:08 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	get_heredoc(t_tok *head, t_tok *tail, t_data *data)
 
 	err = 0;
 	curr = head;
-	while (curr != tail && !err)
+	while (!err && curr != tail)
 	{
 		if (curr->type != HEREDOC)
 			curr = curr->next;

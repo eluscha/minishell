@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 13:28:06 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:13:32 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	init_data(t_data *data, char **envp)
 	data->pids = NULL;
 	data->envp = dup_envp(envp);
 	data->paths = NULL;
-	data->tty_in = ttyname(STDIN_FILENO);
 	data->tty_out = ttyname(STDOUT_FILENO);
 	data->st_code = 0;
 	data->child = 0;

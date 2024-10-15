@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 09:55:35 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:05:29 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	exec_child(t_cmd *cmd, t_data *data)
 		if (cmd->cmd_check != BIN)
 			path_not_found(cmd, data);
 		close(data->std_in);
-		if (!ft_strcmp (cmd->args[0], "minishell")) 
+		if (!ft_strcmp (cmd->args[0], "minishell"))
 			iterate_shlvl(data);
 		execve(cmd->cmd, cmd->args, data->envp);
 		perror(cmd->cmd);
@@ -68,10 +68,7 @@ int	fork_function(t_cmd *cmd, t_data *data)
 		close((data->fd)[0]);
 	}
 	else
-	{
 		dup2(data->std_in, STDIN_FILENO);
-		close(data->std_in);
-	}
 	if (new_pid(pid, data) != 0)
 		return (clean_exit("failed to malloc for pids\n", 1, data));
 	return (0);
@@ -100,7 +97,6 @@ void	wait_loop(t_data *data)
 
 int	execute_loop(t_data *data)
 {
-	int		tty_fd;
 	t_cmd	*cmd;
 
 	lastsignal = 0;
@@ -119,8 +115,5 @@ int	execute_loop(t_data *data)
 		cmd = cmd->next;
 	}
 	wait_loop(data);
-	tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
-	dup2(tty_fd, STDIN_FILENO);
-	close(tty_fd);
 	return (0);
 }

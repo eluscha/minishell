@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eleonora <eleonora@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 14:27:31 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/08 11:57:36 by eleonora         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:28:16 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@ void	ft_pwd(t_cmd *cmd, t_data *data)
 	data->st_code = 0;
 	if (redirect(cmd, data))
 		return ;
+	if (data->child)
+		close (data->std_in);
 	dir = getcwd(NULL, 0);
 	if (!dir)
 	{
 		data->st_code = 1;
 		return ;
 	}
-	write(1, dir, strlen(dir));
+	write(1, dir, ft_strlen(dir));
 	write(1, "\n", 1);
 	free(dir);
 	dir = NULL;
@@ -39,6 +41,8 @@ void	ft_envp(t_cmd *cmd, t_data *data)
 	data->st_code = 0;
 	if (redirect(cmd, data))
 		return ;
+	if (data->child)
+		close (data->std_in);
 	print_array(data->envp);
 	return ;
 }
@@ -52,10 +56,7 @@ int	set_output(t_cmd *cmd, t_data *data)
 		tty_fd = open(data->tty_out, O_RDWR, O_APPEND);
 		dup2(tty_fd, STDOUT_FILENO);
 		close(tty_fd);
-		tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
-		dup2(tty_fd, STDIN_FILENO);
-		close(tty_fd);
-		return (1);
+		dup2(data->std_in, STDERR_FILENO);
 		return (1);
 	}
 	return (0);
