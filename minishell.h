@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 10:07:57 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:41:43 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ typedef struct redirect
 	char		*value;
 }	t_redirect;
 
-extern volatile sig_atomic_t	lastsignal;
+extern volatile sig_atomic_t	g_lastsignal;
 
 /* main.c */
 void	main_loop(t_data *data, t_tok **head);

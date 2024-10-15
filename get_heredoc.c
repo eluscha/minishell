@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_heredoc.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 12:24:49 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/15 10:12:08 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:40:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	hd_found(t_tok *curr, t_tok *head, t_data *data)
 	char	*name;
 	int		fd;
 	int		pid;
-	int		err;	
+	int		err;
 
 	err = 0;
 	name = NULL;
@@ -104,7 +104,7 @@ int	hd_parent(int fd, int pid, t_tok *token, char *name)
 	else if (WIFSIGNALED(status))
 	{
 		err = 1;
-		lastsignal = WTERMSIG(status);
+		g_lastsignal = WTERMSIG(status);
 	}
 	return (err);
 }

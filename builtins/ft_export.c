@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/14 12:21:51 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:48:03 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ char	*check_argument(t_export *export, t_data *data)
 
 	i = 0;
 	res = NULL;
-	if (!ft_isalpha(export->arg[i]) && export->arg[i] != '_')
+	if (!ft_isalpha(export->arg[i]) && export->arg[i] != '_'
+		&& export->type == EXPORT)
 		return (export_err(export, data));
 	while (ft_isalnum(export->arg[i]) || export->arg[i] == '_')
 		i++;
@@ -39,9 +40,9 @@ char	*check_argument(t_export *export, t_data *data)
 		res = ft_strdup(export->arg);
 	else if (i && export->arg[i] == '=' && export->type == EXPORT)
 		res = ft_substr(export->arg, 0, i);
-	else
+	else if (export->type == EXPORT)
 		return (export_err(export, data));
-	if (!res)
+	if (!res && export->type == EXPORT)
 		data->st_code = 1;
 	return (res);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   inits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 12:16:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 10:13:32 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:40:59 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	init_data(t_data *data, char **envp)
 
 void	handle_sigint(int sig)
 {
-	lastsignal = sig;
+	g_lastsignal = sig;
 	printf("\n");
 	rl_replace_line("", 0);
 	rl_on_new_line();
