@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:38:09 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 16:06:37 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:30:14 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,7 @@ int	fork_function(t_cmd *cmd, t_data *data)
 		close((data->fd)[0]);
 	}
 	else
-	{
 		dup2(data->std_in, STDIN_FILENO);
-		close(data->std_in);
-	}
 	if (new_pid(pid, data) != 0)
 		return (clean_exit("failed to malloc for pids\n", 1, data));
 	return (0);
@@ -99,7 +96,6 @@ void	wait_loop(t_data *data)
 int	execute_loop(t_data *data)
 {
 	t_cmd	*cmd;
-	int		tty_fd;
 
 	lastsignal = 0;
 	cmd = data->cmd;
@@ -117,8 +113,5 @@ int	execute_loop(t_data *data)
 		cmd = cmd->next;
 	}
 	wait_loop(data);
-	tty_fd = open(data->tty_in, O_RDWR, O_APPEND);
-	dup2(tty_fd, STDIN_FILENO);
-	close(tty_fd);
 	return (0);
 }

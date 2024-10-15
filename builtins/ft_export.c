@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 14:52:52 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/02 10:36:10 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:21:51 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	ft_export(char *arg, t_cmd *cmd, t_data *data)
 	int			i;
 
 	i = 0;
+	if (data->child)
+		close (data->std_in);
 	data->st_code = 0;
 	if (cmd)
 	{

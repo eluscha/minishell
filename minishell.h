@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/11 15:35:45 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:44:37 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ typedef struct s_lex
 	int			err;
 }	t_lex;
 
-
 typedef struct pids
 {
 	int			pid;
@@ -89,7 +88,6 @@ typedef struct data
 	int					std_in;
 	char				**envp;
 	char				**paths;
-	char				*tty_in;
 	char				*tty_out;
 	struct sigaction	*sa;
 	struct sigaction	*sa_child;
@@ -205,7 +203,6 @@ int		open_tmp_file(char **name);
 int		get_input(int fd, t_tok *token, t_tok *head, t_data *data);
 int		expand_and_write(int fd, char *line, t_data *data);
 int		handle_hd_expand(char *start, t_tok *token, t_data *data, int *err);
-
 
 /* generate_structs.c */
 t_cmd	*generate_structs(t_tok *head, int numargs, int numredir);
