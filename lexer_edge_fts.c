@@ -6,17 +6,19 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/09 10:40:04 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/15 09:13:20 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:38:13 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_lex	*init_lex(char *input, t_tok *tail, t_data *data)
+t_lex	*init_lex(char *input, t_tok *tail, t_data *data, int refr)
 {
 	static t_lex_state	state;
 	t_lex				*lex;
 
+	if (refr == 1)
+		state = DELIM;
 	lex = ft_calloc(1, sizeof(t_lex));
 	if (!lex)
 		return (NULL);
