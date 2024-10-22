@@ -6,7 +6,7 @@
 /*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 15:08:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/09 10:33:40 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/15 14:56:03 by auspensk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	parse_ex_status(char *str, t_data *data)
 		i++;
 	while (str[i] != '\0')
 	{
-		if (str[i] > 47 && *str < 58)
+		if (str[i] > 47 && str[i] < 58)
 			status = (status * 10) + (str[i] - 48);
 		else
 			err_exit(str, data);
