@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:56:30 by auspensk          #+#    #+#             */
-/*   Updated: 2024/10/15 10:41:43 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/22 12:09:23 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ typedef enum e_lex_state
 	INSQTS,
 	INDQTS,
 	INREDIR,
-	OUTREDIR
+	OUTREDIR, 
+	REFRESH
 }	t_lex_state;
 
 typedef struct s_lex
@@ -144,13 +145,13 @@ t_tok	*accept_multiline_input(t_tok *tail, char **input, t_data *data);
 
 /* parser.c */
 t_cmd	*parser(t_tok *head, t_data *data);
-t_tok	*lexer(char *input, t_tok *tail, t_data *data);
+t_tok	*lexer(char *input, t_tok *tail, t_data *data, int refr);
 int		check_syntax(t_tok *head, t_tok **end, t_data *data);
 int		multi_pipe_check(t_tok *head);
 t_tok	*free_tokens(t_tok *head);
 
 /* lexer_edge_fts.c */
-t_lex	*init_lex(char *input, t_tok *tail, t_data *data);
+t_lex	*init_lex(char *input, t_tok *tail, t_data *data, int refr);
 void	set_start(t_lex *lex, int len);
 t_tok	*gen_token(t_toktype type, int len, t_lex *lex);
 void	extend_word(t_lex *lex, int len);

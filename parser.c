@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: auspensk <auspensk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:18:57 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/15 10:42:16 by auspensk         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:38:25 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,13 @@ t_cmd	*parser(t_tok *head, t_data *data)
 	return (cmds);
 }
 
-t_tok	*lexer(char *input, t_tok *tail, t_data *data)
+t_tok	*lexer(char *input, t_tok *tail, t_data *data, int refr)
 {
 	t_lex	*lex;
 	int		i;
 	char	c;
 
-	lex = init_lex(input, tail, data);
+	lex = init_lex(input, tail, data, refr);
 	if (!lex)
 		return (NULL);
 	i = -1;

@@ -6,7 +6,7 @@
 /*   By: eusatiko <eusatiko@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:06:25 by eusatiko          #+#    #+#             */
-/*   Updated: 2024/10/14 14:19:00 by eusatiko         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:03:14 by eusatiko         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	get_input(char **line, char *word, int fd, t_data *data)
 	len = ft_strlen(word);
 	while (!err)
 	{
+		clear_history();
 		if (*line)
 			free(*line);
 		*line = readline("> ");
