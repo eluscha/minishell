@@ -37,9 +37,7 @@ This project was designed to deepen our understanding of process management, sys
 
 ---
 
-## Getting Started
-
-### Installation
+## Installation
 
 1. Clone the repository:
 
