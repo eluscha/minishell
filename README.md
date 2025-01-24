@@ -21,6 +21,7 @@ This project was designed to deepen our understanding of process management, sys
 - Execute external commands found using $PATH.
 - Support for input/output redirection (`>`, `<`, `>>`, `<<`).
 - Support for piping (`|`).
+- Support for multiline input (open quotes/unfunushed piping).
 - Handles `Ctrl+C`, `Ctrl+\`, and `Ctrl+D` gracefully.
 - Interactive and non-interactive modes.
 - Command history support.
